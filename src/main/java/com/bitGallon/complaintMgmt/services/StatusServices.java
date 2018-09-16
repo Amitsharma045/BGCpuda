@@ -21,7 +21,7 @@ public class StatusServices {
 
 	@RequestMapping(value = "/v1.0/saveStatus", produces={"application/json"},
 			method = RequestMethod.POST)
-	@ResponseBody
+	@ResponseBody 
 	public Long saveStatus(ComplaintStatus status) throws Exception {
 		return manager.saveStatus(status);
 	}
