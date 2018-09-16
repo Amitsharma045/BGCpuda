@@ -3,11 +3,17 @@ package com.bitGallon.complaintMgmt.repository;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
+import com.bitGallon.complaintMgmt.bean.RemarkBean;
+import com.bitGallon.complaintMgmt.entity.IssueType;
 import com.bitGallon.complaintMgmt.entity.Remark;
 
 @Repository
@@ -24,15 +30,18 @@ public class RemarkRepository {
 		return id;
 	}
 	
-	public Remark getRemark(long id) {
-		List<Remark> remarks = getSession().createQuery("FROM Remark r WHERE r.id =:id " + UtilRepository.getIsActiveQuery("r")).
-				setParameter("id", id).list();
-		if (remarks.size() == 1) return remarks.get(0);
-		else return null;
+	public RemarkBean getRemark(long id) {
+		Criteria criteria = getSession().createCriteria(Remark.class,  UtilRepository.REMARK_ALIAS);
+		criteria.add(Restrictions.eq("id", id)).add(UtilRepository.isActiveRestricition());
+		List<RemarkBean> remarkBeans = UtilRepository.transferToRemarkBean(criteria).list();
+		if(remarkBeans.isEmpty()) return null;
+		return remarkBeans.get(0);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Remark> getAllRemarks() {
-		return (List<Remark>)getSession().createQuery("FROM Remark r WHERE " + UtilRepository.getIsActiveQuery("r")).list();
+	public List<RemarkBean> getAllRemarks() {
+		Criteria criteria = getSession().createCriteria(Remark.class, UtilRepository.REMARK_ALIAS)
+				.add(UtilRepository.isActiveRestricition());
+		return UtilRepository.transferToRemarkBean(criteria).list();
 	}
 }

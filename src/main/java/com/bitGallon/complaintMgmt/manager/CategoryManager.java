@@ -5,6 +5,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.repository.CategoryRepository;
 
@@ -18,11 +20,11 @@ public class CategoryManager {
 		return repository.saveCategory(category);
 	}
 	
-	public Category getCategory(int id) {
+	public CategoryBean getCategory(int id) {
 		return repository.getCategory(id);
 	}
 	
-	public List<Category> getAllCateogories(){
+	public List<CategoryBean> getAllCateogories(){
 		return repository.getAllCategory();
 	}
 }

@@ -34,7 +34,7 @@ public class BaseEntity implements Serializable {
 	private String modifiedBy;
 
 	// 1 is Active, 0 inactive
-	@Column(name = "IsActive", columnDefinition="tinyint(1) default 1", nullable = false)
+	@Column(name = "IsActive", columnDefinition="tinyint(10) default 1", nullable = false)
 	private short isActive;
 
 	public short getIsActive() {

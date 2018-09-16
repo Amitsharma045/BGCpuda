@@ -23,26 +23,27 @@ public class ComplaintStatus extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@Column(name = "Status", nullable = false)
-	private String Status;
+	private String status;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "BG_StatusId", referencedColumnName = "id")
-	private ComplaintStatus parentStatusId ;
+	private ComplaintStatus parentStatus;
 	public long getId() {
 		return id;
+	}
+	public ComplaintStatus getParentStatus() {
+		return parentStatus;
+	}
+	public void setParentStatus(ComplaintStatus parentStatus) {
+		this.parentStatus = parentStatus;
 	}
 	public void setId(long id) {
 		this.id = id;
 	}
 	public String getStatus() {
-		return Status;
+		return status;
 	}
 	public void setStatus(String status) {
-		Status = status;
+		this.status = status;
 	}
-	public ComplaintStatus getParentStatusId() {
-		return parentStatusId;
-	}
-	public void setParentStatusId(ComplaintStatus parentStatusId) {
-		this.parentStatusId = parentStatusId;
-	}
+	
 }

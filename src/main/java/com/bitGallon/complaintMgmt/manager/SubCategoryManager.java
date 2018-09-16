@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.SubCategory;
 import com.bitGallon.complaintMgmt.repository.SubCategoryRepository;
 
@@ -19,11 +20,12 @@ public class SubCategoryManager {
 		return repository.saveSubCategory(subCategory);
 	}
 	
-	public SubCategory getSubCategory(long id) {
+	public SubCategoryBean getSubCategory(long id) {
 		return repository.getSubCategory(id);
 	}
 	
-	public List<SubCategory> getAllSubCategories(){
+	public List<SubCategoryBean> getAllSubCategories(Long categoryId){
+		if(categoryId !=null ) return repository.getAllSubCategories(categoryId);
 		return repository.getAllSubCategories();
 	}
 }

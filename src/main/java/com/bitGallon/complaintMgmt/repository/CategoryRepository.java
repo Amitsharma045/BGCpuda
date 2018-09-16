@@ -3,11 +3,18 @@ package com.bitGallon.complaintMgmt.repository;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
+import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
 import com.bitGallon.complaintMgmt.entity.Category;
+import com.bitGallon.complaintMgmt.entity.IssueType;
 
 @Repository
 @Transactional
@@ -23,17 +30,19 @@ public class CategoryRepository {
 		return (Long) getSession().save(category);
 	}
 
-	public Category getCategory(long id) {
-		List<Category> category=  getSession()
-				.createQuery("FROM Category c WHERE c.id =:id AND " + UtilRepository.getIsActiveQuery("c"))
-				.setParameter("id", id).list();
-		if (category.size() == 1) return category.get(0);
-		else return null;
+	@SuppressWarnings("unchecked")
+	public CategoryBean getCategory(long id) {
+		Criteria criteria = getSession().createCriteria(Category.class, UtilRepository.CATEGORY_ALIAS);
+		criteria.add(Restrictions.eq("id", id)).add(UtilRepository.isActiveRestricition());
+		List<CategoryBean> categoryBeans = UtilRepository.transferToCategoryBean(criteria).list();
+		if(categoryBeans.isEmpty()) return null;
+		return categoryBeans.get(0);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Category> getAllCategory() {
-		return (List<Category>) getSession()
-				.createQuery("FROM Category c WHERE " + UtilRepository.getIsActiveQuery("c")).list();
+	public List<CategoryBean> getAllCategory() {
+		Criteria criteria = getSession().createCriteria(Category.class, UtilRepository.CATEGORY_ALIAS);
+		criteria.add(UtilRepository.isActiveRestricition());
+		return UtilRepository.transferToCategoryBean(criteria).list();
 	}
 }

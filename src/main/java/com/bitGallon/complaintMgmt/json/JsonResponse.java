@@ -1,9 +1,7 @@
 package com.bitGallon.complaintMgmt.json;
 
-import java.util.List;
-
 /**
- * @author rpsingh
+ * @author aksharma
  *
  */
 public class JsonResponse {

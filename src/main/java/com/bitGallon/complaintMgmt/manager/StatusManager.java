@@ -5,6 +5,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.repository.StatusRepository;
 
@@ -18,11 +20,12 @@ public class StatusManager {
 		return repository.saveStatus(status);
 	}
 	
-	public ComplaintStatus getStatus(int id) {
+	public ComplaintStatusBean getStatus(long id) {
 		return repository.getStatus(id);
 	}
 	
-	public List<ComplaintStatus> getAllStatus(){
+	public List<ComplaintStatusBean> getAllStatus(Long parentId){
+		if(parentId !=null) return repository.getAllStatuses(parentId);
 		return repository.getAllStatuses();
 	}
 }

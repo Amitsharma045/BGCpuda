@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.manager.CategoryManager;
 
@@ -28,14 +29,14 @@ public class CategoryServices {
 	@RequestMapping(value = "/v1.0/getCategory", produces={"application/json"},
 			method = RequestMethod.GET)
 	@ResponseBody
-	public Category getCategory(@RequestParam("id") int id) {
+	public CategoryBean getCategory(@RequestParam("id") int id) {
 		return manager.getCategory(id);
 	}
 	
 	@RequestMapping(value = "/v1.0/getCategories", produces={"application/json"},
 			method = RequestMethod.GET)
 	@ResponseBody
-	public List<Category> getAllCategories() {
+	public List<CategoryBean> getAllCategories() {
 		return manager.getAllCateogories();
 	}
 }
