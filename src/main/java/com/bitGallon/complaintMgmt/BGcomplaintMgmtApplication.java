@@ -14,7 +14,7 @@ public class BGcomplaintMgmtApplication {
 	public static void main(String[] args) {
 		logger.info("Starting App");
 		SpringApplication.run(BGcomplaintMgmtApplication.class, args);
-		logger.info("Application Started");
+		logger.info("Application Started by rp");
 	}
 }
 
