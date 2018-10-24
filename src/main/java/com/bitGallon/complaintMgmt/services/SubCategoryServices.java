@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.SubCategory;
 import com.bitGallon.complaintMgmt.manager.SubCategoryManager;
@@ -38,11 +37,5 @@ public class SubCategoryServices {
 	@ResponseBody
 	public List<SubCategoryBean> getAllSubCategories(@RequestParam(value = "categoryId" , required = false) Long categoryId) {
 		return manager.getAllSubCategories(categoryId);
-	}
-	
-	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)
-	@ResponseBody
-	public SubCategoryBean updateIsActive(@RequestParam("id") long id, @RequestParam("isActive") short isActive) {
-		return manager.updateIsActive(id, isActive);
 	}
 }

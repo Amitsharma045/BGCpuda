@@ -19,28 +19,24 @@ public class CategoryServices {
 	@Autowired
 	private CategoryManager manager;
 
-	@RequestMapping(value = "/v1.0/saveCategory", produces = { "application/json" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/v1.0/saveCategory", produces={"application/json"},
+			method = RequestMethod.POST)
 	@ResponseBody
 	public Long saveCategory(Category category) throws Exception {
 		return manager.saveCategory(category);
 	}
-
-	@RequestMapping(value = "/v1.0/getCategory", produces = { "application/json" }, method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/v1.0/getCategory", produces={"application/json"},
+			method = RequestMethod.GET)
 	@ResponseBody
 	public CategoryBean getCategory(@RequestParam("id") int id) {
 		return manager.getCategory(id);
 	}
-
-	@RequestMapping(value = "/v1.0/getCategories", produces = { "application/json" }, method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/v1.0/getCategories", produces={"application/json"},
+			method = RequestMethod.GET)
 	@ResponseBody
 	public List<CategoryBean> getAllCategories() {
 		return manager.getAllCateogories();
 	}
-
-	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)
-	@ResponseBody
-	public CategoryBean updateIsActive(@RequestParam("id") long id, @RequestParam("isActive") short isActive) {
-		return manager.updateIsActive(id, isActive);
-	}
-
 }

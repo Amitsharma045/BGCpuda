@@ -27,8 +27,4 @@ public class CategoryManager {
 	public List<CategoryBean> getAllCateogories(){
 		return repository.getAllCategory();
 	}
-
-	public CategoryBean updateIsActive(long id, short isActive) {
-		return repository.updateIsActive(id, isActive);
-	}
 }
