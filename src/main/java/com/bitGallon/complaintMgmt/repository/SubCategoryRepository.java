@@ -11,7 +11,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
+import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.entity.SubCategory;
 
 @Repository
@@ -50,5 +52,15 @@ public class SubCategoryRepository {
 		Criteria criteria = getSession().createCriteria(SubCategory.class, UtilRepository.SUB_CATEGORY_ALIAS)
 				.add(Restrictions.eq("category.id", categoryId)).add(UtilRepository.isActiveRestricition());
 		return UtilRepository.transferToSubCategoryBean(criteria).list();
+	}
+	
+	public SubCategoryBean updateIsActive(long id, short isActive) {
+		SubCategory subCategory= getSession().byId(SubCategory.class).load(id);
+		if(subCategory != null) {
+			subCategory.setIsActive(isActive);
+			getSession().update(subCategory);
+			return getSubCategory(id);
+		}
+		return null;
 	}
 }

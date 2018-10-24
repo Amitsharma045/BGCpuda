@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
+import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
 
@@ -38,5 +39,11 @@ public class StatusServices {
 	@ResponseBody
 	public List<ComplaintStatusBean> getAllStatues(@RequestParam("parentId") long parentId) {
 		return manager.getAllStatus(parentId);
+	}
+	
+	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)
+	@ResponseBody
+	public ComplaintStatusBean updateIsActive(@RequestParam("id") long id, @RequestParam("isActive") short isActive) {
+		return manager.updateIsActive(id, isActive);
 	}
 }

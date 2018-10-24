@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.SubCategory;
 import com.bitGallon.complaintMgmt.repository.SubCategoryRepository;
@@ -27,5 +28,9 @@ public class SubCategoryManager {
 	public List<SubCategoryBean> getAllSubCategories(Long categoryId){
 		if(categoryId !=null ) return repository.getAllSubCategories(categoryId);
 		return repository.getAllSubCategories();
+	}
+	
+	public SubCategoryBean updateIsActive(long id, short isActive) {
+		return repository.updateIsActive(id, isActive);
 	}
 }

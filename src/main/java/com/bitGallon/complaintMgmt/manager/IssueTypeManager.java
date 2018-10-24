@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
 import com.bitGallon.complaintMgmt.entity.IssueType;
 import com.bitGallon.complaintMgmt.repository.IssueTypeRepository;
@@ -28,5 +29,9 @@ public class IssueTypeManager {
 		if (subCategoryId != null)
 			return repository.getAllIssueTypes(subCategoryId);
 		return repository.getAllIssueTypes();
+	}
+	
+	public IssueTypeBean updateIsActive(long id, short isActive) {
+		return repository.updateIsActive(id, isActive);
 	}
 }
