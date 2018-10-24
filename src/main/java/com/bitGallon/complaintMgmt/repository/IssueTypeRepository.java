@@ -11,7 +11,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
+import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.IssueType;
 
 @Repository
@@ -55,5 +57,15 @@ public class IssueTypeRepository {
 		Criteria criteria = getSession().createCriteria(IssueType.class, UtilRepository.ISSUE_TYPE_ALIAS);
 		criteria.add(Restrictions.eq("subCategory.id", subCategoryId)).add(UtilRepository.isActiveRestricition());
 		return UtilRepository.transferToIssueTypeBean(criteria).list();
+	}
+	
+	public IssueTypeBean updateIsActive(long id, short isActive) {
+		IssueType issueType= getSession().byId(IssueType.class).load(id);
+		if(issueType != null) {
+			issueType.setIsActive(isActive);
+			getSession().update(issueType);
+			return getIssueType(id);
+		}
+		return null;
 	}
 }

@@ -45,4 +45,14 @@ public class CategoryRepository {
 		criteria.add(UtilRepository.isActiveRestricition());
 		return UtilRepository.transferToCategoryBean(criteria).list();
 	}
+
+	public CategoryBean updateIsActive(long id, short isActive) {
+		Category category = getSession().byId(Category.class).load(id);
+		if(category != null) {
+			category.setIsActive((short) (isActive == 0 ? 0 : 1) );
+			getSession().update(category);
+			return getCategory(id);
+		}
+		return null;
+	}
 }

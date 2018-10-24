@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
 import com.bitGallon.complaintMgmt.entity.IssueType;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
@@ -44,5 +45,11 @@ public class IssueTypeServices {
 	@ResponseBody
 	public List<IssueTypeBean> getIssueTypes(@RequestParam(value = "subCatId" , required = false)  Long subCatId) {
 		return manager.getAllIssueTypes(subCatId);
+	}
+	
+	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)
+	@ResponseBody
+	public IssueTypeBean updateIsActive(@RequestParam("id") long id, @RequestParam("isActive") short isActive) {
+		return manager.updateIsActive(id, isActive);
 	}
 }

@@ -44,4 +44,14 @@ public class RemarkRepository {
 				.add(UtilRepository.isActiveRestricition());
 		return UtilRepository.transferToRemarkBean(criteria).list();
 	}
+	
+	public RemarkBean updateIsActive(long id, short isActive) {
+		Remark remark= getSession().byId(Remark.class).load(id);
+		if(remark != null) {
+			remark.setIsActive(isActive);
+			getSession().update(remark);
+			return getRemark(id);
+		}
+		return null;
+	}
 }
