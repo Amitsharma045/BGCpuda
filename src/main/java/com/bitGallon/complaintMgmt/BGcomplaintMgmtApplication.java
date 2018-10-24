@@ -12,7 +12,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 public class BGcomplaintMgmtApplication {
 	private static final Logger logger = LoggerFactory.getLogger(BGcomplaintMgmtApplication.class);	
 	public static void main(String[] args) {
-		logger.info("Starting App");
+		logger.info("Starting App- by RSingh");
 		SpringApplication.run(BGcomplaintMgmtApplication.class, args);
 		logger.info("Application Started by rp");
 	}
