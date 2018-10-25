@@ -13,14 +13,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 public class JwtTokenFactory {
 	
-	public static String createAccessJwtToken(String id, String role, String secretKey) 
+	public static String createAccessJwtToken(String id, String secretKey) 
 		    throws Exception 
 		  {
 		    // TODO: Summer18 - Need to include a property to define the token expire period
 		    Date expiration = CommonUtil.getExpiryDate();
 		    
 		    return Jwts.builder().
-		        setSubject(id).claim("role", role).
+		        setSubject(id).
 //		        setExpiration(expiration).
 		        signWith(SignatureAlgorithm.HS512, secretKey).compact();
 		  }
