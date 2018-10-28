@@ -1,4 +1,4 @@
-package com.bitGallon.complaintMgmt.services;
+package com.bitGallon.complaintMgmt.common.services;
 /*package com.bitGallon.complaintMgmt.repository;
 
 import java.util.List;

@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.bean.CategoryBean;
@@ -42,7 +43,7 @@ public class CategoryRepository {
 	@SuppressWarnings("unchecked")
 	public List<CategoryBean> getAllCategory() {
 		Criteria criteria = getSession().createCriteria(Category.class, UtilRepository.CATEGORY_ALIAS);
-		criteria.add(UtilRepository.isActiveRestricition());
+		criteria.add(UtilRepository.isActiveRestricition()); 
 		return UtilRepository.transferToCategoryBean(criteria).list();
 	}
 

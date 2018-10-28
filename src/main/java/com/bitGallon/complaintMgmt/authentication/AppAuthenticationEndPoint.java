@@ -305,7 +305,6 @@ public class AppAuthenticationEndPoint extends RestResource {
 	
 	public User getUserDetail(String userId, String mobileNumber, String emailId) throws Exception {
 		User user = new User();
-		user.setActive(1);
 		user.setLoginCount(1);
 		user.setLoginDate(CommonUtil.getCurrentDate());
 		user.setUserId(userId);

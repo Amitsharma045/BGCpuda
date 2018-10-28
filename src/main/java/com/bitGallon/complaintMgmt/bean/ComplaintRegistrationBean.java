@@ -14,6 +14,7 @@ public class ComplaintRegistrationBean {
 	private ComplaintStatusBean subStatus;
 	private RemarkBean remark;
 	private String additionalComments;
+	private UserBean complaintBy;
 	public long getId() {
 		return id;
 	}
@@ -92,4 +93,11 @@ public class ComplaintRegistrationBean {
 	public void setAdditionalComments(String additionalComments) {
 		this.additionalComments = additionalComments;
 	}
+	public UserBean getComplaintBy() {
+		return complaintBy;
+	}
+	public void setComplaintBy(UserBean complaintBy) {
+		this.complaintBy = complaintBy;
+	}
+	
 }

@@ -35,7 +35,7 @@ public class IssueTypeRepository {
 	public IssueTypeBean getIssueType(long id) {
 		Criteria criteria = getSession().createCriteria(IssueType.class,  UtilRepository.ISSUE_TYPE_ALIAS);
 		criteria.add(Restrictions.eq("id", id)).add(UtilRepository.isActiveRestricition());
-		List<IssueTypeBean> issueTypes = UtilRepository.transferToIssueTypeBean(criteria).list();
+		List<IssueTypeBean> issueTypes = UtilRepository.setResultTransformer(UtilRepository.setResultTransformer(UtilRepository.transferToIssueTypeBean(criteria), IssueTypeBean.class), IssueTypeBean.class).list();
 		if(issueTypes.isEmpty()) return null;
 		return issueTypes.get(0);
 	}
@@ -44,7 +44,7 @@ public class IssueTypeRepository {
 	public List<IssueTypeBean> getAllIssueTypes() {
 		Criteria criteria = getSession().createCriteria(IssueType.class, UtilRepository.ISSUE_TYPE_ALIAS)
 				.add(UtilRepository.isActiveRestricition());
-		return UtilRepository.transferToIssueTypeBean(criteria).list();
+		return UtilRepository.setResultTransformer(UtilRepository.transferToIssueTypeBean(criteria), IssueTypeBean.class).list();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class IssueTypeRepository {
 	public List<IssueTypeBean> getAllIssueTypes(long subCategoryId){
 		Criteria criteria = getSession().createCriteria(IssueType.class, UtilRepository.ISSUE_TYPE_ALIAS);
 		criteria.add(Restrictions.eq("subCategory.id", subCategoryId)).add(UtilRepository.isActiveRestricition());
-		return UtilRepository.transferToIssueTypeBean(criteria).list();
+		return UtilRepository.setResultTransformer(UtilRepository.transferToIssueTypeBean(criteria), IssueTypeBean.class).list();
 	}
 	
 	public IssueTypeBean updateIsActive(long id, short isActive) {

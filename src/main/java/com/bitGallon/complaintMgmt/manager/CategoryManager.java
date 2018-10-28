@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.bean.CategoryBean;

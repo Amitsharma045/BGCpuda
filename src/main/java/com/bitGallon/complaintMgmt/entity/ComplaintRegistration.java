@@ -28,9 +28,14 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "AssignedTo", referencedColumnName = "id")
 	private Employee employee;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name ="RaisedBy", referencedColumnName ="id")
+	private User user;
 //	@JoinColumn(name = "BG_ComplaintLevel", referencedColumnName = "id")
+	@Column(name ="issueTitle")
+	private String issueTitle;
 	@Column(name = "ComplaintLevel")
-	private short complaintLevel;
+	private Short complaintLevel;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "IssueType", referencedColumnName = "id")
 	private IssueType issueType;
@@ -38,9 +43,9 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	@JoinColumn(name = "Area_id", referencedColumnName = "id")
 	private Area area;
 	@Column(name = "complaintLat" , precision = 10 , scale = 8 )
-	private double complaintLat;
+	private Double complaintLat;
 	@Column(name = "complaintLng" , precision = 11 , scale = 8 )
-	private double complaintLng;
+	private Double complaintLng;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "ReferenceComplaint", referencedColumnName = "id")
 	private ComplaintRegistration referenceComplaint;
@@ -74,10 +79,10 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
-	public short getComplaintLevel() {
+	public Short getComplaintLevel() {
 		return complaintLevel;
 	}
-	public void setComplaintLevel(short complaintLevel) {
+	public void setComplaintLevel(Short complaintLevel) {
 		this.complaintLevel = complaintLevel;
 	}
 	public IssueType getIssueType() {
@@ -92,10 +97,10 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	public void setArea(Area area) {
 		this.area = area;
 	}
-	public double getComplaintLat() {
+	public Double getComplaintLat() {
 		return complaintLat;
 	}
-	public void setComplaintLat(double complaintLat) {
+	public void setComplaintLat(Double complaintLat) {
 		this.complaintLat = complaintLat;
 	}
 	public double getComplaintLng() {
@@ -134,4 +139,17 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	public void setAdditionalComments(String additionalComments) {
 		this.additionalComments = additionalComments;
 	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public String getIssueTitle() {
+		return issueTitle;
+	}
+	public void setIssueTitle(String issueTitle) {
+		this.issueTitle = issueTitle;
+	}
+	
 }

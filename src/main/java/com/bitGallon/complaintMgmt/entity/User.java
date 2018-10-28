@@ -31,14 +31,14 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "UserId")
 	private String userId;
 	
+	@Column(name ="UserName")
+	private String userName;
+	
 	@Column(name = "User_MobileNumber")
 	private String mobileNumber;
 	
 	@Column(name = "User_EmailId")
 	private String emailId;
-	
-	@Column(name = "Active")
-	private int active;
 	
 	@Column(name = "LoginDate")
 	private Date loginDate;
@@ -47,7 +47,7 @@ public class User extends BaseEntity implements Serializable {
 	private Date lastLoginDate;
 	
 	@Column(name = "LoginCount")
-	private int loginCount;
+	private Integer loginCount;
 
 	public long getId() {
 		return id;
@@ -63,10 +63,6 @@ public class User extends BaseEntity implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public void setActive(int active) {
-		this.active = active;
 	}
 
 	public Date getLoginDate() {
@@ -85,11 +81,11 @@ public class User extends BaseEntity implements Serializable {
 		this.lastLoginDate = lastLoginDate;
 	}
 
-	public int getLoginCount() {
+	public Integer getLoginCount() {
 		return loginCount;
 	}
 
-	public void setLoginCount(int loginCount) {
+	public void setLoginCount(Integer loginCount) {
 		this.loginCount = loginCount;
 	}
 
@@ -109,10 +105,13 @@ public class User extends BaseEntity implements Serializable {
 		this.emailId = emailId;
 	}
 
-	public int getActive() {
-		return active;
+	public String getUserName() {
+		return userName;
 	}
 
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 }
 
