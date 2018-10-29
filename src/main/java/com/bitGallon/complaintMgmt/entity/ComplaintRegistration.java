@@ -46,9 +46,8 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	private Double complaintLat;
 	@Column(name = "complaintLng" , precision = 11 , scale = 8 )
 	private Double complaintLng;
-	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "ReferenceComplaint", referencedColumnName = "id")
-	private ComplaintRegistration referenceComplaint;
+	@Column(name = "ReferenceComplaint", nullable = false, unique = true)
+	private String referenceComplaint;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "Status", referencedColumnName = "id")
 	private ComplaintStatus status;
@@ -109,10 +108,10 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	public void setComplaintLng(double complaintLng) {
 		this.complaintLng = complaintLng;
 	}
-	public ComplaintRegistration getReferenceComplaint() {
+	public String getReferenceComplaint() {
 		return referenceComplaint;
 	}
-	public void setReferenceComplaint(ComplaintRegistration referenceComplaint) {
+	public void setReferenceComplaint(String referenceComplaint) {
 		this.referenceComplaint = referenceComplaint;
 	}
 	public ComplaintStatus getStatus() {

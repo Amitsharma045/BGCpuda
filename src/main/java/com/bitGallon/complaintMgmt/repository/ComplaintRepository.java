@@ -59,10 +59,12 @@ public class ComplaintRepository {
 		return false;
 	}
 
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, long userId) {
+	@SuppressWarnings("unchecked")
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, long mobileNo) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
-		UtilRepository.addPageable(criteria, page);
+		UtilRepository.addPageableAndSorting(criteria, page);
+		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS+".mobileNumber", mobileNo+""));
 		return UtilRepository.transferToMiniComplaintBean(criteria).list(); 
 	}
 

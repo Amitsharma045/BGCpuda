@@ -1,23 +1,21 @@
 package com.bitGallon.complaintMgmt.repository;
 
-import java.util.Iterator;
-import java.util.Spliterator;
+
+import java.util.Date;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintMinBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
-import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
 import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 
@@ -31,9 +29,9 @@ public class UtilRepository {
 	public static final String PARENT_STATUS_ALIAS = "PARENT_STATUS";
 	public static final String COMPLAINT_REG = "COMPLAINT_REG";
 	public static final String COMPLAINT_REG_MIN = "COMPLAINT_REG_MIN";
-	private static final String EMPLOYEE_ALIAS = "EMPLOYEE_ALIAS";
-	private static final String USER_ALIAS = "USER_ALIAS";
-	private static final String REF_COMPLAINT = "REF_COMPLAINT";
+	public static final String EMPLOYEE_ALIAS = "EMPLOYEE_ALIAS";
+	public static final String USER_ALIAS = "USER_ALIAS";
+	public static final String REF_COMPLAINT = "REF_COMPLAINT";
 
 	public static String getIsActiveQuery(String aliasName) {
 		return " " + aliasName + ".isActive = 1";
@@ -114,7 +112,7 @@ public class UtilRepository {
 		ProjectionList projList = Projections.projectionList();
 		criteria.setProjection(projList.add(Projections.property(COMPLAINT_REG_MIN + ".issueTitle"), "issueTitle").
 		add(Projections.property(USER_ALIAS + ".mobileNumber"), "complaintBy").
-		add(Projections.property(COMPLAINT_REG_MIN + ".complaintId"), "referenceComplaint").
+		add(Projections.property(COMPLAINT_REG_MIN + ".referenceComplaint"), "referenceComplaint").
 		add(Projections.property(ISSUE_TYPE_ALIAS + ".name"), "issueType").
 		add(Projections.property(SUB_CATEGORY_ALIAS + ".name"), "subCategory").
 		add(Projections.property(CATEGORY_ALIAS + ".name"), "category").
@@ -126,17 +124,20 @@ public class UtilRepository {
 		return criteria;
 	}
 	
-	public static Criteria addPageable(Criteria criteria, Pageable page) {
+	public static Criteria addPageableAndSorting(Criteria criteria, Pageable page) {
 		criteria.setFirstResult(page.getPageNumber()*page.getPageSize()).setMaxResults(page.getPageSize());
-//		Order order = page.getSort().getOrderFor(page.getSort());
 		if(page.getSort()!=null) {
-			Sort sort = page.getSort();
-			Iterator<org.springframework.data.domain.Sort.Order> ite = sort.iterator();
-			while(ite.hasNext()) {
-				System.out.println(ite.next().getProperty());
+			Order order = page.getSort().iterator().next();
+			if(!order.isAscending()) {
+				criteria.addOrder(org.hibernate.criterion.Order.desc(order.getProperty()));
+			} else {
+				criteria.addOrder(org.hibernate.criterion.Order.asc(order.getProperty()));
 			}
-			System.out.println(sort.toString());
 		}
 		return criteria;
+	}
+	
+	public static Criteria addDateFilterCriteria(Criteria criteria, String propertyName, Date startDate, Date endDate) {
+		return criteria.add(Restrictions.between("DATE(" + propertyName + ")", startDate, endDate));
 	}
 }
