@@ -29,6 +29,8 @@ public class OtpTransectionDetail  implements Serializable {
 	
 	@Column(name = "OTD_MobileNumber")
 	private String mobileNumber;
+	@Column(name = "OTD_EmailId")
+	private String emailId;
 	@Column(name = "OTD_otp")
 	private String otp;
 	@Column(name = "OTD_ExpirytimeStamp")
@@ -47,6 +49,12 @@ public class OtpTransectionDetail  implements Serializable {
 	}
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	public String getOtp() {
 		return otp;

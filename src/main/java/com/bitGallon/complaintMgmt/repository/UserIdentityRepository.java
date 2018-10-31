@@ -38,6 +38,28 @@ public class UserIdentityRepository {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public User getUserByMobileNumber(String mobileNumber) throws Exception {
+		List<User> userlist = getSession()
+							 .createQuery("FROM User u WHERE u.mobileNumber =:p1")
+							 .setParameter("p1", mobileNumber).list();
+		if(userlist.size() != 0) {
+			return userlist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public User getUserByEmail(String emailId) throws Exception {
+		List<User> userlist = getSession()
+							 .createQuery("FROM User u WHERE u.emailId =:p1")
+							 .setParameter("p1", emailId).list();
+		if(userlist.size() != 0) {
+			return userlist.get(0);
+		}
+		return null;
+	}
+	
 	public Long saveUser(User user) throws Exception {
 		Long id = (Long) getSession().save(user);
 		return id;

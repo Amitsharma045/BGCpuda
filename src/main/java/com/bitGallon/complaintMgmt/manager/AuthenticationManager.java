@@ -20,7 +20,15 @@ public class AuthenticationManager {
 	public User getUserById(String phoneNumber) throws Exception {
 		return userIdentityDAO.getUserById(phoneNumber);
 	}
+	
+	public User getUserByMobileNumber(String phoneNumber) throws Exception {
+		return userIdentityDAO.getUserByMobileNumber(phoneNumber);
+	}
 
+	public User getUserByEmailId(String emailId) throws Exception {
+		return userIdentityDAO.getUserByEmail(emailId);
+	}
+	
 	public Long saveUser(User user) throws Exception {
 		return userIdentityDAO.saveUser(user);
 	}

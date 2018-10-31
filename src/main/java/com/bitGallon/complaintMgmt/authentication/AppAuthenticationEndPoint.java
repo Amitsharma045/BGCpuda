@@ -59,17 +59,18 @@ public class AppAuthenticationEndPoint extends RestResource {
 	
 	private JsonResponse jsonResponse;
 	
+	HashMap<String, String> smsStatus = null;
+
 	@RequestMapping(value = "/v1.0/login", produces={"application/json"},
-			method = RequestMethod.POST)
+					method = RequestMethod.POST)
 	@ResponseBody
 	public HashMap<String,Object> authenticateUser(HttpServletRequest request) throws Exception {
 		String phoneNumber = request.getParameter(ConstantProperty.MOBILE_NUMBER);
 		jsonResponse = new JsonResponse();
-		HashMap<String, String> smsStatus = null;
 		String otp = CommonUtil.getRandomOtp();
 		try {
 			Long.valueOf(phoneNumber);
-			OtpTransectionDetail otpTransectionDetails = getOtpDetail(phoneNumber, otp);
+			OtpTransectionDetail otpTransectionDetails = getOtpDetail(phoneNumber, otp, null);
 			Long id = otpDetailManager.saveOtpDetails(otpTransectionDetails);
 			if(id != null) {
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
@@ -112,12 +113,13 @@ public class AppAuthenticationEndPoint extends RestResource {
 			OtpTransectionDetail otpTransectionDetail = otpDetailManager.getOtpDetails(otp, mobileNumber);
 			if (otpTransectionDetail != null) {
 				if (ValidateOtpExpiryTime(otpTransectionDetail)) {
-					user = authenticationManager.getUserById(CommonUtil.getEncryptUserDetail(mobileNumber));
+					user = authenticationManager.getUserByMobileNumber(mobileNumber);
 					if (user == null) {
-						user = getUserDetail(CommonUtil.getEncryptUserDetail(mobileNumber), mobileNumber, null);
+						user = getUserDetail(mobileNumber, otpTransectionDetail.getEmailId());
 						Long id = authenticationManager.saveUser(user);
 						user.setId(id);
 					} else {
+						if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
 						user.setLastLoginDate(CommonUtil.getCurrentDate());
 						user.setLoginCount(user.getLoginCount()+1);
 						authenticationManager.saveUpdateUser(user);
@@ -191,11 +193,12 @@ public class AppAuthenticationEndPoint extends RestResource {
 					log(clazz, ConstantProperty.EMAIL_NOT_PRESENT_IN_ACCESS_CODE, ConstantProperty.LOG_DEBUG);
 					return sendResponse(jsonResponse);
 				}
-				user = authenticationManager.getUserById(CommonUtil.getEncryptUserDetail(emailId));
+				user = authenticationManager.getUserByEmailId(emailId);
 				if (user == null) {
-					user = getUserDetail(CommonUtil.getEncryptUserDetail(emailId), null, emailId);
-					Long id = authenticationManager.saveUser(user);
-					user.setId(id);
+					jsonResponse.setStatusCode(ConstantProperty.NEW_USER);
+					jsonResponse.setMessage(ConstantProperty.REGISTER_MOBILE_NUMBER_WITH_MAIL+":: "+emailId); 
+					log(clazz, ConstantProperty.REGISTER_MOBILE_NUMBER_WITH_MAIL, ConstantProperty.LOG_DEBUG);
+					return sendResponse(jsonResponse);
 				} else {
 					user.setLastLoginDate(CommonUtil.getCurrentDate());
 					user.setLoginCount(user.getLoginCount()+1);
@@ -255,11 +258,12 @@ public class AppAuthenticationEndPoint extends RestResource {
 				log(clazz, ConstantProperty.EMAIL_NOT_PRESENT_IN_ACCESS_CODE, ConstantProperty.LOG_DEBUG);
 				return sendResponse(jsonResponse);
 			}
-			User user = authenticationManager.getUserById(CommonUtil.getEncryptUserDetail(emailId));
+			User user = authenticationManager.getUserByEmailId(emailId);
         	if (user == null) {
-				user = getUserDetail(CommonUtil.getEncryptUserDetail(emailId), null, emailId);
-				Long id = authenticationManager.saveUser(user);
-				user.setId(id);
+        		jsonResponse.setStatusCode(ConstantProperty.NEW_USER);
+				jsonResponse.setMessage(ConstantProperty.REGISTER_MOBILE_NUMBER_WITH_MAIL+":: "+emailId); 
+				log(clazz, ConstantProperty.REGISTER_MOBILE_NUMBER_WITH_MAIL, ConstantProperty.LOG_DEBUG);
+				return sendResponse(jsonResponse);
 			} else {
 				user.setLastLoginDate(CommonUtil.getCurrentDate());
 				user.setLoginCount(user.getLoginCount()+1);
@@ -288,6 +292,61 @@ public class AppAuthenticationEndPoint extends RestResource {
         return sendResponse(jsonResponse);
 	}
 
+	@RequestMapping(value = "/v1.0/register/mobilenumber", produces={"application/json"},
+			consumes={"application/x-www-form-urlencoded"},
+			method = RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String,Object> registerMobileNumberWithEmail(HttpServletRequest request) throws Exception {
+		jsonResponse = new JsonResponse();
+		String mobileNumber = request.getParameter(ConstantProperty.MOBILE_NUMBER);
+		String emailId = request.getParameter(ConstantProperty.EMAIL_ID);
+		User user = null;
+		if ((mobileNumber == null || mobileNumber.equals("")) && (emailId == null || emailId.equals(""))) {
+			jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
+			jsonResponse.setMessage(ConstantProperty.FACEBOOK_CODE_NOT_PRESENT); 
+			log(clazz, ConstantProperty.FACEBOOK_CODE_NOT_PRESENT, ConstantProperty.LOG_DEBUG);
+			return sendResponse(jsonResponse);
+		}
+		try {
+			Long.valueOf(mobileNumber);
+			user = authenticationManager.getUserByMobileNumber(mobileNumber);
+			if(user!=null && user.getEmailId() != null) {
+				jsonResponse.setStatusCode(ConstantProperty.ALREADY_EXIST_USER);
+				jsonResponse.setMessage(ConstantProperty.ALREADY_REGISTER_MOBILE_NUMBER_WITH_MAIL); 
+				log(clazz, ConstantProperty.ALREADY_REGISTER_MOBILE_NUMBER_WITH_MAIL, ConstantProperty.LOG_DEBUG);
+				return sendResponse(jsonResponse);
+			}
+			String otp = CommonUtil.getRandomOtp();
+			OtpTransectionDetail otpTransectionDetails = getOtpDetail(mobileNumber, otp, emailId);
+			Long id = otpDetailManager.saveOtpDetails(otpTransectionDetails);
+			if(id != null) {
+				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+				jsonResponse.setMessage(ConstantProperty.OTP_SENT);
+				String messageBody = "Silent Reaction OTP Verification Code: "+otp+". Do not share it or"
+						+ " use it elsewhere.";
+				smsStatus = sendSMS.sendSms(mobileNumber, messageBody);
+				if(!smsStatus.get(ConstantProperty.STATUS_CODE).equals(ConstantProperty.OK_STATUS)) {
+					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+					jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+					log(clazz, "OTP NOT SENT", ConstantProperty.LOG_ERROR);
+
+				}
+			}
+			else {
+				jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+				jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+				log(clazz, "NOT ABLE TO GENERATE OTP", ConstantProperty.LOG_TRACE);
+
+			}
+		} catch (Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
+			jsonResponse.setMessage(ex.getMessage()); 
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+			return sendResponse(jsonResponse);
+		}
+		
+        return sendResponse(jsonResponse);
+	}
 
 	private boolean ValidateOtpExpiryTime(OtpTransectionDetail otpTransectionDetails) throws Exception {
 		Date currentDate = CommonUtil.getCurrentDate();
@@ -295,19 +354,19 @@ public class AppAuthenticationEndPoint extends RestResource {
 		return otpExpiryDate.after(currentDate);
 	}
 	
-	public OtpTransectionDetail getOtpDetail(String mobileNumber, String otp) throws Exception {
+	public OtpTransectionDetail getOtpDetail(String mobileNumber, String otp, String emailId) throws Exception {
 		OtpTransectionDetail otpTransectionDetails = new OtpTransectionDetail();
 		otpTransectionDetails.setMobileNumber(mobileNumber);
+		otpTransectionDetails.setEmailId(emailId);
 		otpTransectionDetails.setOtp(otp);
 		otpTransectionDetails.setExpirytimeStamp(CommonUtil.getExpiryDate());
 		return otpTransectionDetails;
 	}
 	
-	public User getUserDetail(String userId, String mobileNumber, String emailId) throws Exception {
+	public User getUserDetail(String mobileNumber, String emailId) throws Exception {
 		User user = new User();
 		user.setLoginCount(1);
 		user.setLoginDate(CommonUtil.getCurrentDate());
-		user.setUserId(userId);
 		user.setMobileNumber(mobileNumber);
 		user.setEmailId(emailId);
 		return user;

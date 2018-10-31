@@ -11,8 +11,11 @@ public class ConstantProperty {
 	public static final String FILE_SIZE_LIMIT  = "421";
 	public static final String INVALID_FILE  = "422";
 	public static final String SERVER_ERROR  = "501";
-	
+	public static final String NEW_USER = "800";
+	public static final String ALREADY_EXIST_USER = "600";
+
 	public static final String MOBILE_NUMBER  = "mobileNumber";
+	public static final String EMAIL_ID  = "emailId";
 	public static final String NAME  = "name";
 	public static final String OTP  = "otp";
 	public static final String COMPLAINT_NUMBER  = "complaintNumber";
@@ -97,6 +100,9 @@ public class ConstantProperty {
 	public static final String LOGOUT = "Successfully Logout";
 
 	public static final String CLIENT_ID = "clientId";
+
+	public static final String REGISTER_MOBILE_NUMBER_WITH_MAIL  = "Register Mobile Number With Mail Id";
+	public static final String ALREADY_REGISTER_MOBILE_NUMBER_WITH_MAIL  = "Already Register Mobile Number With Mail Id";
 
 	public static final String STATUS_RESOLVED = "Resolved";
 
