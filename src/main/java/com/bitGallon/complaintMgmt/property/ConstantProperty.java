@@ -15,6 +15,12 @@ public class ConstantProperty {
 	public static final String MOBILE_NUMBER  = "mobileNumber";
 	public static final String NAME  = "name";
 	public static final String OTP  = "otp";
+	public static final String COMPLAINT_NUMBER  = "complaintNumber";
+	public static final String SERVICE_RATING  = "serviceRating";
+	public static final String SERVICE_COMMENT  = "serviceComment";
+	public static final String RECOMMENDATION_POINT  = "recommendationPoint";
+	public static final String ASPECT_RATING  = "aspectRating";
+
 
 	public static final String STATUS_CODE  = "statusCode";
 	public static final String MESSAGE  = "message";
@@ -92,6 +98,7 @@ public class ConstantProperty {
 
 	public static final String CLIENT_ID = "clientId";
 
+	public static final String STATUS_RESOLVED = "Resolved";
 
 
 

@@ -42,4 +42,8 @@ public class ComplaintManager {
 	public Boolean updateIsActive(long id, short isActive) {
 		return repository.updateIsActive(id, isActive);
 	}
+	
+	public ComplaintRegistration getComplaintByComplaintNumber(String complaintNumber) {
+		return repository.getComplaintByComplaintNumber(complaintNumber);
+	}
 }

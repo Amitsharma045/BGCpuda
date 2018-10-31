@@ -72,4 +72,15 @@ public class ComplaintRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ComplaintRegistration getComplaintByComplaintNumber(String complaintNumber) {
+		List<ComplaintRegistration> complaintlist = getSession()
+				.createQuery("FROM ComplaintRegistration cr WHERE cr.complaintId =:p1")
+				.setParameter("p1", complaintNumber).list();
+		if(complaintlist.size() != 0) {
+			return complaintlist.get(0);
+		}
+		return null;
+	}
 }
