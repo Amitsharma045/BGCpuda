@@ -110,7 +110,7 @@ public class UtilRepository {
 				createAlias(COMPLAINT_REG_MIN + ".subStatus", STATUS_ALIAS).
 				createAlias(COMPLAINT_REG_MIN + ".user", USER_ALIAS);
 		ProjectionList projList = Projections.projectionList();
-		criteria.setProjection(projList.add(Projections.property(COMPLAINT_REG_MIN + ".issueTitle"), "issueTitle").
+		criteria.setProjection(projList.add(Projections.distinct(Projections.property(COMPLAINT_REG_MIN + ".issueTitle")), "issueTitle").
 		add(Projections.property(USER_ALIAS + ".mobileNumber"), "complaintBy").
 		add(Projections.property(COMPLAINT_REG_MIN + ".referenceComplaint"), "referenceComplaint").
 		add(Projections.property(ISSUE_TYPE_ALIAS + ".name"), "issueType").
@@ -125,6 +125,7 @@ public class UtilRepository {
 	}
 	
 	public static Criteria addPageableAndSorting(Criteria criteria, Pageable page) {
+		//setting page configurations
 		criteria.setFirstResult(page.getPageNumber()*page.getPageSize()).setMaxResults(page.getPageSize());
 		if(page.getSort()!=null) {
 			Order order = page.getSort().iterator().next();
@@ -134,10 +135,14 @@ public class UtilRepository {
 				criteria.addOrder(org.hibernate.criterion.Order.asc(order.getProperty()));
 			}
 		}
+		else {
+			// set order by created date desc
+			criteria.addOrder(org.hibernate.criterion.Order.desc("createdDate"));
+		}
 		return criteria;
 	}
 	
 	public static Criteria addDateFilterCriteria(Criteria criteria, String propertyName, Date startDate, Date endDate) {
-		return criteria.add(Restrictions.between("DATE(" + propertyName + ")", startDate, endDate));
+		return criteria.add(Restrictions.between( propertyName , startDate, endDate));
 	}
 }

@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -60,12 +61,19 @@ public class ComplaintRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, long mobileNo) {
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, String mobileNo, Date startDate,
+			Date endDate, Long categoryId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
 		UtilRepository.addPageableAndSorting(criteria, page);
-		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS+".mobileNumber", mobileNo+""));
-		return UtilRepository.transferToMiniComplaintBean(criteria).list(); 
+		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".mobileNumber", mobileNo));
+		if (startDate != null && endDate != null) {
+			UtilRepository.addDateFilterCriteria(criteria, "createdDate", startDate, endDate);
+		}
+		if(categoryId!=null && categoryId!=0) {
+			criteria.add(Restrictions.eq(UtilRepository.CATEGORY_ALIAS+".id", categoryId));
+		}
+		return UtilRepository.transferToMiniComplaintBean(criteria).list();
 	}
 
 	public ComplaintRegistration getComplaintForUser(String complanintId, long userId) {
