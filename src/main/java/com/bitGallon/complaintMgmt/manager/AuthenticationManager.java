@@ -15,26 +15,26 @@ import com.bitGallon.complaintMgmt.repository.UserIdentityRepository;
 public class AuthenticationManager {
 	
 	@Autowired
-	private  UserIdentityRepository userIdentityDAO;
+	private  UserIdentityRepository repository;
 	
 	public User getUserById(String phoneNumber) throws Exception {
-		return userIdentityDAO.getUserById(phoneNumber);
+		return repository.getUserById(phoneNumber);
 	}
 	
 	public User getUserByMobileNumber(String phoneNumber) throws Exception {
-		return userIdentityDAO.getUserByMobileNumber(phoneNumber);
+		return repository.getUserByMobileNumber(phoneNumber);
 	}
 
 	public User getUserByEmailId(String emailId) throws Exception {
-		return userIdentityDAO.getUserByEmail(emailId);
+		return repository.getUserByEmail(emailId);
 	}
 	
 	public Long saveUser(User user) throws Exception {
-		return userIdentityDAO.saveUser(user);
+		return repository.saveUser(user);
 	}
 	
 	public void saveUpdateUser(User user) throws Exception {
-		userIdentityDAO.saveUpdateUser(user);
+		repository.saveUpdateUser(user);
 	}
 
 }

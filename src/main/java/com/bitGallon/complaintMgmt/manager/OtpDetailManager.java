@@ -15,17 +15,17 @@ import com.bitGallon.complaintMgmt.repository.OtpTransectionRepository;
 public class OtpDetailManager {
 
 	@Autowired
-	private  OtpTransectionRepository otpTransectionDetailDAO;
+	private  OtpTransectionRepository repository;
 
 	public Long saveOtpDetails(OtpTransectionDetail otp) throws Exception {
-		return otpTransectionDetailDAO.saveOtpDetails(otp);
+		return repository.saveOtpDetails(otp);
 	}
 	
 	public OtpTransectionDetail getOtpDetails(String otp,String mobileNumber) throws Exception {
-		return otpTransectionDetailDAO.getOtpDetails(otp, mobileNumber);
+		return repository.getOtpDetails(otp, mobileNumber);
 	}
 	
 	public  boolean delete(OtpTransectionDetail otpTransectionDetail) throws Exception {
-		return otpTransectionDetailDAO.delete(otpTransectionDetail);
+		return repository.delete(otpTransectionDetail);
 	}
 }

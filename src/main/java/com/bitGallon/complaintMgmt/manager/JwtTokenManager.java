@@ -16,13 +16,13 @@ import com.bitGallon.complaintMgmt.repository.JwtTokenRepository;
 public class JwtTokenManager {
 
 	@Autowired
-	private  JwtTokenRepository jwtTokenDAO;
+	private  JwtTokenRepository repository;
 	
 	public Long createAccessToken(User user, String accessToken, String accessKey) throws Exception {
-		return jwtTokenDAO.createAccessToken(user, accessToken, accessKey);
+		return repository.createAccessToken(user, accessToken, accessKey);
 	}
 	
 	public JwtToken getJwtTokenByAccessToken(String accessToken) {
-		return jwtTokenDAO.getJwtTokenByAccessToken(accessToken);
+		return repository.getJwtTokenByAccessToken(accessToken);
 	}
 }
