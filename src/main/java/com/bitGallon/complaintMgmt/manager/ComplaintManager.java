@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.manager;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -31,8 +32,10 @@ public class ComplaintManager {
 		return repository.getComplaintForUser(complanintId, empId);
 	}*/
 	
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, long userId){
-		return repository.getAllComplaintsForUser(page, userId);
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, String userId, Date startDate, Date endDate, Long categoryId){
+		if(startDate == null && endDate !=null) return null;
+		if(endDate == null) endDate = new Date();
+		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId);
 	}
 	
 	/*public List<ComplaintRegistration> getAllComplaintsForEmp(Pageable page, long empId){
