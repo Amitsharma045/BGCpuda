@@ -25,7 +25,7 @@ import com.bitGallon.complaintMgmt.manager.CategoryManager;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 
 @Controller
-@RequestMapping(value = "/bitGallon/user/complaint")
+@RequestMapping(value = "/bitGallon/api/user/complaint")
 public class UserComplaintServices {
 	@Autowired
 	private ComplaintManager manager;
