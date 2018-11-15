@@ -26,6 +26,9 @@ import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.FeedbackManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.rest.RestResource;
+import com.google.gson.Gson;
+
+import net.sf.json.JSONObject;
 
 
 @Controller
@@ -52,12 +55,15 @@ public class FeedbackServices extends RestResource {
 	
 	@RequestMapping(value = "/v1.0/submitFeedback", produces = { "application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public HashMap<String,Object> submitFeedBack(HttpServletRequest request, @RequestParam("aspectRating")  HashMap<String, Object> aspectRating) throws Exception {
+	public HashMap<String,Object> submitFeedBack(HttpServletRequest request) throws Exception {
 		String complaintNumber = request.getParameter(ConstantProperty.COMPLAINT_NUMBER);
 		String serviceRating = request.getParameter(ConstantProperty.SERVICE_RATING);
 		String serviceComment = request.getParameter(ConstantProperty.SERVICE_COMMENT);
 		String recommendedPoint = request.getParameter(ConstantProperty.RECOMMENDATION_POINT);
+		String myJsonString = request.getParameter("data");
 
+		JSONObject json = JSONObject.fromObject(myJsonString.toString());
+		HashMap<String, Object> aspectRating = new Gson().fromJson(json.toString(), HashMap.class);
 		jsonResponse = new JsonResponse();
 
 		try {
