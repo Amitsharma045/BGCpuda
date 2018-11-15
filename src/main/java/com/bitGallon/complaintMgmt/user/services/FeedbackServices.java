@@ -69,13 +69,15 @@ public class FeedbackServices extends RestResource {
 		try {
 			ComplaintRegistration complaintRegistration = complaintManager.getComplaintByComplaintNumber(complaintNumber);
 			if(complaintRegistration != null && 
-					complaintRegistration.getStatus().equals(ConstantProperty.STATUS_RESOLVED))
+					complaintRegistration.getStatus().getStatus().equals(ConstantProperty.STATUS_RESOLVED))
 			{
 				Feedback feedback = getFeedBack(complaintRegistration, serviceRating, serviceComment, recommendedPoint);
 				List<AspectRating> aspectRatingList = getAspectRating(complaintRegistration,aspectRating);
 				Long id =feedbackManager.saveFeedback(feedback);
 				if(id != null) {
 					aspectRatingManager.saveAspectRating(aspectRatingList);
+					jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+					jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_AUTHENTICATION);
 				} else {
 					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
 					jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
