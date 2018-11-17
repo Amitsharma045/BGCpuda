@@ -26,10 +26,13 @@ import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.FeedbackManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.rest.RestResource;
+import com.google.gson.Gson;
+
+import net.sf.json.JSONObject;
 
 
 @Controller
-@RequestMapping(value = "/bitGallon/api/feedback")
+@RequestMapping(value = "/bitGallon/feedback")
 public class FeedbackServices extends RestResource {
 	
 	private Class clazz = FeedbackServices.class;
@@ -50,20 +53,55 @@ public class FeedbackServices extends RestResource {
 	private JsonResponse jsonResponse;
 
 	
+	@RequestMapping(value = "/v1.0/checkFeedback", produces = { "application/json" }, method = RequestMethod.POST)
+	@ResponseBody
+	public void checkSubmitFeedBack(HttpServletRequest request) throws Exception {
+		
+		String myJsonString = request.getParameter("data");
+
+		JSONObject json = JSONObject.fromObject(myJsonString.toString());
+		 String address = json.getString("Project");
+		 System.out.println(address);
+		 HashMap<String, Object> aspectRating = new Gson().fromJson(json.toString(), HashMap.class);
+		
+		
+		Iterator<Map.Entry<String, Object>> itr = aspectRating.entrySet().iterator();
+		while(itr.hasNext()) {
+			Map.Entry<String, Object> entry = itr.next(); 
+			System.out.println("Key :: "+entry.getKey()+ "Value :: "+entry.getValue().toString());
+		}
+	}
+	
+	@RequestMapping(value = "/v1.0/check", produces = { "application/json" }, method = RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String, Object> check() throws Exception {
+		HashMap<String, Object> hs = new HashMap<>();
+		hs.put("Name", "Ravinder");
+		hs.put("Employee", "Model N");
+		hs.put("Project", "C-Puda");
+		hs.put("Client", "PUDA");
+
+		return hs;
+	}
+	
+	
 	@RequestMapping(value = "/v1.0/submitFeedback", produces = { "application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public HashMap<String,Object> submitFeedBack(HttpServletRequest request, @RequestParam("aspectRating")  HashMap<String, Object> aspectRating) throws Exception {
+	public HashMap<String,Object> submitFeedBack(HttpServletRequest request) throws Exception {
 		String complaintNumber = request.getParameter(ConstantProperty.COMPLAINT_NUMBER);
 		String serviceRating = request.getParameter(ConstantProperty.SERVICE_RATING);
 		String serviceComment = request.getParameter(ConstantProperty.SERVICE_COMMENT);
 		String recommendedPoint = request.getParameter(ConstantProperty.RECOMMENDATION_POINT);
+		String myJsonString = request.getParameter("data");
 
+		JSONObject json = JSONObject.fromObject(myJsonString.toString());
+		HashMap<String, Object> aspectRating = new Gson().fromJson(json.toString(), HashMap.class);
 		jsonResponse = new JsonResponse();
 
 		try {
 			ComplaintRegistration complaintRegistration = complaintManager.getComplaintByComplaintNumber(complaintNumber);
 			if(complaintRegistration != null && 
-					complaintRegistration.getStatus().equals(ConstantProperty.STATUS_RESOLVED))
+					complaintRegistration.getStatus().getStatus().equals(ConstantProperty.STATUS_RESOLVED))
 			{
 				Feedback feedback = getFeedBack(complaintRegistration, serviceRating, serviceComment, recommendedPoint);
 				List<AspectRating> aspectRatingList = getAspectRating(complaintRegistration,aspectRating);

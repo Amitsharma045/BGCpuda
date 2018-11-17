@@ -32,6 +32,17 @@ public class IssueTypeRepository {
 	}
 
 	@SuppressWarnings("unchecked")
+	public IssueType getIssueType(String issueName) throws Exception {
+		List<IssueType> issueTypelist = getSession()
+				.createQuery("FROM IssueType it WHERE it.name =:p1")
+				.setParameter("p1", issueName).list();
+		if(issueTypelist.size() != 0) {
+			return issueTypelist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public IssueTypeBean getIssueType(long id) {
 		Criteria criteria = getSession().createCriteria(IssueType.class,  UtilRepository.ISSUE_TYPE_ALIAS);
 		criteria.add(Restrictions.eq("id", id)).add(UtilRepository.isActiveRestricition());

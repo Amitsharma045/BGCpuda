@@ -27,6 +27,12 @@ public class Role extends BaseEntity implements Serializable {
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "BG_AreaId", referencedColumnName = "id")
 	private Area area;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "BG_CategoryId", referencedColumnName = "id")
+	private Category category;
+	@Column(name = "RoleHierarchy", nullable = false)
+	private int roleHierarchy;
+	
 	public long getId() {
 		return id;
 	}
@@ -44,6 +50,18 @@ public class Role extends BaseEntity implements Serializable {
 	}
 	public void setArea(Area area) {
 		this.area = area;
+	}
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	public int getRoleHierarchy() {
+		return roleHierarchy;
+	}
+	public void setRoleHierarchy(int roleHierarchy) {
+		this.roleHierarchy = roleHierarchy;
 	}
 
 }

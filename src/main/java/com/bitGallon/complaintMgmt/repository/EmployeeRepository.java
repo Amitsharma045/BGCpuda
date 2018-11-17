@@ -1,6 +1,7 @@
 package com.bitGallon.complaintMgmt.repository;
 
 import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -9,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.entity.Area;
+import com.bitGallon.complaintMgmt.entity.Employee;
+import com.bitGallon.complaintMgmt.entity.Role;
+
 
 @Repository
 @Transactional
-public class AreaRepository  {
-	
+public class EmployeeRepository {
+
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -21,14 +25,15 @@ public class AreaRepository  {
 		return sessionFactory.getCurrentSession();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Area getArea(String areaName) {
-		List<Area> arealist = getSession()
-				.createQuery("FROM Area a WHERE a.name =:p1")
-				.setParameter("p1", areaName).list();
-		if(arealist.size() != 0) {
-			return arealist.get(0);
+	public List<Employee> getEmployee(Role role) {
+		List<Employee> emplist = getSession()
+				.createQuery("FROM Employee emp WHERE emp.role.id =:p1")
+				.setParameter("p1", role.getId()).list();
+		if(emplist.size() != 0) {
+			return emplist;
 		}
 		return null;
 	}
+	
+	
 }

@@ -37,4 +37,47 @@ public class Employee extends BaseEntity implements Serializable {
 	@Column(name = "EmailId", nullable = false, unique = true)
 	private String emailId;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	public Employee getReportingEmployee() {
+		return reportingEmployee;
+	}
+	public void setReportingEmployee(Employee reportingEmployee) {
+		this.reportingEmployee = reportingEmployee;
+	}
+	public String getRegisteredMobileNo() {
+		return registeredMobileNo;
+	}
+	public void setRegisteredMobileNo(String registeredMobileNo) {
+		this.registeredMobileNo = registeredMobileNo;
+	}
+	public String getAlternateMobileNo() {
+		return alternateMobileNo;
+	}
+	public void setAlternateMobileNo(String alternateMobileNo) {
+		this.alternateMobileNo = alternateMobileNo;
+	}
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	
 }

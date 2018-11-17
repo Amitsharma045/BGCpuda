@@ -21,6 +21,10 @@ public class IssueTypeManager {
 		return repository.saveIssueType(issueType);
 	}
 
+	public IssueType getIssueType(String issueName) throws Exception {
+		return repository.getIssueType(issueName);
+	}
+	
 	public IssueTypeBean getIssueType(int id) {
 		return repository.getIssueType(id);
 	}

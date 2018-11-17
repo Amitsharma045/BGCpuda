@@ -89,6 +89,7 @@
 			<artifactId>json</artifactId>
 			<version>20180130</version>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-rest-webmvc -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -99,6 +100,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
+		<dependency>
+        	<groupId>net.sf.json-lib</groupId>
+        	<artifactId>json-lib</artifactId>
+        	<version>2.4</version>
+        	<classifier>jdk15</classifier>
+   		 </dependency>
 	</dependencies>
 
 	<build>

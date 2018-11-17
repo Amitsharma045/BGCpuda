@@ -1,13 +1,16 @@
 package com.bitGallon.complaintMgmt.manager;
-/*package com.bitGallon.complaintMgmt.repository;
 
-import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.bitGallon.complaintMgmt.entity.Area;
+import com.bitGallon.complaintMgmt.repository.AreaRepository;
 
-public interface AreaRepository extends CrudRepository<Area, Long>  {
-	List<Area> findByName(String name);
+public class AreaManager  {
+	
+	@Autowired
+	private AreaRepository repository;
+	
+	public Area getArea(String aspectName) {
+		return repository.getArea(aspectName);
+	}
 }
-*/

@@ -89,6 +89,7 @@ public class ConstantProperty {
 	public static final long MAX_FILES_LIMIT = 26214400l;
 	public static final int MAX_RANDOM_NUM = 8888889;
 	public static final int MIN_RANDOM_NUM = 1111111;
+	
 	public static final String ATTACHMENT_LIST = "attachments";
 	public static final String IMAGE_LIST = "images";
 
@@ -105,6 +106,16 @@ public class ConstantProperty {
 	public static final String ALREADY_REGISTER_MOBILE_NUMBER_WITH_MAIL  = "Already Register Mobile Number With Mail Id";
 
 	public static final String STATUS_RESOLVED = "Resolved";
+	public static final String STATUS_OPEN = "Open";
+
+
+	
+	public static final String ISSUE_TITLE = "issueTitle";
+	public static final String ISSUE_TYPE = "issueType";
+	public static final String AREA_NAME = "areaName";
+	public static final String COMPLAINT_LATITUDE = "complaintLatitude";
+	public static final String COMPLAINT_LOGITUDE = "complaintLogitude";
+	public static final String LANDMARK = "landmark";
 
 
 

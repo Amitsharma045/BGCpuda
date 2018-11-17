@@ -60,6 +60,10 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	@Lob
 	@Column(name ="AdditionalComments")
 	private String additionalComments;
+	
+	@Column(name ="LandMark")
+	private String landMark;
+	
 	public long getId() {
 		return id;
 	}
@@ -149,6 +153,12 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 	}
 	public void setIssueTitle(String issueTitle) {
 		this.issueTitle = issueTitle;
+	}
+	public String getLandMark() {
+		return landMark;
+	}
+	public void setLandMark(String landMark) {
+		this.landMark = landMark;
 	}
 	
 }

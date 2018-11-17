@@ -1,6 +1,7 @@
 package com.bitGallon.complaintMgmt.repository;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -18,6 +19,9 @@ import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
+import com.bitGallon.complaintMgmt.entity.Employee;
+import com.bitGallon.complaintMgmt.entity.Role;
+import com.bitGallon.complaintMgmt.property.ConstantProperty;
 
 @Repository
 @Transactional
@@ -29,8 +33,22 @@ public class ComplaintRepository {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public Long saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
-		return (Long) getSession().save(complaintRegistration);
+	@SuppressWarnings("unchecked")
+	public HashMap<Employee, Integer> getAssignedEmployee(List<Employee> empList) {
+		HashMap<Employee, Integer> hs = new HashMap<>();
+		for(Employee emp : empList) {
+			List<Employee> count = getSession()
+					.createQuery("FROM ComplaintRepository cr WHERE cr.employee.id =:p1 and cr.status.status =:p2")
+					.setParameter("p1", emp.getId())
+					.setParameter("p2", ConstantProperty.STATUS_OPEN).list();
+			hs.put(emp, count.size());
+		}
+		return hs;
+	}
+	
+	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
+		complaintRegistration.setId((Long) getSession().save(complaintRegistration));
+		return complaintRegistration;
 	}
 
 	/*@SuppressWarnings("unchecked")
