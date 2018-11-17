@@ -38,7 +38,7 @@ public class ComplaintRepository {
 		HashMap<Employee, Integer> hs = new HashMap<>();
 		for(Employee emp : empList) {
 			List<Employee> count = getSession()
-					.createQuery("FROM ComplaintRepository cr WHERE cr.employee.id =:p1 and cr.status.status =:p2")
+					.createQuery("FROM ComplaintRegistration cr WHERE cr.employee.id =:p1 and cr.status.status =:p2")
 					.setParameter("p1", emp.getId())
 					.setParameter("p2", ConstantProperty.STATUS_OPEN).list();
 			hs.put(emp, count.size());

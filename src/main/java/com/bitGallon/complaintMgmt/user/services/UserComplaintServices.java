@@ -92,6 +92,7 @@ public class UserComplaintServices extends RestResource {
 		String complaintLng = request.getParameter(ConstantProperty.COMPLAINT_LOGITUDE);
 		String landmark = request.getParameter(ConstantProperty.LANDMARK);
 		
+		jsonResponse = new JsonResponse();
 		try {
 			AttachmentDetail [] attachmentDetails = new AttachmentDetail[uploadedFiles.length];
 			if(attachmentDetails.length>0 && !validateFiles(uploadedFiles,attachmentDetails,jsonResponse)) {
@@ -113,8 +114,9 @@ public class UserComplaintServices extends RestResource {
 			
 			ComplaintRegistration savedComplaint=manager.saveComplaintRegistration(complaintRegistration);
 			if(savedComplaint!=null && savedComplaint.getId()!=0) {
-				if(attachmentDetails.length>0)
+				if(attachmentDetails.length>0) {
 					attachmentDetails = attachmentManager.saveAttachments(savedComplaint,attachmentDetails,uploadedFiles);
+				}
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 				jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
 				log(clazz, ConstantProperty.SUCCESSFUL_SAVED, ConstantProperty.LOG_DEBUG);
