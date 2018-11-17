@@ -28,6 +28,9 @@ public class Employee extends BaseEntity implements Serializable {
 	@JoinColumn(name = "BG_RoleId", referencedColumnName = "id")
 	private Role role;
 	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "BG_CategoryId", referencedColumnName = "id")
+	private Category category;
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "BG_ReportingId", referencedColumnName = "id")
 	private Employee reportingEmployee;
 	@Column(name = "RegisteredMobileNo", nullable = false, unique = true)
@@ -54,6 +57,12 @@ public class Employee extends BaseEntity implements Serializable {
 	}
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	public Employee getReportingEmployee() {
 		return reportingEmployee;

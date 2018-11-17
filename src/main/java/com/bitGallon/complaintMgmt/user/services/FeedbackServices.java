@@ -108,6 +108,8 @@ public class FeedbackServices extends RestResource {
 				Long id =feedbackManager.saveFeedback(feedback);
 				if(id != null) {
 					aspectRatingManager.saveAspectRating(aspectRatingList);
+					jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+					jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_AUTHENTICATION);
 				} else {
 					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
 					jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);

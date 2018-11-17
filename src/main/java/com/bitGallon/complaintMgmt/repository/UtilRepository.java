@@ -16,6 +16,7 @@ import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintMinBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
+import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
 import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 
@@ -42,18 +43,16 @@ public class UtilRepository {
 	}
 
 	public static Criteria transferToIssueTypeBean(Criteria criteria) {
-		return transferToIssueTypeBean(criteria,null);
-	}
-	public static Criteria transferToIssueTypeBean(Criteria criteria, ProjectionList projList) {
-		if(projList == null) projList = Projections.projectionList();
+		ProjectionList projList = Projections.projectionList(); 
 		return criteria.createAlias(ISSUE_TYPE_ALIAS + ".subCategory", SUB_CATEGORY_ALIAS)
 				.createAlias(SUB_CATEGORY_ALIAS + ".category", CATEGORY_ALIAS)
-				.setProjection(projList.add(Projections.property(ISSUE_TYPE_ALIAS + "issue.id"), "id")
+				.setProjection(projList.add(Projections.property(ISSUE_TYPE_ALIAS + ".id"), "id")
 						.add(Projections.property(ISSUE_TYPE_ALIAS + ".name"), "name")
 						.add(Projections.property(SUB_CATEGORY_ALIAS + ".id"), "subCategoryId")
 						.add(Projections.property(SUB_CATEGORY_ALIAS + ".name"), "subCategoryName")
 						.add(Projections.property(CATEGORY_ALIAS + ".id"), "categoryId")
-						.add(Projections.property(CATEGORY_ALIAS + ".name"), "categoryName"));
+						.add(Projections.property(CATEGORY_ALIAS + ".name"), "categoryName"))
+				.setResultTransformer(new AliasToBeanResultTransformer(IssueTypeBean.class)); 
 	}
 
 	public static Criteria setResultTransformer(Criteria criteria, Class cls) {

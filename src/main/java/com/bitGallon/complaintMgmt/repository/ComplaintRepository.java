@@ -95,7 +95,7 @@ public class ComplaintRepository {
 	}
 
 	public ComplaintRegistration getComplaintForUser(String complanintId, long userId) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	
