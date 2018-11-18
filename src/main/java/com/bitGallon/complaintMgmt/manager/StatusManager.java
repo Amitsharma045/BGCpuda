@@ -25,6 +25,10 @@ public class StatusManager {
 		return repository.getStatus(id);
 	}
 	
+	public ComplaintStatus getStatus(String name) {
+		return repository.getStatus(name);
+	}
+	
 	public List<ComplaintStatusBean> getAllStatus(Long parentId){
 		if(parentId !=null) return repository.getAllStatuses(parentId);
 		return repository.getAllStatuses();

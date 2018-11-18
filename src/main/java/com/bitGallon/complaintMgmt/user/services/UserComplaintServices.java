@@ -25,8 +25,8 @@ import com.bitGallon.complaintMgmt.manager.AreaManager;
 import com.bitGallon.complaintMgmt.manager.AttachmentDetailManager;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
+import com.bitGallon.complaintMgmt.manager.StatusManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
-import com.bitGallon.complaintMgmt.repository.UserIdentityRepository;
 import com.bitGallon.complaintMgmt.rest.RestResource;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
 
@@ -51,7 +51,8 @@ public class UserComplaintServices extends RestResource {
 	private  AttachmentDetailManager attachmentManager;
 	
 	@Autowired
-	private UserIdentityRepository userIdentityRepository;
+	private  StatusManager statusManager;
+	
 	
 	private JsonResponse jsonResponse;
 
@@ -98,8 +99,8 @@ public class UserComplaintServices extends RestResource {
 			complaintRegistration.setComplaintLng(Double.valueOf(complaintLng));
 			complaintRegistration.setLandMark(landmark);
 			complaintRegistration.setIsActive((short)1);
-	/*		complaintRegistration.setStatus(ConstantProperty.STATUS_IN_PROGRESS);
-			complaintRegistration.setSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS);*/
+			complaintRegistration.setStatus(statusManager.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
+			complaintRegistration.setSubStatus(statusManager.getStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
 			
 			ComplaintRegistration savedComplaint=manager.saveComplaintRegistration(complaintRegistration);
 			if(savedComplaint!=null && savedComplaint.getId()!=0) {
