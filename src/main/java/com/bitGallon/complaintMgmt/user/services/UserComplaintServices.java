@@ -97,6 +97,9 @@ public class UserComplaintServices extends RestResource {
 			complaintRegistration.setComplaintLat(Double.valueOf(complaintLat));
 			complaintRegistration.setComplaintLng(Double.valueOf(complaintLng));
 			complaintRegistration.setLandMark(landmark);
+			complaintRegistration.setIsActive((short)1);
+	/*		complaintRegistration.setStatus(ConstantProperty.STATUS_IN_PROGRESS);
+			complaintRegistration.setSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS);*/
 			
 			ComplaintRegistration savedComplaint=manager.saveComplaintRegistration(complaintRegistration);
 			if(savedComplaint!=null && savedComplaint.getId()!=0) {

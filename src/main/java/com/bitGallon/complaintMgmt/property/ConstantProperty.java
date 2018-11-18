@@ -105,9 +105,27 @@ public class ConstantProperty {
 	public static final String REGISTER_MOBILE_NUMBER_WITH_MAIL  = "Register Mobile Number With Mail Id";
 	public static final String ALREADY_REGISTER_MOBILE_NUMBER_WITH_MAIL  = "Already Register Mobile Number With Mail Id";
 
-	public static final String STATUS_RESOLVED = "Resolved";
-	public static final String STATUS_OPEN = "Open";
+	public static final String STATUS_RESOLVED = "RESOLVED";
+	public static final String STATUS_IN_PROGRESS = "IN PROGRESS";
+	public static final String STATUS_ESCALED = "ESCALATED";
+	public static final String STATUS_CLOSED = "CLOSED";
 
+	
+	public static final String SUB_STATUS_RESOLVED_NOT_AN_ISSUE = "NOT AN ISSUE";
+	public static final String SUB_STATUS_RESOLVED_NEED_APPROVAL = "NEED APPROVAL";
+	public static final String SUB_STATUS_RESOLVED_ISSUE_FIXED = "ISSUE FIXED";
+	public static final String SUB_STATUS_RESOLVED_OTHERS = "OTHERS";
+
+	public static final String SUB_STATUS_IN_PROGRESS = "IN PROGRESS";
+	
+	public static final String SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM = "ESCALATED BY SYSTEM";
+	public static final String SUB_STATUS_ESCALED_NEED_APPROVAL = "NEED APPROVAL";
+	public static final String SUB_STATUS_ESCALED_STOCK_UNAVAILABLE = "STOCK UNAVAILABLE";
+	public static final String SUB_STATUS_ESCALED_REQUIRE_MORE_TIME = "REQUIRE MORE TIME";
+	public static final String SUB_STATUS_ESCALED_OTHERS = "OTHERS";
+	
+	public static final String SUB_STATUS_CLOSED_FEEDBACK_NOT_PROVIDED = "FEEDBACK NOT PROVIDED";
+	public static final String SUB_STATUS_CLOSED_FEEDBACK_PROVIDED = "FEEDBACK PROVIDED";
 
 	
 	public static final String ISSUE_TITLE = "issueTitle";
