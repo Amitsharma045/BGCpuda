@@ -28,6 +28,8 @@ import com.bitGallon.complaintMgmt.repository.RoleRepository;
 @Transactional
 public class ComplaintManager {
 	
+	private static final String DELIM = "-";
+
 	@Autowired
 	private ComplaintRepository repository;
 	
@@ -39,6 +41,7 @@ public class ComplaintManager {
 	
 	@Autowired
 	private ComplaintRepository complaintRepository;
+	
 
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
 		Role role = roleRepository.getRole(complaintRegistration.getArea(), complaintRegistration.getIssueType().getSubCategory().getCategory());
@@ -47,9 +50,8 @@ public class ComplaintManager {
 		Employee assignedEmployee = findAssignedEmployee(empCountHM);
 		complaintRegistration.setEmployee(assignedEmployee);
 		String comp = getComplaintNumber();
-		complaintRegistration.setComplaintId(comp+"-0");
+		complaintRegistration.setComplaintId(comp+DELIM+complaintRegistration.getComplaintLevel());
 		complaintRegistration.setReferenceComplaint(comp);
-		
 		return repository.saveComplaintRegistration(complaintRegistration);
 	}
 	
@@ -61,9 +63,10 @@ public class ComplaintManager {
 		return repository.getComplaintForUser(complanintId, empId);
 	}*/
 	
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, String userId, Date startDate, Date endDate, Long categoryId){
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate, Date endDate, Long categoryId){
 		if(startDate == null && endDate !=null) return null;
 		if(endDate == null) endDate = new Date();
+		
 		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId);
 	}
 	

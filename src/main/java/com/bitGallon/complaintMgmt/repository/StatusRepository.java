@@ -12,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
-import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
-import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
-import com.bitGallon.complaintMgmt.entity.IssueType;
-import com.bitGallon.complaintMgmt.entity.Remark;
 
 @Repository
 @Transactional

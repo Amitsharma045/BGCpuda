@@ -33,6 +33,7 @@ public class UtilRepository {
 	public static final String EMPLOYEE_ALIAS = "EMPLOYEE_ALIAS";
 	public static final String USER_ALIAS = "USER_ALIAS";
 	public static final String REF_COMPLAINT = "REF_COMPLAINT";
+	private static final String AREA_ALIAS = "AREA_ALIAS";
 
 	public static String getIsActiveQuery(String aliasName) {
 		return " " + aliasName + ".isActive = 1";
@@ -91,15 +92,33 @@ public class UtilRepository {
 	}
 	
 	public static Criteria transferToComplaintBean(Criteria criteria) {
+		criteria.createAlias(COMPLAINT_REG + ".issueType", ISSUE_TYPE_ALIAS).
+		createAlias(ISSUE_TYPE_ALIAS + ".subCategory", SUB_CATEGORY_ALIAS).
+		createAlias(SUB_CATEGORY_ALIAS + ".category", CATEGORY_ALIAS).
+		createAlias(COMPLAINT_REG + ".employee", EMPLOYEE_ALIAS).
+		createAlias(COMPLAINT_REG + ".status", PARENT_STATUS_ALIAS).
+		createAlias(COMPLAINT_REG + ".subStatus", STATUS_ALIAS).
+		createAlias(COMPLAINT_REG + ".area", AREA_ALIAS).
+		createAlias(COMPLAINT_REG + ".remark", REMARK_ALIAS).
+		createAlias(COMPLAINT_REG + ".user", USER_ALIAS);
 		return criteria
 				.setProjection(Projections.projectionList().add(Projections.property(COMPLAINT_REG + ".id"), "id")
-						.add(Projections.property(COMPLAINT_REG + ".name"), "name"))
+						.add(Projections.property(COMPLAINT_REG + ".complaintId"), "complaintId")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLevel"), "complaintLevel")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLat"), "complaintLat")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLng"), "complaintLng")
+						.add(Projections.property(COMPLAINT_REG + ".referenceComplaint"), "referenceComplaint")
+						.add(Projections.property(COMPLAINT_REG + ".additionalComments"), "additionalComments")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLevel"), "complaintLevel")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLevel"), "complaintLevel")
+						.add(Projections.property(COMPLAINT_REG + ".complaintLevel"), "complaintLevel"))
 				.setResultTransformer(new AliasToBeanResultTransformer(ComplaintRegistrationBean.class));
 	}
 	
 	public static Criteria transferToEmployeeBean(Criteria criteria) {
 		return null;
 	}
+	
 	public static Criteria transferToMiniComplaintBean(Criteria criteria) {
 		criteria.createAlias(COMPLAINT_REG_MIN + ".issueType", ISSUE_TYPE_ALIAS).
 				createAlias(ISSUE_TYPE_ALIAS + ".subCategory", SUB_CATEGORY_ALIAS).
@@ -125,7 +144,7 @@ public class UtilRepository {
 	
 	public static Criteria addPageableAndSorting(Criteria criteria, Pageable page) {
 		//setting page configurations
-		criteria.setFirstResult(page.getPageNumber()*page.getPageSize()).setMaxResults(page.getPageSize());
+		criteria.setFirstResult(page.getPageNumber() * page.getPageSize()).setMaxResults(page.getPageSize());
 		if(page.getSort()!=null) {
 			Order order = page.getSort().iterator().next();
 			if(!order.isAscending()) {

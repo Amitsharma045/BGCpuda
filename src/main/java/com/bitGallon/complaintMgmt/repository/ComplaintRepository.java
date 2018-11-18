@@ -15,12 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.bitGallon.complaintMgmt.bean.CategoryBean;
-import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
-import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
-import com.bitGallon.complaintMgmt.entity.Role;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 
 @Repository
@@ -79,12 +75,12 @@ public class ComplaintRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, String mobileNo, Date startDate,
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate,
 			Date endDate, Long categoryId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
 		UtilRepository.addPageableAndSorting(criteria, page);
-		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".mobileNumber", mobileNo));
+		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".id", userId));
 		if (startDate != null && endDate != null) {
 			UtilRepository.addDateFilterCriteria(criteria, "createdDate", startDate, endDate);
 		}
@@ -95,7 +91,9 @@ public class ComplaintRepository {
 	}
 
 	public ComplaintRegistration getComplaintForUser(String complanintId, long userId) {
-		
+		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
+		criteria.add(UtilRepository.isActiveRestricition());
+		criteria.add(Restrictions.eq("complaintId", complanintId)).add(Restrictions.eq("user", userId));
 		return null;
 	}
 	

@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -71,5 +74,10 @@ public class UserIdentityRepository {
 	
 	public User getUserById(Long id) throws Exception {
 		return getSession().get(User.class,id);
+	}
+	
+	public String getUserMobileNo(Long id) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		return (String) criteria.setProjection(Projections.property("mobileNumber")).add(Restrictions.eq("id", id)).list().get(0);
 	}
 } 

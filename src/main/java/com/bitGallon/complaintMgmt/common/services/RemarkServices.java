@@ -22,14 +22,14 @@ public class RemarkServices {
 	@RequestMapping(value = "/v1.0/saveSubCategory", produces={"application/json"},
 			method = RequestMethod.POST)
 	@ResponseBody
-	public Long saveSubCategory(Remark remark) throws Exception {
+	public Long saveRemarks(Remark remark) throws Exception {
 		return manager.saveRemark(remark);
 	}
 	
 	@RequestMapping(value = "/v1.0/getRemark", produces={"application/json"},
 			method = RequestMethod.GET)
 	@ResponseBody
-	public RemarkBean getRemakr(@RequestParam("id") Long id) {
+	public RemarkBean getRemark(@RequestParam("id") Long id) {
 		return manager.getRemark(id);
 	}
 	

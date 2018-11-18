@@ -3,18 +3,21 @@ package com.bitGallon.complaintMgmt.bean;
 public class ComplaintRegistrationBean {
 	private long id;
 	private String complaintId;
-	private EmployeeBean employee;
+	private String employeeName;
+	private String employeeMobileNumber;
 	private short complaintLevel;
-	private IssueTypeBean issueType;
-	private AreaBean area;
+	private String issueName;
+	private String subCategoryName;
+	private String categoryName;
+	private String areaName;
 	private double complaintLat;
 	private double complaintLng;
-	private ComplaintRegistrationBean referenceComplaint;
-	private ComplaintStatusBean status;
-	private ComplaintStatusBean subStatus;
-	private RemarkBean remark;
+	private String referenceComplaint;
+	private String status;
+	private String subStatus;
+	private String remark;
 	private String additionalComments;
-	private UserBean complaintBy;
+	private String complaintBy;
 	public long getId() {
 		return id;
 	}
@@ -27,11 +30,17 @@ public class ComplaintRegistrationBean {
 	public void setComplaintId(String complaintId) {
 		this.complaintId = complaintId;
 	}
-	public EmployeeBean getEmployee() {
-		return employee;
+	public String getEmployeeName() {
+		return employeeName;
 	}
-	public void setEmployee(EmployeeBean employee) {
-		this.employee = employee;
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	public String getEmployeeMobileNumber() {
+		return employeeMobileNumber;
+	}
+	public void setEmployeeMobileNumber(String employeeMobileNumber) {
+		this.employeeMobileNumber = employeeMobileNumber;
 	}
 	public short getComplaintLevel() {
 		return complaintLevel;
@@ -39,17 +48,29 @@ public class ComplaintRegistrationBean {
 	public void setComplaintLevel(short complaintLevel) {
 		this.complaintLevel = complaintLevel;
 	}
-	public IssueTypeBean getIssueType() {
-		return issueType;
+	public String getIssueName() {
+		return issueName;
 	}
-	public void setIssueType(IssueTypeBean issueType) {
-		this.issueType = issueType;
+	public void setIssueName(String issueName) {
+		this.issueName = issueName;
 	}
-	public AreaBean getArea() {
-		return area;
+	public String getSubCategoryName() {
+		return subCategoryName;
 	}
-	public void setArea(AreaBean area) {
-		this.area = area;
+	public void setSubCategoryName(String subCategoryName) {
+		this.subCategoryName = subCategoryName;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	public String getAreaName() {
+		return areaName;
+	}
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 	public double getComplaintLat() {
 		return complaintLat;
@@ -63,28 +84,28 @@ public class ComplaintRegistrationBean {
 	public void setComplaintLng(double complaintLng) {
 		this.complaintLng = complaintLng;
 	}
-	public ComplaintRegistrationBean getReferenceComplaint() {
+	public String getReferenceComplaint() {
 		return referenceComplaint;
 	}
-	public void setReferenceComplaint(ComplaintRegistrationBean referenceComplaint) {
+	public void setReferenceComplaint(String referenceComplaint) {
 		this.referenceComplaint = referenceComplaint;
 	}
-	public ComplaintStatusBean getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(ComplaintStatusBean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
-	public ComplaintStatusBean getSubStatus() {
+	public String getSubStatus() {
 		return subStatus;
 	}
-	public void setSubStatus(ComplaintStatusBean subStatus) {
+	public void setSubStatus(String subStatus) {
 		this.subStatus = subStatus;
 	}
-	public RemarkBean getRemark() {
+	public String getRemark() {
 		return remark;
 	}
-	public void setRemark(RemarkBean remark) {
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 	public String getAdditionalComments() {
@@ -93,11 +114,10 @@ public class ComplaintRegistrationBean {
 	public void setAdditionalComments(String additionalComments) {
 		this.additionalComments = additionalComments;
 	}
-	public UserBean getComplaintBy() {
+	public String getComplaintBy() {
 		return complaintBy;
 	}
-	public void setComplaintBy(UserBean complaintBy) {
+	public void setComplaintBy(String complaintBy) {
 		this.complaintBy = complaintBy;
 	}
-	
 }
