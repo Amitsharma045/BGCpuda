@@ -1,4 +1,4 @@
-package com.bitGallon.complaintMgmt.dbConfig;
+package com.bitGallon.complaintMgmt.config;
 
 import java.util.Properties;
 
