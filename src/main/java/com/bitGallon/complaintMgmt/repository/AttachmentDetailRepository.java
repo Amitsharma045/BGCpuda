@@ -54,8 +54,8 @@ public class AttachmentDetailRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AttachmentDetail> getAttachments(String complaintId) throws Exception {
-		return getSession().createQuery("FROM AttachmentDetail at WHERE at.complaintReferenceId.complaintId =:complaintId")
+	public List<AttachmentDetail> getAttachments(String complaintId) {
+		return getSession().createQuery("FROM AttachmentDetail at WHERE at.complaintReferenceId.referenceComplaint =:complaintId")
 				.setParameter("complaintId", complaintId).list();
 	}
 

@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfigurer extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-         registry.addResourceHandler("/drug/**").addResourceLocations("file:"+Constants.STATIC_IMAGE_LOC);
-         registry.addResourceHandler("/drugstopper/admin/uploadedContents/**").addResourceLocations("file:"+Constants.COMPLAINT_IMAGE_LOC);
+         registry.addResourceHandler("/cpuda/admin/uploadedContents/**").addResourceLocations("file:"+Constants.COMPLAINT_IMAGE_LOC);
     }
 } 

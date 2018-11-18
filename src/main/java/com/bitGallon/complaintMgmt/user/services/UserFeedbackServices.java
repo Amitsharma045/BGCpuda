@@ -98,7 +98,7 @@ public class UserFeedbackServices extends RestResource {
 		jsonResponse = new JsonResponse();
 
 		try {
-			ComplaintRegistration complaintRegistration = complaintManager.getComplaintByComplaintNumber(complaintNumber);
+			ComplaintRegistration complaintRegistration = complaintManager.getComplaintForUser(complaintNumber , getUserId());
 			if(complaintRegistration != null && 
 					complaintRegistration.getStatus().getStatus().equals(ConstantProperty.STATUS_RESOLVED))
 			{

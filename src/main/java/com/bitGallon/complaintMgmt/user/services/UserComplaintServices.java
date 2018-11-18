@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.User;
@@ -57,13 +57,20 @@ public class UserComplaintServices extends RestResource {
 	private JsonResponse jsonResponse;
 
 
-	@RequestMapping(value = "/v1.0/getComplaints/{userId}", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/v1.0/getAllComplaints/", produces = { "application/json" }, method = RequestMethod.GET)
 	@ResponseBody
 	public List<ComplaintRegistration> getAllComplaints(Pageable page,
 			@RequestParam(name= "startDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date startDate,
 		@RequestParam(name= "endDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date endDate,
 		@RequestParam(name="categoryId", required = false) Long categoryId) {
 		return manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId);
+	}
+	
+	@RequestMapping(value = "/v1.0/getComplaints/", produces = { "application/json" }, method = RequestMethod.GET)
+	@ResponseBody
+	public ComplaintRegistrationBean getComplaints(Pageable page,
+		@RequestParam(name="complaintId") String complaintId) {
+		return manager.getComplaintByComplaintNumber(complaintId, getUserId());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,34 +1,50 @@
 package com.bitGallon.complaintMgmt.bean;
 
+import java.util.List;
+
 public class ComplaintRegistrationBean {
 	private long id;
-	private String complaintId;
 	private String employeeName;
 	private String employeeMobileNumber;
+	private String designation;
 	private short complaintLevel;
 	private String issueName;
-	private String subCategoryName;
-	private String categoryName;
+	private String issueTitle;
 	private String areaName;
 	private double complaintLat;
 	private double complaintLng;
 	private String referenceComplaint;
 	private String status;
 	private String subStatus;
-	private String remark;
 	private String additionalComments;
 	private String complaintBy;
+	private List<String> attachmentsFiles;
+	
+	
+	public String getDesignation() {
+		return designation;
+	}
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+	public String getIssueTitle() {
+		return issueTitle;
+	}
+	public void setIssueTitle(String issueTitle) {
+		this.issueTitle = issueTitle;
+	}
+	
+	public List<String> getAttachmentsFiles() {
+		return attachmentsFiles;
+	}
+	public void setAttachmentsFiles(List<String> attachmentsFiles) {
+		this.attachmentsFiles = attachmentsFiles;
+	}
 	public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
-	}
-	public String getComplaintId() {
-		return complaintId;
-	}
-	public void setComplaintId(String complaintId) {
-		this.complaintId = complaintId;
 	}
 	public String getEmployeeName() {
 		return employeeName;
@@ -53,18 +69,6 @@ public class ComplaintRegistrationBean {
 	}
 	public void setIssueName(String issueName) {
 		this.issueName = issueName;
-	}
-	public String getSubCategoryName() {
-		return subCategoryName;
-	}
-	public void setSubCategoryName(String subCategoryName) {
-		this.subCategoryName = subCategoryName;
-	}
-	public String getCategoryName() {
-		return categoryName;
-	}
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
 	}
 	public String getAreaName() {
 		return areaName;
@@ -101,12 +105,6 @@ public class ComplaintRegistrationBean {
 	}
 	public void setSubStatus(String subStatus) {
 		this.subStatus = subStatus;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 	public String getAdditionalComments() {
 		return additionalComments;

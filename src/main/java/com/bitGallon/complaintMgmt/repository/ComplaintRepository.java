@@ -90,18 +90,12 @@ public class ComplaintRepository {
 		return UtilRepository.transferToMiniComplaintBean(criteria).list();
 	}
 
-	public ComplaintRegistration getComplaintForUser(String complanintId, long userId) {
+	@SuppressWarnings("unchecked")
+	public ComplaintRegistration getComplaintByComplaintNumber(String complaintNumber, long userId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
-		criteria.add(Restrictions.eq("complaintId", complanintId)).add(Restrictions.eq("user", userId));
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ComplaintRegistration getComplaintByComplaintNumber(String complaintNumber) {
-		List<ComplaintRegistration> complaintlist = getSession()
-				.createQuery("FROM ComplaintRegistration cr WHERE cr.complaintId =:p1")
-				.setParameter("p1", complaintNumber).list();
+		criteria.add(Restrictions.eq("referenceComplaint", complaintNumber)).add(Restrictions.eq("user.id", userId));
+		List<ComplaintRegistration> complaintlist = criteria.addOrder(org.hibernate.criterion.Order.desc("complaintLevel")).setFetchSize(1).list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);
 		}
