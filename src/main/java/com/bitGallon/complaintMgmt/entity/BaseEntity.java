@@ -3,18 +3,21 @@ package com.bitGallon.complaintMgmt.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * @author aksharma
  *
  */
 @MappedSuperclass
-public class BaseEntity implements Serializable {
+@EntityListeners(AuditingEntityListener.class)
+public class BaseEntity<U> implements Serializable {
 
 	/**
 	 * 
@@ -31,7 +34,7 @@ public class BaseEntity implements Serializable {
 
 	@Column(name = "ModifiedBy")
 	@LastModifiedBy
-	private String modifiedBy;
+	private U modifiedBy;
 
 	// 1 is Active, 0 inactive
 	@Column(name = "IsActive", columnDefinition="tinyint(10) default 1", nullable = false)
@@ -57,11 +60,11 @@ public class BaseEntity implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public U getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(U modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 

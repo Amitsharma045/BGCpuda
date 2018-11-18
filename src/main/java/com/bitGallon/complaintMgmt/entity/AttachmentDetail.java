@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BG_AttachmentDetail")
-public class AttachmentDetail extends BaseEntity implements Serializable {
+public class AttachmentDetail extends BaseEntity<String> implements Serializable {
 
 	/**
 	 * 

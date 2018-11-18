@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BG_LocationAreaMapping")
-public class LocationAreaMapping extends BaseEntity implements Serializable {
+public class LocationAreaMapping extends BaseEntity<String> implements Serializable {
 	/**
 	 * 
 	 */

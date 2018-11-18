@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BG_AspectRating")
-public class AspectRating extends BaseEntity implements Serializable {
+public class AspectRating extends BaseEntity<String> implements Serializable {
 
 	/**
 	 * 

@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 /*@Entity
 @Table(name = "BG_EscalationHierarchy")*/
-public class EscalationHierarchy extends BaseEntity implements Serializable {
+public class EscalationHierarchy extends BaseEntity<String> implements Serializable {
 	/**
 	 * 
 	 */

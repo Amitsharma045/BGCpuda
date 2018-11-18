@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BG_SubCategory")
-public class SubCategory extends BaseEntity implements Serializable {
+public class SubCategory extends BaseEntity<String> implements Serializable {
 	/**
 	 * 
 	 */

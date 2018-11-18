@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BG_Area")
-public class Area extends BaseEntity implements Serializable {
+public class Area extends BaseEntity<String> implements Serializable {
 	/**
 	 * 
 	 */
