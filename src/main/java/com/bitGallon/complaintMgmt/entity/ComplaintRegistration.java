@@ -34,7 +34,7 @@ public class ComplaintRegistration extends BaseEntity implements Serializable {
 //	@JoinColumn(name = "BG_ComplaintLevel", referencedColumnName = "id")
 	@Column(name ="issueTitle")
 	private String issueTitle;
-	@Column(name = "ComplaintLevel")
+	@Column(name = "ComplaintLevel", columnDefinition="tinyint(10) default 0")
 	private Short complaintLevel;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "IssueType", referencedColumnName = "id")
