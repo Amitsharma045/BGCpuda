@@ -59,18 +59,43 @@ public class UserComplaintServices extends RestResource {
 
 	@RequestMapping(value = "/v1.0/getAllComplaints/", produces = { "application/json" }, method = RequestMethod.GET)
 	@ResponseBody
-	public List<ComplaintRegistration> getAllComplaints(Pageable page,
+	public HashMap<String,Object> getAllComplaints(Pageable page,
 			@RequestParam(name= "startDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date startDate,
 		@RequestParam(name= "endDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date endDate,
-		@RequestParam(name="categoryId", required = false) Long categoryId) {
-		return manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId);
+		@RequestParam(name="categoryId", required = false) Long categoryId) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId);
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setComplaintList(complaintList);
+			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
 	}
 	
 	@RequestMapping(value = "/v1.0/getComplaints/", produces = { "application/json" }, method = RequestMethod.GET)
 	@ResponseBody
-	public ComplaintRegistrationBean getComplaints(Pageable page,
-		@RequestParam(name="complaintId") String complaintId) {
-		return manager.getComplaintByComplaintNumber(complaintId, getUserId());
+	public HashMap<String,Object> getComplaints(Pageable page,
+		@RequestParam(name="complaintId") String complaintId) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			ComplaintRegistrationBean complaintRegistrationBean = manager.getComplaintByComplaintNumber(complaintId, getUserId());
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
+			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
+		
 	}
 
 	@SuppressWarnings("unchecked")

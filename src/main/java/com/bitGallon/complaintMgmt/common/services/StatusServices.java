@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.common.services;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
-import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
+import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
+import com.bitGallon.complaintMgmt.property.ConstantProperty;
+import com.bitGallon.complaintMgmt.rest.RestResource;
 
 @Controller
 @RequestMapping(value = "/bitGallon/api/status")
-public class StatusServices {
+public class StatusServices  extends RestResource  {
+	private Class clazz = StatusServices.class;
+	
+	private JsonResponse jsonResponse;
+	
 	@Autowired
 	private StatusManager manager;
 
@@ -30,15 +37,38 @@ public class StatusServices {
 	@RequestMapping(value = "/v1.0/getStatus", produces={"application/json"},
 			method = RequestMethod.GET)
 	@ResponseBody
-	public ComplaintStatusBean getStatus(@RequestParam("id") long id) {
-		return manager.getStatus(id);
+	public HashMap<String,Object> getStatus(@RequestParam("id") long id) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			ComplaintStatusBean complaintStatusBean = manager.getStatus(id);
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_PROCESSED);
+			jsonResponse.setComplaintStatusBean(complaintStatusBean);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
 	}
 	
 	@RequestMapping(value = "/v1.0/getStatues", produces={"application/json"},
 			method = RequestMethod.GET)
 	@ResponseBody
-	public List<ComplaintStatusBean> getAllStatues(@RequestParam("parentId") long parentId) {
-		return manager.getAllStatus(parentId);
+	public HashMap<String,Object> getAllStatues(@RequestParam("parentId") long parentId) throws Exception {
+
+		jsonResponse = new JsonResponse();
+		try {
+			List<ComplaintStatusBean> complaintStatusBeanList = manager.getAllStatus(parentId);
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_PROCESSED);
+			jsonResponse.setComplaintStatusBeanList(complaintStatusBeanList);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
 	}
 	
 	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)

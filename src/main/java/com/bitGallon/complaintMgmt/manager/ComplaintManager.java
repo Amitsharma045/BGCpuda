@@ -3,29 +3,25 @@ package com.bitGallon.complaintMgmt.manager;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
-import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.Role;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.AttachmentDetailRepository;
-import com.bitGallon.complaintMgmt.repository.CategoryRepository;
 import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
-import com.bitGallon.complaintMgmt.repository.IssueTypeRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
 
 @Repository

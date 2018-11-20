@@ -31,7 +31,7 @@ import net.sf.json.JSONObject;
 
 
 @Controller
-@RequestMapping(value = "/bitGallon/feedback")
+@RequestMapping(value = "/bitGallon/api/feedback")
 public class UserFeedbackServices extends RestResource {
 	
 	private Class clazz = UserFeedbackServices.class;
@@ -50,39 +50,6 @@ public class UserFeedbackServices extends RestResource {
 	private  FeedbackManager feedbackManager;
 	
 	private JsonResponse jsonResponse;
-
-	
-	@RequestMapping(value = "/v1.0/checkFeedback", produces = { "application/json" }, method = RequestMethod.POST)
-	@ResponseBody
-	public void checkSubmitFeedBack(HttpServletRequest request) throws Exception {
-		
-		String myJsonString = request.getParameter("data");
-
-		JSONObject json = JSONObject.fromObject(myJsonString.toString());
-		 String address = json.getString("Project");
-		 System.out.println(address);
-		 HashMap<String, Object> aspectRating = new Gson().fromJson(json.toString(), HashMap.class);
-		
-		
-		Iterator<Map.Entry<String, Object>> itr = aspectRating.entrySet().iterator();
-		while(itr.hasNext()) {
-			Map.Entry<String, Object> entry = itr.next(); 
-			System.out.println("Key :: "+entry.getKey()+ "Value :: "+entry.getValue().toString());
-		}
-	}
-	
-	@RequestMapping(value = "/v1.0/check", produces = { "application/json" }, method = RequestMethod.POST)
-	@ResponseBody
-	public HashMap<String, Object> check() throws Exception {
-		HashMap<String, Object> hs = new HashMap<>();
-		hs.put("Name", "Ravinder");
-		hs.put("Employee", "Model N");
-		hs.put("Project", "C-Puda");
-		hs.put("Client", "PUDA");
-
-		return hs;
-	}
-	
 	
 	@RequestMapping(value = "/v1.0/submitFeedback", produces = { "application/json" }, method = RequestMethod.POST)
 	@ResponseBody
