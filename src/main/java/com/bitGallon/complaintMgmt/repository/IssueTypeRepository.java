@@ -30,10 +30,10 @@ public class IssueTypeRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	public IssueType getIssueType(String issueName) throws Exception {
+	public IssueType getIssueType(String issueId) throws Exception {
 		List<IssueType> issueTypelist = getSession()
-				.createQuery("FROM IssueType it WHERE it.name =:p1")
-				.setParameter("p1", issueName).list();
+				.createQuery("FROM IssueType it WHERE it.id =:p1")
+				.setParameter("p1", Long.valueOf(issueId)).list();
 		if(issueTypelist.size() != 0) {
 			return issueTypelist.get(0);
 		}
