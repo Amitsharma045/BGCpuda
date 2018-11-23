@@ -24,6 +24,18 @@ public class EmployeeRepository {
 		return sessionFactory.getCurrentSession();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Employee getEmployee(String mobileNumber) {
+		List<Employee> emplist = getSession()
+				.createQuery("FROM Employee emp WHERE emp.registeredMobileNo =:p1")
+				.setParameter("p1", mobileNumber).list();
+		if(emplist.size() != 0) {
+			return emplist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Employee> getEmployee(Role role) {
 		List<Employee> emplist = getSession()
 				.createQuery("FROM Employee emp WHERE emp.role.id =:p1")

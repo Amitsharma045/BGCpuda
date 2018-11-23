@@ -62,6 +62,8 @@ public class ConstantProperty {
 
 	public static final String ALREADY_REGISTED_USER  = "Already Registered Mobile Number";
 	public static final String NOT_RESISTERED_USER  = "Not Exsit User";
+	public static final String NOT_RESISTERED_EMPLOYEE  = "Not Resgisterd Employee";
+
 	public static final String EMAIL_NOT_PRESENT_IN_ACCESS_CODE  = "Email Not Present In AccessCode";
 	
 	public static final String LOGIN  = "login";
@@ -134,6 +136,9 @@ public class ConstantProperty {
 	public static final String COMPLAINT_LATITUDE = "complaintLatitude";
 	public static final String COMPLAINT_LOGITUDE = "complaintLogitude";
 	public static final String LANDMARK = "landmark";
+
+	public static final String EMPLOYEE  = "EMPLOYEE";
+	public static final String USER  = "USER";
 
 
 

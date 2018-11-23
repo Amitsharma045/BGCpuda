@@ -35,6 +35,8 @@ public class OtpTransectionDetail  implements Serializable {
 	private String otp;
 	@Column(name = "OTD_ExpirytimeStamp")
 	private Date expirytimeStamp;
+	@Column(name = "OTD_UserType")
+	private String userType;
 
 	
 	public long getId() {
@@ -67,6 +69,12 @@ public class OtpTransectionDetail  implements Serializable {
 	}
 	public void setExpirytimeStamp(Date expirytimeStamp) {
 		this.expirytimeStamp = expirytimeStamp;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 

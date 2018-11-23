@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.OtpTransectionDetail;
 import com.bitGallon.complaintMgmt.entity.User;
 import com.bitGallon.complaintMgmt.facebook.FBConnection;
 import com.bitGallon.complaintMgmt.facebook.FBGraph;
 import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.manager.AuthenticationManager;
+import com.bitGallon.complaintMgmt.manager.EmployeeManager;
 import com.bitGallon.complaintMgmt.manager.JwtTokenManager;
 import com.bitGallon.complaintMgmt.manager.OtpDetailManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
@@ -57,11 +59,14 @@ public class AppAuthenticationEndPoint extends RestResource {
 	@Autowired
 	private  JwtTokenManager jwtTokenManager;
 	
+	@Autowired
+	private  EmployeeManager employeeManager;
+	
 	private JsonResponse jsonResponse;
 	
 	HashMap<String, String> smsStatus = null;
 
-	@RequestMapping(value = "/v1.0/login", produces={"application/json"},
+	@RequestMapping(value = "/user/v1.0/login", produces={"application/json"},
 					method = RequestMethod.POST)
 	@ResponseBody
 	public HashMap<String,Object> authenticateUser(HttpServletRequest request) throws Exception {
@@ -70,7 +75,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 		String otp = CommonUtil.getRandomOtp();
 		try {
 			Long.valueOf(phoneNumber);
-			OtpTransectionDetail otpTransectionDetails = getOtpDetail(phoneNumber, otp, null);
+			OtpTransectionDetail otpTransectionDetails = getOtpDetail(phoneNumber, otp, null, ConstantProperty.USER);
 			Long id = otpDetailManager.saveOtpDetails(otpTransectionDetails);
 			if(id != null) {
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
@@ -100,12 +105,60 @@ public class AppAuthenticationEndPoint extends RestResource {
 		return sendResponse(jsonResponse);
 	}
 
+
+	@RequestMapping(value = "/employee/v1.0/login", produces={"application/json"},
+			method = RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String,Object> authenticateEmployee(HttpServletRequest request) throws Exception {
+		String mobileNumber = request.getParameter(ConstantProperty.MOBILE_NUMBER);
+		jsonResponse = new JsonResponse();
+		String otp = CommonUtil.getRandomOtp();
+		try {
+			Long.valueOf(mobileNumber);
+			Employee emp = employeeManager.getEmployee(mobileNumber);
+			if(emp == null) {
+				jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
+				jsonResponse.setMessage(ConstantProperty.NOT_RESISTERED_EMPLOYEE);
+				return sendResponse(jsonResponse);
+			}
+			OtpTransectionDetail otpTransectionDetails = getOtpDetail(mobileNumber, otp, null, ConstantProperty.EMPLOYEE);
+			Long id = otpDetailManager.saveOtpDetails(otpTransectionDetails);
+			if(id != null) {
+				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+				jsonResponse.setMessage(ConstantProperty.OTP_SENT);
+				String messageBody = "Silent Reaction OTP Verification Code: "+otp+". Do not share it or"
+						+ " use it elsewhere.";
+				smsStatus = sendSMS.sendSms(mobileNumber, messageBody);
+				if(!smsStatus.get(ConstantProperty.STATUS_CODE).equals(ConstantProperty.OK_STATUS)) {
+					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+					jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+					log(clazz, "OTP NOT SENT", ConstantProperty.LOG_ERROR);
+
+				}
+			}
+			else {
+				jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+				jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+				log(clazz, "NOT ABLE TO GENERATE OTP", ConstantProperty.LOG_TRACE);
+
+			}
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+			return sendResponse(jsonResponse);
+		}
+		return sendResponse(jsonResponse);
+	}
+
+	
 	@RequestMapping(value = "/v1.0/validate", produces = { "application/json" },
 					method = RequestMethod.POST)
 	@ResponseBody
 	public HashMap<String, Object> validateOtp(HttpServletRequest request)
 			throws Exception {
 		User user = null;
+		Employee emp = null;
 		String mobileNumber = request.getParameter(ConstantProperty.MOBILE_NUMBER);
 		String otp = request.getParameter(ConstantProperty.OTP);
 		jsonResponse = new JsonResponse();
@@ -113,32 +166,57 @@ public class AppAuthenticationEndPoint extends RestResource {
 			OtpTransectionDetail otpTransectionDetail = otpDetailManager.getOtpDetails(otp, mobileNumber);
 			if (otpTransectionDetail != null) {
 				if (ValidateOtpExpiryTime(otpTransectionDetail)) {
-					user = authenticationManager.getUserByMobileNumber(mobileNumber);
-					if (user == null) {
-						user = getUserDetail(mobileNumber, otpTransectionDetail.getEmailId());
-						Long id = authenticationManager.saveUser(user);
-						user.setId(id);
-					} else {
-						if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
-						user.setLastLoginDate(CommonUtil.getCurrentDate());
-						user.setLoginCount(user.getLoginCount()+1);
-						authenticationManager.saveUpdateUser(user);
-					}
-					otpDetailManager.delete(otpTransectionDetail);
+					if(otpTransectionDetail.getUserType().equals(ConstantProperty.USER)) {
+						user = authenticationManager.getUserByMobileNumber(mobileNumber);
+						if (user == null) {
+							user = getUserDetail(mobileNumber, otpTransectionDetail.getEmailId());
+							Long id = authenticationManager.saveUser(user);
+							user.setId(id);
+						} else {
+							if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
+							user.setLastLoginDate(CommonUtil.getCurrentDate());
+							user.setLoginCount(user.getLoginCount()+1);
+							authenticationManager.saveUpdateUser(user);
+						}
+						otpDetailManager.delete(otpTransectionDetail);
 
-					String accessKey = JwtUtil.getRandomSecretKey();
-					String accessToken = JwtTokenFactory.createAccessJwtToken(String.valueOf(user.getId()), accessKey);
+						String accessKey = JwtUtil.getRandomSecretKey();
+						String accessToken = JwtTokenFactory.createAccessJwtToken(String.valueOf(user.getId()), accessKey);
 
-					Long id = jwtTokenManager.createAccessToken(user, accessToken, accessKey);
-					if (id != null) {
-						jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
-						jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_AUTHENTICATION);
-						jsonResponse.setAccessToken(accessToken);
+						Long id = jwtTokenManager.createAccessToken(user, accessToken, accessKey);
+						if (id != null) {
+							jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+							jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_AUTHENTICATION);
+							jsonResponse.setAccessToken(accessToken);
+						} else {
+							jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+							jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+							log(clazz, "NOT ABLE TO GENERATE ACCESS_TOKEN", ConstantProperty.LOG_DEBUG);
+							return sendResponse(jsonResponse);
+						}
 					} else {
-						jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
-						jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
-						log(clazz, "NOT ABLE TO GENERATE ACCESS_TOKEN", ConstantProperty.LOG_DEBUG);
-						return sendResponse(jsonResponse);
+						emp  = employeeManager.getEmployee(mobileNumber);
+						if (emp == null) {
+							jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
+							jsonResponse.setMessage(ConstantProperty.NOT_RESISTERED_EMPLOYEE);
+							return sendResponse(jsonResponse);
+						}
+						otpDetailManager.delete(otpTransectionDetail);
+
+						String accessKey = JwtUtil.getRandomSecretKey();
+						String accessToken = JwtTokenFactory.createAccessJwtToken(String.valueOf(emp.getId()), accessKey);
+
+						Long id = jwtTokenManager.createAccessTokenEmployee(emp, accessToken, accessKey);
+						if (id != null) {
+							jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+							jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_AUTHENTICATION);
+							jsonResponse.setAccessToken(accessToken);
+						} else {
+							jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+							jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+							log(clazz, "NOT ABLE TO GENERATE ACCESS_TOKEN", ConstantProperty.LOG_DEBUG);
+							return sendResponse(jsonResponse);
+						}
 					}
 				} else {
 					jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
@@ -317,7 +395,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 				return sendResponse(jsonResponse);
 			}
 			String otp = CommonUtil.getRandomOtp();
-			OtpTransectionDetail otpTransectionDetails = getOtpDetail(mobileNumber, otp, emailId);
+			OtpTransectionDetail otpTransectionDetails = getOtpDetail(mobileNumber, otp, emailId, ConstantProperty.USER);
 			Long id = otpDetailManager.saveOtpDetails(otpTransectionDetails);
 			if(id != null) {
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
@@ -354,11 +432,12 @@ public class AppAuthenticationEndPoint extends RestResource {
 		return otpExpiryDate.after(currentDate);
 	}
 	
-	public OtpTransectionDetail getOtpDetail(String mobileNumber, String otp, String emailId) throws Exception {
+	public OtpTransectionDetail getOtpDetail(String mobileNumber, String otp, String emailId, String userType) throws Exception {
 		OtpTransectionDetail otpTransectionDetails = new OtpTransectionDetail();
 		otpTransectionDetails.setMobileNumber(mobileNumber);
 		otpTransectionDetails.setEmailId(emailId);
 		otpTransectionDetails.setOtp(otp);
+		otpTransectionDetails.setUserType(userType);
 		otpTransectionDetails.setExpirytimeStamp(CommonUtil.getExpiryDate());
 		return otpTransectionDetails;
 	}

@@ -34,6 +34,10 @@ public class JwtToken  implements Serializable{
 	@ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "JWT_UserId", referencedColumnName = "id")
 	private User user;
+	@ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "JWT_EmpId", referencedColumnName = "id")
+	private Employee employee;
+	
 	
 	public long getId() {
 		return id;
@@ -59,6 +63,12 @@ public class JwtToken  implements Serializable{
 	}
 	public void setAccessKey(String accessKey) {
 		this.accessKey = accessKey;
+	}
+	public Employee getEmployee() {
+		return employee;
+	}
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 }

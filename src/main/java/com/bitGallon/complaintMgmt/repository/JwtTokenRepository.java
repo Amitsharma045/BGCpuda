@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.JwtToken;
 import com.bitGallon.complaintMgmt.entity.User;
 
@@ -29,7 +30,8 @@ public class JwtTokenRepository {
 		return sessionFactory.getCurrentSession();
 	}
 	
-	public Long createAccessToken(User user, String accessToken, String accessKey) throws Exception 
+	public Long createAccessToken(User user, String accessToken, String accessKey) 
+	  throws Exception 
 	{
 		JwtToken jwt = getJwtTokenByUser(user);
 		if(jwt == null) {
@@ -37,6 +39,24 @@ public class JwtTokenRepository {
 			jwt.setAccessKey(accessKey);
 			jwt.setAccessToken(accessToken);
 			jwt.setUser(user);
+			Long id = (Long) getSession().save(jwt);
+			return id;
+		} 
+		jwt.setAccessKey(accessKey);
+		jwt.setAccessToken(accessToken);
+		getSession().saveOrUpdate(jwt);
+		return jwt.getId();
+	}
+	
+	public Long createAccessTokenEmployee(Employee employee, String accessToken, String accessKey)
+	  throws Exception 
+	{
+		JwtToken jwt = getJwtTokenByEmployee(employee);
+		if(jwt == null) {
+			jwt = new JwtToken();
+			jwt.setAccessKey(accessKey);
+			jwt.setAccessToken(accessToken);
+			jwt.setEmployee(employee);
 			Long id = (Long) getSession().save(jwt);
 			return id;
 		} 
@@ -83,6 +103,17 @@ public class JwtTokenRepository {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public JwtToken getJwtTokenByEmployee(Employee employee) {
+		List<JwtToken> jwtTokenList = getSession()
+									 .createQuery("FROM JwtToken jt WHERE jt.employee.id=:p1")
+									 .setParameter("p1", employee.getId()).list();
+
+		if(jwtTokenList.size() != 0) {
+			return jwtTokenList.get(0);
+		}
+		return null;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Deprecated	
