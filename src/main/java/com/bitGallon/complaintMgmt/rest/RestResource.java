@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.rest;
 
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
+import com.bitGallon.complaintMgmt.util.CommonUtil;
 
 
 /**
@@ -24,10 +26,12 @@ public abstract class RestResource {
 	
 	protected LinkedHashMap<String, Object> sendResponse(JsonResponse jsonResponse) throws Exception {
 		LinkedHashMap<String, Object> json = new LinkedHashMap<String, Object>();
-		json.put(ConstantProperty.STATUS_CODE, jsonResponse.getStatusCode());
-		json.put(ConstantProperty.MESSAGE, jsonResponse.getMessage());
-		if(jsonResponse.getAccessToken() != null)
-			json.put(ConstantProperty.ACCESS_TOKEN, jsonResponse.getAccessToken());
+		Method[] methods = JsonResponse.class.getDeclaredMethods();
+		for(Method method : methods) {
+			if(CommonUtil.isGetter(method) && null != method.invoke(jsonResponse)) {
+				json.put(method.getName().substring(3, method.getName().length()), method.invoke(jsonResponse));
+			}
+		} 
 		return json;
 	}
 	

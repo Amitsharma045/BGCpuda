@@ -18,6 +18,7 @@ public class ConstantProperty {
 	public static final String EMAIL_ID  = "emailId";
 	public static final String NAME  = "name";
 	public static final String OTP  = "otp";
+	public static final String REGISTERED_COMPLAINT  = "registeredComplaint";
 	public static final String COMPLAINT_NUMBER  = "complaintNumber";
 	public static final String SERVICE_RATING  = "serviceRating";
 	public static final String SERVICE_COMMENT  = "serviceComment";

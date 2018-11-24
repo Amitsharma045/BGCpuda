@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.manager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,10 +84,10 @@ public class ComplaintManager {
 	
 	public ComplaintRegistrationBean getComplaintByComplaintNumber(String complaintNumber, Long userId) {
 		ComplaintRegistration registration = repository.getComplaintByComplaintNumber(complaintNumber, userId);
-		List<AttachmentDetail> attachmentDetails = null;
+		List<AttachmentDetail> attachmentDetails = new ArrayList<>();
 		ComplaintRegistrationBean registrationBean = null;
 		if(registration != null) {
-			attachmentDetails = attachmentDetailRepository.getAttachments(registration.getReferenceComplaint());
+			attachmentDetails = attachmentDetailRepository.getAttachments(registration.getId());
 			registrationBean = createComplaintRepoBean(registration , attachmentDetails);
 		}
 		return registrationBean;
@@ -94,6 +95,7 @@ public class ComplaintManager {
 	
 	private ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {
 		ComplaintRegistrationBean bean = new ComplaintRegistrationBean();
+		bean.setId(registration.getId());
 		bean.setReferenceComplaint(registration.getReferenceComplaint());
 		bean.setAdditionalComments(registration.getAdditionalComments());
 		bean.setAreaName(registration.getArea().getName());

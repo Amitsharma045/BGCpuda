@@ -27,7 +27,7 @@ public class AttachmentDetailManager {
 		return repository.saveAttachments(savedComplaint,attachmentDetails,uploadedFiles);
 	}
 	
-	public List<AttachmentDetail> getAttachments(String complaintId) throws Exception {
+	public List<AttachmentDetail> getAttachments(Long complaintId) throws Exception {
 		return repository.getAttachments(complaintId);
 	}
 		

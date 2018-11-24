@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,9 +55,10 @@ public class AttachmentDetailRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AttachmentDetail> getAttachments(String complaintId) {
-		return getSession().createQuery("FROM AttachmentDetail at WHERE at.complaintReferenceId.referenceComplaint =:complaintId")
-				.setParameter("complaintId", complaintId).list();
+	public List<AttachmentDetail> getAttachments(Long complaintId) {
+		return getSession().createCriteria(AttachmentDetail.class).add(Restrictions.eq("complaintReferenceId.id", complaintId)).list();
+		/*return getSession().createQuery("FROM AttachmentDetail WHERE complaintReferenceId.id =:id")
+				.setParameter("id", complaintId).list();*/
 	}
 
 }

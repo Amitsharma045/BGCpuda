@@ -81,6 +81,7 @@ public class ComplaintRepository {
 		criteria.add(UtilRepository.isActiveRestricition());
 		UtilRepository.addPageableAndSorting(criteria, page);
 		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".id", userId));
+		criteria.add(Restrictions.ne(UtilRepository.STATUS_ALIAS + ".id", 4l));
 		if (startDate != null && endDate != null) {
 			UtilRepository.addDateFilterCriteria(criteria, "createdDate", startDate, endDate);
 		}
@@ -95,7 +96,7 @@ public class ComplaintRepository {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
 		criteria.add(Restrictions.eq("referenceComplaint", complaintNumber)).add(Restrictions.eq("user.id", userId));
-		List<ComplaintRegistration> complaintlist = criteria.addOrder(org.hibernate.criterion.Order.desc("complaintLevel")).setFetchSize(1).list();
+		List<ComplaintRegistration> complaintlist = criteria.setFetchSize(1).list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);
 		}

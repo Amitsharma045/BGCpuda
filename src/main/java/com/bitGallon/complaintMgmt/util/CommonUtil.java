@@ -1,5 +1,7 @@
 package com.bitGallon.complaintMgmt.util;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,5 +82,18 @@ public class CommonUtil {
 		  }
 
 		  return false;
+		}
+	
+	public static boolean isGetter(Method method) {
+		   if (Modifier.isPublic(method.getModifiers()) &&
+		      method.getParameterTypes().length == 0) {
+		         if (method.getName().matches("^get[A-Z].*") &&
+		            !method.getReturnType().equals(void.class))
+		               return true;
+		         if (method.getName().matches("^is[A-Z].*") &&
+		            method.getReturnType().equals(boolean.class))
+		               return true;
+		   }
+		   return false;
 		}
 }
