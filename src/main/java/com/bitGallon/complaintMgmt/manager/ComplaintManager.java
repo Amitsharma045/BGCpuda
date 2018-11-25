@@ -63,6 +63,7 @@ public class ComplaintManager {
 		return repository.getComplaintByComplaintNumber(complanintId, userId);
 	}
 	
+	
 	/*public ComplaintRegistration getComplaintForEmployee(String complanintId, long empId) {
 		return repository.getComplaintForUser(complanintId, empId);
 	}*/
@@ -74,6 +75,12 @@ public class ComplaintManager {
 		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId);
 	}
 	
+	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate, Date endDate, Long subCategoryId){
+		if(startDate == null && endDate !=null) return null;
+		if(endDate == null) endDate = new Date();
+		
+		return repository.getAllComplaintsForEmployee(page, employeeId, startDate, endDate, subCategoryId);
+	}
 	/*public List<ComplaintRegistration> getAllComplaintsForEmp(Pageable page, long empId){
 		return repository.getAllComplaints(page, empId);
 	}*/
@@ -93,6 +100,16 @@ public class ComplaintManager {
 		return registrationBean;
 	}
 	
+	public ComplaintRegistrationBean getComplaintByComplaintNumberForEmployee(String complaintNumber, Long employeeId) {
+		ComplaintRegistration registration = repository.getComplaintByComplaintNumberForEmployee(complaintNumber, employeeId);
+		List<AttachmentDetail> attachmentDetails = null;
+		ComplaintRegistrationBean registrationBean = null;
+		if(registration != null) {
+			attachmentDetails = attachmentDetailRepository.getAttachments(registration.getId());
+			registrationBean = createComplaintRepoBean(registration , attachmentDetails);
+		}
+		return registrationBean;
+	}
 	private ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {
 		ComplaintRegistrationBean bean = new ComplaintRegistrationBean();
 		bean.setId(registration.getId());

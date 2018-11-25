@@ -160,6 +160,23 @@ public class UtilRepository {
 		return criteria;
 	}
 	
+	public static Criteria addSorting(Criteria criteria, Pageable page) {
+		//setting page configurations
+		if(page.getSort()!=null) {
+			Order order = page.getSort().iterator().next();
+			if(!order.isAscending()) {
+				criteria.addOrder(org.hibernate.criterion.Order.desc(order.getProperty()));
+			} else {
+				criteria.addOrder(org.hibernate.criterion.Order.asc(order.getProperty()));
+			}
+		}
+		else {
+			// set order by created date desc
+			criteria.addOrder(org.hibernate.criterion.Order.desc("createdDate"));
+		}
+		return criteria;
+	}
+	
 	public static Criteria addDateFilterCriteria(Criteria criteria, String propertyName, Date startDate, Date endDate) {
 		return criteria.add(Restrictions.between( propertyName , startDate, endDate));
 	}

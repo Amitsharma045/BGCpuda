@@ -90,6 +90,24 @@ public class ComplaintRepository {
 		}
 		return UtilRepository.transferToMiniComplaintBean(criteria).list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate,
+			Date endDate, Long subCategoryId) {
+		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
+		criteria.add(UtilRepository.isActiveRestricition());
+		UtilRepository.addSorting(criteria, page);
+		criteria.add(Restrictions.eq(UtilRepository.EMPLOYEE_ALIAS+ ".id", employeeId));
+		criteria.add(Restrictions.lt("id", page.getPageNumber()));
+		if (startDate != null && endDate != null) {
+			UtilRepository.addDateFilterCriteria(criteria, "createdDate", startDate, endDate);
+		}
+		if(subCategoryId!=null && subCategoryId!=0) {
+			criteria.add(Restrictions.eq(UtilRepository.SUB_CATEGORY_ALIAS+".id", subCategoryId));
+		}
+		return UtilRepository.transferToMiniComplaintBean(criteria).list();
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public ComplaintRegistration getComplaintByComplaintNumber(String complaintNumber, long userId) {
@@ -97,6 +115,18 @@ public class ComplaintRepository {
 		criteria.add(UtilRepository.isActiveRestricition());
 		criteria.add(Restrictions.eq("referenceComplaint", complaintNumber)).add(Restrictions.eq("user.id", userId));
 		List<ComplaintRegistration> complaintlist = criteria.setFetchSize(1).list();
+		if(complaintlist.size() != 0) {
+			return complaintlist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ComplaintRegistration getComplaintByComplaintNumberForEmployee(String complaintNumber, long employeeId) {
+		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
+		criteria.add(UtilRepository.isActiveRestricition());
+		criteria.add(Restrictions.eq("referenceComplaint", complaintNumber)).add(Restrictions.eq("employee.id", employeeId));
+		List<ComplaintRegistration> complaintlist = criteria.addOrder(org.hibernate.criterion.Order.desc("complaintLevel")).setFetchSize(1).list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);
 		}
