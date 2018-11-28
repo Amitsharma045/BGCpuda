@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,6 +28,17 @@ public class IssueType extends BaseEntity<String> implements Serializable {
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "BG_SubCategotyId", referencedColumnName = "id")
 	private SubCategory subCategory;
+	@OneToOne
+	@JoinColumn(name = "BG_Starting_Emp_Role", referencedColumnName = "id")
+	private Role role;
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 	public long getId() {
 		return id;

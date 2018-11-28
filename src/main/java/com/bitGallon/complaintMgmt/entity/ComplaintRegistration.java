@@ -1,6 +1,7 @@
 package com.bitGallon.complaintMgmt.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,6 +40,8 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "IssueType", referencedColumnName = "id")
 	private IssueType issueType;
+	@Column(name ="EscalatedTime")
+	private Date escalatedTime;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "Area_id", referencedColumnName = "id")
 	private Area area;
@@ -160,5 +163,13 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	public void setLandMark(String landMark) {
 		this.landMark = landMark;
 	}
-	
+	public Date getEscalatedTime() {
+		return escalatedTime;
+	}
+	public void setEscalatedTime(Date escalatedTime) {
+		this.escalatedTime = escalatedTime;
+	}
+	public void setComplaintLng(Double complaintLng) {
+		this.complaintLng = complaintLng;
+	}
 }
