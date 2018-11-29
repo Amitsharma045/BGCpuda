@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang.time.DateUtils;
+
 import com.google.common.net.MediaType;
 
 /**
@@ -96,4 +98,9 @@ public class CommonUtil {
 		   }
 		   return false;
 		}
+	
+	public static Date getEscaltedTime(short hour) {
+		Date currentDate = new Date();
+		return DateUtils.addHours(currentDate, 3);
+	}
 }

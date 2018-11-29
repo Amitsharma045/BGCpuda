@@ -25,9 +25,6 @@ public class Role extends BaseEntity<String> implements Serializable {
 	@Column(name = "RoleName", nullable = false)
 	private String roleName;
 	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "BG_AreaId", referencedColumnName = "id")
-	private Area area;
-	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "BG_CategoryId", referencedColumnName = "id")
 	private Category category;
 	@Column(name = "RoleHierarchy", nullable = false)
@@ -44,12 +41,6 @@ public class Role extends BaseEntity<String> implements Serializable {
 	}
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-	public Area getArea() {
-		return area;
-	}
-	public void setArea(Area area) {
-		this.area = area;
 	}
 	public Category getCategory() {
 		return category;

@@ -23,16 +23,4 @@ public class RoleRepository {
 	public Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
-	
-	@SuppressWarnings("unchecked")
-	public Role getRole(Area area, Category categry) {
-		List<Role> rolelist = getSession()
-				.createQuery("FROM Role rl WHERE rl.area.id =:p1 and rl.category.id =:p2")
-				.setParameter("p1", area.getId())
-				.setParameter("p2", categry.getId()).list();
-		if(rolelist.size() != 0) {
-			return rolelist.get(0);
-		}
-		return null;
-	}
 }

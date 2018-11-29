@@ -131,6 +131,7 @@ public class UserComplaintServices extends RestResource {
 			complaintRegistration.setComplaintLng(Double.valueOf(complaintLng));
 			complaintRegistration.setLandMark(landmark);
 			complaintRegistration.setIsActive((short)1);
+			complaintRegistration.setComplaintLevel((short)0);
 			complaintRegistration.setStatus(statusManager.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
 			complaintRegistration.setSubStatus(statusManager.getStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
 			

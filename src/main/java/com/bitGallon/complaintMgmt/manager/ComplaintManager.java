@@ -18,12 +18,15 @@ import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
+import com.bitGallon.complaintMgmt.entity.EscalationHierarchy;
 import com.bitGallon.complaintMgmt.entity.Role;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.AttachmentDetailRepository;
 import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
+import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
+import com.bitGallon.complaintMgmt.util.CommonUtil;
 
 @Repository
 @Transactional
@@ -46,13 +49,24 @@ public class ComplaintManager {
 	@Autowired
 	private AttachmentDetailRepository attachmentDetailRepository;
 	
+	@Autowired
+	private EscalationHierarchyRepository escalationHierarchyRepository;
+	
+	
 
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
-		Role role = roleRepository.getRole(complaintRegistration.getArea(), complaintRegistration.getIssueType().getSubCategory().getCategory());
-		List<Employee> empList = empRepository.getEmployee(role);
-		HashMap<Employee, Integer> empCountHM = complaintRepository.getAssignedEmployee(empList);
-		Employee assignedEmployee = findAssignedEmployee(empCountHM);
-		complaintRegistration.setEmployee(assignedEmployee);
+		List<Employee> empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
+		if(empList != null) {
+			HashMap<Employee, Integer> empCountHM = complaintRepository.getAssignedEmployee(empList);
+			Employee assignedEmployee = findAssignedEmployee(empCountHM);
+			complaintRegistration.setEmployee(assignedEmployee);
+			EscalationHierarchy escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(complaintRegistration.getIssueType(), (short)0);
+			complaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
+		} else {
+			complaintRegistration.setEmployee(null);
+			complaintRegistration.setEscalatedTime(null);
+
+		}
 		String comp = getComplaintNumber();
 		complaintRegistration.setComplaintId(comp+DELIM+complaintRegistration.getComplaintLevel());
 		complaintRegistration.setReferenceComplaint(comp);
