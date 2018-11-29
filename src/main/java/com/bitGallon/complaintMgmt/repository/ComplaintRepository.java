@@ -33,7 +33,7 @@ public class ComplaintRepository {
 	public HashMap<Employee, Integer> getAssignedEmployee(List<Employee> empList) {
 		HashMap<Employee, Integer> hs = new HashMap<>();
 		for(Employee emp : empList) {
-			List<Employee> count = getSession()
+			List<ComplaintRegistration> count = getSession()
 					.createQuery("FROM ComplaintRegistration cr WHERE cr.employee.id =:p1 and cr.isActive = 1 and cr.status.status =:p2")
 					.setParameter("p1", emp.getId())
 					.setParameter("p2", ConstantProperty.STATUS_IN_PROGRESS).list();
@@ -45,6 +45,10 @@ public class ComplaintRepository {
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
 		complaintRegistration.setId((Long) getSession().save(complaintRegistration));
 		return complaintRegistration;
+	}
+	
+	public void saveOrUpdateComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
+		getSession().saveOrUpdate(complaintRegistration);
 	}
 
 	/*@SuppressWarnings("unchecked")
@@ -129,6 +133,17 @@ public class ComplaintRepository {
 		List<ComplaintRegistration> complaintlist = criteria.setFetchSize(1).list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ComplaintRegistration> getAllUnAssiginedComplaint() {
+		List<ComplaintRegistration> complaintlist = getSession()
+				.createQuery("FROM ComplaintRegistration cr WHERE cr.employee.id is null and cr.escalatedTime is null")
+				.list();
+		if(complaintlist.size() != 0) {
+			return complaintlist;
 		}
 		return null;
 	}

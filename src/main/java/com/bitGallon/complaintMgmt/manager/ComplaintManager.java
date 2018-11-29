@@ -26,6 +26,7 @@ import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
+import com.bitGallon.complaintMgmt.schedular.SchedularTask;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
 
 @Repository
@@ -58,14 +59,14 @@ public class ComplaintManager {
 		List<Employee> empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
 		if(empList != null) {
 			HashMap<Employee, Integer> empCountHM = complaintRepository.getAssignedEmployee(empList);
-			Employee assignedEmployee = findAssignedEmployee(empCountHM);
+			Employee assignedEmployee = CommonUtil.findAssignedEmployee(empCountHM);
 			complaintRegistration.setEmployee(assignedEmployee);
 			EscalationHierarchy escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(complaintRegistration.getIssueType(), (short)0);
 			complaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
 		} else {
 			complaintRegistration.setEmployee(null);
 			complaintRegistration.setEscalatedTime(null);
-
+			SchedularTask.setAssignEmployeeTask(true);
 		}
 		String comp = getComplaintNumber();
 		complaintRegistration.setComplaintId(comp+DELIM+complaintRegistration.getComplaintLevel());
@@ -124,6 +125,11 @@ public class ComplaintManager {
 		}
 		return registrationBean;
 	}
+	
+	public List<ComplaintRegistration> getAllUnAssiginedComplaint() {
+		return repository.getAllUnAssiginedComplaint();
+	}
+	
 	private ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {
 		ComplaintRegistrationBean bean = new ComplaintRegistrationBean();
 		bean.setId(registration.getId());
@@ -148,18 +154,6 @@ public class ComplaintManager {
 		return bean;
 	}
 
-	private Employee findAssignedEmployee(HashMap<Employee, Integer> empHM) {
-		int temp = (int) empHM.values().toArray()[0];
-		Employee emp = empHM.keySet().stream().findFirst().get();
-		for (Entry<Employee, Integer> entry : empHM.entrySet()) {
-			if(entry.getValue() < temp) {
-				emp = entry.getKey();
-				temp = entry.getValue();
-			} 
-		}
-		return emp;
-	}
-	
 	private String getComplaintNumber() {
 		return "C"+new Random().nextInt(ConstantProperty.MAX_RANDOM_NUM);
 	}

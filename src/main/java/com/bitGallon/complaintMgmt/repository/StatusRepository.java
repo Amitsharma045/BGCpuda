@@ -42,11 +42,11 @@ public class StatusRepository {
 	public ComplaintStatus getStatus(String name) {
 		Criteria criteria = getSession().createCriteria(ComplaintStatus.class,  UtilRepository.STATUS_ALIAS);
 		criteria.add(Restrictions.eq("status", name)).add(UtilRepository.isActiveRestricition());
-		List<ComplaintStatus> statusBeans = UtilRepository.transferToStatusBean(criteria).list();
+		List<ComplaintStatus> statusBeans =criteria.list();
 		if(statusBeans.isEmpty()) return null;
 		return statusBeans.get(0);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<ComplaintStatusBean> getAllStatuses() {
 		Criteria criteria = getSession().createCriteria(ComplaintStatus.class, UtilRepository.STATUS_ALIAS)

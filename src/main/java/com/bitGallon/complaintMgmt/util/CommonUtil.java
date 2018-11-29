@@ -5,11 +5,14 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
 
+import com.bitGallon.complaintMgmt.entity.Employee;
 import com.google.common.net.MediaType;
 
 /**
@@ -102,5 +105,17 @@ public class CommonUtil {
 	public static Date getEscaltedTime(short hour) {
 		Date currentDate = new Date();
 		return DateUtils.addHours(currentDate, 3);
+	}
+	
+	public static Employee findAssignedEmployee(HashMap<Employee, Integer> empHM) {
+		int temp = (int) empHM.values().toArray()[0];
+		Employee emp = empHM.keySet().stream().findFirst().get();
+		for (Entry<Employee, Integer> entry : empHM.entrySet()) {
+			if(entry.getValue() < temp) {
+				emp = entry.getKey();
+				temp = entry.getValue();
+			} 
+		}
+		return emp;
 	}
 }
