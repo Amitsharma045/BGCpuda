@@ -24,18 +24,20 @@ import com.bitGallon.complaintMgmt.rest.JwtUtil;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
 
 import io.jsonwebtoken.Claims;
+
 /**
  * @author rpsingh
  *
  */
-@WebFilter(urlPatterns = "/bitGallon/api/*")
-public class AppAuthenticationFilter implements Filter {
- 
-	private Class clazz = AppAuthenticationFilter.class;
+@WebFilter(urlPatterns = "/bitGallon/api/employee/*")
+public class AppAuthenticationEmployeeModuleFilter implements Filter {
+
+
+	private Class clazz = AppAuthenticationEmployeeModuleFilter.class;
 
 	@Autowired
 	private  JwtTokenManager jwtTokenManager;
-	
+
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
 		HttpServletRequest httpservletRequest = (HttpServletRequest) servletRequest;
@@ -43,7 +45,7 @@ public class AppAuthenticationFilter implements Filter {
 		try {
 			// Get the Authorization header from the request
 			String authorizationHeader = httpservletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-			System.out.println("filter hit");
+			System.out.println("Emloyee Module - Filter Hit");
 			if (!isTokenBasedAuthentication(authorizationHeader)) {
 				abortWithErrorStatus(httpservletResponse, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token type");
 				return;
@@ -53,7 +55,7 @@ public class AppAuthenticationFilter implements Filter {
 			String appUserId = null;
 			try {
 				JwtToken jwt = jwtTokenManager.getJwtTokenByAccessToken(token);
-				if(jwt != null){
+				if(jwt != null && jwt.getEmployee() != null){
 					Claims claims = JwtUtil.parseJwtToken(token, jwt.getAccessKey());
 					appUserId = claims.getSubject();
 				}
@@ -77,17 +79,17 @@ public class AppAuthenticationFilter implements Filter {
 
 		}
 	}
- 
-    
-    public void destroy() {
- 
-    }
+
+
+	public void destroy() {
+
+	}
 
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private boolean isTokenBasedAuthentication(String authorizationHeader) {
 		// Check if the Authorization header is valid
 		// It must not be null and must be prefixed with "Bearer" plus a whitespace
@@ -103,7 +105,7 @@ public class AppAuthenticationFilter implements Filter {
 		// The WWW-Authenticate header is sent along with the response
 		httpservletResponse.sendError(status,errorMsg);
 	}
-	
+
 	private void log(Class clazz, String message, String tag) {
 		Logger logger = LoggerFactory.getLogger(clazz);
 		if(ConstantProperty.LOG_INFO.equals(tag)) {
@@ -118,5 +120,6 @@ public class AppAuthenticationFilter implements Filter {
 			logger.trace(message);
 		}
 	}
-	
+
+
 }
