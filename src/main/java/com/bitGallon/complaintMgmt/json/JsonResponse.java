@@ -22,6 +22,7 @@ public class JsonResponse {
 	private String refreshToken;
 	private ComplaintRegistrationBean complaintRegistrationBean;
 	private List<ComplaintRegistration> complaintList;
+	private ComplaintRegistration complaintRegistration;
 	private CategoryBean categoryBean;
 	private List<CategoryBean> categoryBeanList;
 	private IssueTypeBean issueTypeBean;
@@ -80,6 +81,12 @@ public class JsonResponse {
 	}
 	public void setCategoryBeanList(List<CategoryBean> categoryBeanList) {
 		this.categoryBeanList = categoryBeanList;
+	}
+	public ComplaintRegistration getComplaintRegistration() {
+		return complaintRegistration;
+	}
+	public void setComplaintRegistration(ComplaintRegistration complaintRegistration) {
+		this.complaintRegistration = complaintRegistration;
 	}
 	public IssueTypeBean getIssueTypeBean() {
 		return issueTypeBean;

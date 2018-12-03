@@ -112,9 +112,6 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	public double getComplaintLng() {
 		return complaintLng;
 	}
-	public void setComplaintLng(double complaintLng) {
-		this.complaintLng = complaintLng;
-	}
 	public String getReferenceComplaint() {
 		return referenceComplaint;
 	}

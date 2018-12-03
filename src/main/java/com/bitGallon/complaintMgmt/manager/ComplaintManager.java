@@ -26,6 +26,7 @@ import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
+import com.bitGallon.complaintMgmt.repository.StatusRepository;
 import com.bitGallon.complaintMgmt.schedular.SchedularTask;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
 
@@ -52,6 +53,9 @@ public class ComplaintManager {
 	
 	@Autowired
 	private EscalationHierarchyRepository escalationHierarchyRepository;
+	
+	@Autowired
+	private StatusRepository statusRepository;
 	
 	
 
@@ -154,8 +158,72 @@ public class ComplaintManager {
 		return bean;
 	}
 
+	public ComplaintRegistration resolveComplaint(String complaintId, Long empId, String subStatus, String additionalComments) {
+		ComplaintRegistration complaintRegistration = repository.getResolveOrUpdateComplaint(complaintId);
+		if(complaintRegistration.getEmployee().getId()==empId) {
+			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_RESOLVED));
+			complaintRegistration.setSubStatus(statusRepository.getStatus(subStatus));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_ISSUE_FIXED))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_ISSUE_FIXED));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_NOT_AN_ISSUE))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_AN_ISSUE));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_OTHERS)) {
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
+				complaintRegistration.setAdditionalComments(additionalComments);
+			}
+		}
+		repository.resolveComplaint(complaintRegistration);
+		return complaintRegistration;
+	}
+	
+	public ComplaintRegistration updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
+		ComplaintRegistration newComplaintRegistration = null;
+		ComplaintRegistration complaintRegistration = repository.getResolveOrUpdateComplaint(complaintId);
+		if(complaintRegistration.getEmployee().getId()==empId) {
+			newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
+			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE))
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE));
+			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_OTHERS)) {
+				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
+				complaintRegistration.setAdditionalComments(additionalComments);
+			}
+		}
+		
+		return repository.saveComplaintRegistration(newComplaintRegistration);
+	}
+	
 	private String getComplaintNumber() {
 		return "C"+new Random().nextInt(ConstantProperty.MAX_RANDOM_NUM);
 	}
 	
+	private ComplaintRegistration getUpdatedComplaint(ComplaintRegistration updatedComplaintRegistration) {
+		ComplaintRegistration newComplaintRegistration = new ComplaintRegistration();
+		newComplaintRegistration.setArea(updatedComplaintRegistration.getArea());
+		newComplaintRegistration.setAdditionalComments(updatedComplaintRegistration.getAdditionalComments());
+		String comp = updatedComplaintRegistration.getReferenceComplaint();
+		newComplaintRegistration.setComplaintId(comp+DELIM+(updatedComplaintRegistration.getComplaintLevel()+1));
+		newComplaintRegistration.setComplaintLat(updatedComplaintRegistration.getComplaintLat());
+		newComplaintRegistration.setComplaintLevel((short) (updatedComplaintRegistration.getComplaintLevel()+1));
+		newComplaintRegistration.setComplaintLng(updatedComplaintRegistration.getComplaintLng());
+		newComplaintRegistration.setEmployee(updatedComplaintRegistration.getEmployee().getReportingEmployee());
+		EscalationHierarchy escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(updatedComplaintRegistration.getIssueType(), 
+				newComplaintRegistration.getComplaintLevel());
+		newComplaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
+		newComplaintRegistration.setIssueTitle(updatedComplaintRegistration.getIssueTitle());
+		newComplaintRegistration.setIssueType(updatedComplaintRegistration.getIssueType());
+		newComplaintRegistration.setLandMark(updatedComplaintRegistration.getLandMark());
+		newComplaintRegistration.setReferenceComplaint(updatedComplaintRegistration.getReferenceComplaint());
+		newComplaintRegistration.setRemark(updatedComplaintRegistration.getRemark());
+		newComplaintRegistration.setUser(updatedComplaintRegistration.getUser());
+		return newComplaintRegistration;
+	}
 }

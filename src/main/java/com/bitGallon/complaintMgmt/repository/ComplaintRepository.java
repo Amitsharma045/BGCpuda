@@ -22,6 +22,7 @@ import com.bitGallon.complaintMgmt.property.ConstantProperty;
 @Repository
 @Transactional
 public class ComplaintRepository {
+	
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -158,4 +159,25 @@ public class ComplaintRepository {
 		}
 		return null;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public ComplaintRegistration getResolveOrUpdateComplaint(String complaintId) {
+		List<ComplaintRegistration> complaintlist = getSession()
+				.createQuery("FROM ComplaintRegistration cr WHERE cr.referenceComplaint =:p1 and cr.isActive = 1 and cr.complaintLevel IN (select max(complaintLevel) from ComplaintRegistration cpr cpr.referenceComplaint=:p2)")
+				.setParameter("p1", complaintId)
+				.setParameter("p1", complaintId)
+				.list();
+		if(complaintlist.size() != 0) {
+			return complaintlist.get(0);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void resolveComplaint(ComplaintRegistration complaintRegistration) {
+		 getSession().saveOrUpdate(complaintRegistration);
+	}
+	
+	
 }

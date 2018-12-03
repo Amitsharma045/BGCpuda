@@ -88,4 +88,42 @@ public class EmployeeComplaintServices  extends RestResource {
 		
 	}
 
+	@RequestMapping(value = "/v1.0/resolveComplaint/", produces = { "application/json" }, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String,Object> resolveComplaint(@RequestParam(name="complaintId") String complaintId, @RequestParam(name="subStatus") String subStatus,
+			@RequestParam(name="comment") String comment) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			ComplaintRegistration complaintRegistration = manager.resolveComplaint(complaintId, getUserId(), subStatus, comment);
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setComplaintRegistration(complaintRegistration);
+			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
+	}
+	
+	@RequestMapping(value = "/v1.0/updateComplaint/", produces = { "application/json" }, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String,Object> updateComplaint(@RequestParam(name="complaintId") String complaintId, @RequestParam(name="subStatus") String subStatus,
+			@RequestParam(name="comment") String comment) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			ComplaintRegistration complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setComplaintRegistration(complaintRegistration);
+			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
+	}
+	
 }

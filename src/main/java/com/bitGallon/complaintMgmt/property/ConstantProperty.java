@@ -113,10 +113,9 @@ public class ConstantProperty {
 	public static final String STATUS_ESCALED = "ESCALATED";
 	public static final String STATUS_CLOSED = "CLOSED";
 
-	
-	public static final String SUB_STATUS_RESOLVED_NOT_AN_ISSUE = "NOT AN ISSUE";
-	public static final String SUB_STATUS_RESOLVED_NEED_APPROVAL = "NEED APPROVAL";
 	public static final String SUB_STATUS_RESOLVED_ISSUE_FIXED = "ISSUE FIXED";
+	public static final String SUB_STATUS_RESOLVED_NOT_AN_ISSUE = "NOT AN ISSUE";
+	public static final String SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE = "NOT DEPARTMENTAL ISSUE";
 	public static final String SUB_STATUS_RESOLVED_OTHERS = "OTHERS";
 
 	public static final String SUB_STATUS_IN_PROGRESS = "IN PROGRESS";
