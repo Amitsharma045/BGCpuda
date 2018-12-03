@@ -104,7 +104,7 @@ public class CommonUtil {
 	
 	public static Date getEscaltedTime(short hour) {
 		Date currentDate = new Date();
-		return DateUtils.addHours(currentDate, 3);
+		return DateUtils.addHours(currentDate, hour);
 	}
 	
 	public static Employee findAssignedEmployee(HashMap<Employee, Integer> empHM) {

@@ -138,7 +138,18 @@ public class ComplaintRepository {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ComplaintRegistration> getAllUnAssiginedComplaint() {
+	public List<ComplaintRegistration> getAllUnAssiginedComplaints() {
+		List<ComplaintRegistration> complaintlist = getSession()
+				.createQuery("FROM ComplaintRegistration cr WHERE cr.employee.id is null and cr.escalatedTime is null")
+				.list();
+		if(complaintlist.size() != 0) {
+			return complaintlist;
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ComplaintRegistration> getAllEsclatedComplaints() {
 		List<ComplaintRegistration> complaintlist = getSession()
 				.createQuery("FROM ComplaintRegistration cr WHERE cr.employee.id is null and cr.escalatedTime is null")
 				.list();

@@ -127,7 +127,7 @@ public class ComplaintManager {
 	}
 	
 	public List<ComplaintRegistration> getAllUnAssiginedComplaint() {
-		return repository.getAllUnAssiginedComplaint();
+		return repository.getAllUnAssiginedComplaints();
 	}
 	
 	private ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {

@@ -41,9 +41,9 @@ public class SchedularTask {
 	public void assignEmployeeToComplaint() throws Exception {
 		List<Employee> empList = null;
 		boolean complaintStatus = false;
-		System.out.println("Testing Schedular");
+		System.out.println("Complaint Assignment Schedular");
 		if(isAssignEmployeeTask()) {
-			List<ComplaintRegistration> complaintlist = complaintRepository.getAllUnAssiginedComplaint();
+			List<ComplaintRegistration> complaintlist = complaintRepository.getAllUnAssiginedComplaints();
 			if(complaintlist != null) {
 				for(ComplaintRegistration complaintRegistration : complaintlist) {
 					empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
@@ -67,11 +67,6 @@ public class SchedularTask {
 			if(!complaintStatus) SchedularTask.setAssignEmployeeTask(false);
 		}
 	}
-
-	/*@Scheduled(fixedRate = 5000)
-	public void escalateComplaint() {
-		System.out.println("The time is now {}"+ dateFormat.format(new Date()));
-	}*/
 
 	protected void log(Class clazz, String message, String tag) {
 		Logger logger = LoggerFactory.getLogger(clazz);
