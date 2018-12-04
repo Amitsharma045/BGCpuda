@@ -39,9 +39,6 @@ public class Employee extends BaseEntity<String> implements Serializable {
 	private String alternateMobileNo;
 	@Column(name = "EmailId", nullable = false, unique = true)
 	private String emailId;
-	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "BG_AreaId", referencedColumnName = "id")
-	private Area area;
 	
 	public long getId() {
 		return id;
@@ -91,11 +88,4 @@ public class Employee extends BaseEntity<String> implements Serializable {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-	public Area getArea() {
-		return area;
-	}
-	public void setArea(Area area) {
-		this.area = area;
-	}
-	
 }

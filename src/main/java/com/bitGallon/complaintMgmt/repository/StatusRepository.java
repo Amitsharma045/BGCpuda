@@ -32,7 +32,8 @@ public class StatusRepository {
 	@SuppressWarnings("unchecked")
 	public ComplaintStatusBean getStatus(long id) {
 		Criteria criteria = getSession().createCriteria(ComplaintStatus.class,  UtilRepository.STATUS_ALIAS);
-		criteria.add(Restrictions.eq("id", id)).add(UtilRepository.isActiveRestricition());
+		criteria.add(Restrictions.eq("id", id)).add(Restrictions.isNull("parentStatus.id")).
+		add(UtilRepository.isActiveRestricition());
 		List<ComplaintStatusBean> statusBeans = UtilRepository.transferToStatusBean(criteria).list();
 		if(statusBeans.isEmpty()) return null;
 		return statusBeans.get(0);
@@ -70,5 +71,13 @@ public class StatusRepository {
 			return getStatus(id);
 		}
 		return null;
+	}
+
+	public ComplaintStatus getSubStatus(String name) {
+		Criteria criteria = getSession().createCriteria(ComplaintStatus.class,  UtilRepository.STATUS_ALIAS);
+		criteria.add(Restrictions.eq("status", name)).add(Restrictions.isNotNull("parentStatus.id")).add(UtilRepository.isActiveRestricition());
+		List<ComplaintStatus> statusBeans =criteria.list();
+		if(statusBeans.isEmpty()) return null;
+		return statusBeans.get(0);
 	}
 }

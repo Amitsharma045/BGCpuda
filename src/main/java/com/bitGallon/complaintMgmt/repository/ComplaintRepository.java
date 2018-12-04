@@ -162,7 +162,7 @@ public class ComplaintRepository {
 	
 	
 	@SuppressWarnings("unchecked")
-	public ComplaintRegistration getResolveOrUpdateComplaint(String complaintId) {
+	public ComplaintRegistration getLatestComplaint(String complaintId) {
 		List<ComplaintRegistration> complaintlist = getSession()
 				.createQuery("FROM ComplaintRegistration cr WHERE cr.referenceComplaint =:p1 and cr.isActive = 1 and cr.complaintLevel IN (select max(complaintLevel) from ComplaintRegistration cpr cpr.referenceComplaint=:p2)")
 				.setParameter("p1", complaintId)
@@ -178,6 +178,12 @@ public class ComplaintRepository {
 	public void resolveComplaint(ComplaintRegistration complaintRegistration) {
 		 getSession().saveOrUpdate(complaintRegistration);
 	}
-	
-	
+
+	@SuppressWarnings("unchecked")
+	public List<ComplaintRegistration> getCrossedEscalatedTimeComplaints() {
+		return (List<ComplaintRegistration>) getSession().createCriteria(ComplaintRegistration.class).
+				add(Restrictions.le("escalatedTime", new Date())).
+				add(Restrictions.disjunction().add(Restrictions.eq("status.id", 1l)).add(Restrictions.eq("status.id", 3l))).list();
+	}
+
 }

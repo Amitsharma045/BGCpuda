@@ -34,7 +34,7 @@ import com.bitGallon.complaintMgmt.util.CommonUtil;
 @Transactional
 public class ComplaintManager {
 	
-	private static final String DELIM = "-";
+	public static final String DELIM = "-";
 
 	@Autowired
 	private ComplaintRepository repository;
@@ -159,20 +159,20 @@ public class ComplaintManager {
 	}
 
 	public ComplaintRegistration resolveComplaint(String complaintId, Long empId, String subStatus, String additionalComments) {
-		ComplaintRegistration complaintRegistration = repository.getResolveOrUpdateComplaint(complaintId);
+		ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
 		if(complaintRegistration.getEmployee().getId()==empId) {
 			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_RESOLVED));
-			complaintRegistration.setSubStatus(statusRepository.getStatus(subStatus));
+			complaintRegistration.setSubStatus(statusRepository.getSubStatus(subStatus));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_ISSUE_FIXED))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_ISSUE_FIXED));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_RESOLVED_ISSUE_FIXED));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_NOT_AN_ISSUE))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_AN_ISSUE));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_AN_ISSUE));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_RESOLVED_NOT_DEPARTMENTAL_ISSUE));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_RESOLVED_OTHERS)) {
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
 				complaintRegistration.setAdditionalComments(additionalComments);
 			}
 		}
@@ -182,18 +182,18 @@ public class ComplaintManager {
 	
 	public ComplaintRegistration updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
 		ComplaintRegistration newComplaintRegistration = null;
-		ComplaintRegistration complaintRegistration = repository.getResolveOrUpdateComplaint(complaintId);
+		ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
 		if(complaintRegistration.getEmployee().getId()==empId) {
 			newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
 			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE))
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_OTHERS)) {
-				complaintRegistration.setSubStatus(statusRepository.getStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
+				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
 				complaintRegistration.setAdditionalComments(additionalComments);
 			}
 		}
@@ -217,7 +217,8 @@ public class ComplaintManager {
 		newComplaintRegistration.setEmployee(updatedComplaintRegistration.getEmployee().getReportingEmployee());
 		EscalationHierarchy escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(updatedComplaintRegistration.getIssueType(), 
 				newComplaintRegistration.getComplaintLevel());
-		newComplaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
+		if(escalationHierarchy != null)	newComplaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
+		else newComplaintRegistration.setEscalatedTime(null); //no further escalation hierarchy hence complaint has reached to the highest level
 		newComplaintRegistration.setIssueTitle(updatedComplaintRegistration.getIssueTitle());
 		newComplaintRegistration.setIssueType(updatedComplaintRegistration.getIssueType());
 		newComplaintRegistration.setLandMark(updatedComplaintRegistration.getLandMark());
@@ -225,5 +226,26 @@ public class ComplaintManager {
 		newComplaintRegistration.setRemark(updatedComplaintRegistration.getRemark());
 		newComplaintRegistration.setUser(updatedComplaintRegistration.getUser());
 		return newComplaintRegistration;
+	}
+
+	public void escalateComplaints(ComplaintRegistration complaint) {
+		ComplaintRegistration newComplaintRegistration = null;
+		newComplaintRegistration = getUpdatedComplaint(complaint);
+		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
+		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM));
+		try {
+			//create new complaint
+			if (newComplaintRegistration.getEscalatedTime() != null) {
+				repository.saveComplaintRegistration(newComplaintRegistration);
+				// update the old complaint
+				complaint.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
+				complaint.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM));
+				repository.saveOrUpdateComplaintRegistration(complaint);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

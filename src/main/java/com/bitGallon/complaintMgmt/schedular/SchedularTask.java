@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
+import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.EscalationHierarchy;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
@@ -30,6 +31,9 @@ public class SchedularTask {
 	
 	@Autowired
 	private ComplaintRepository complaintRepository;
+	
+	@Autowired
+	private ComplaintManager complaintManager;
 	
 	@Autowired
 	private EmployeeRepository empRepository;
@@ -81,6 +85,20 @@ public class SchedularTask {
 		} else {
 			logger.trace(message);
 		}
+	}
+	
+	@Scheduled(fixedRate = 300000)
+	public void escalateComplaint() {
+		List<ComplaintRegistration> escalatedComplaints = complaintRepository.getCrossedEscalatedTimeComplaints();
+		if (escalatedComplaints != null && !escalatedComplaints.isEmpty()) {
+			for (ComplaintRegistration complaint : escalatedComplaints) {
+				complaintManager.escalateComplaints(complaint);
+			}
+		}
+		else {
+			log(clazz, "No escalation required at "+new Date(), ConstantProperty.LOG_INFO);
+		}
+		System.out.println(escalatedComplaints);
 	}
 
 	public static boolean isAssignEmployeeTask() {

@@ -23,7 +23,7 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	@Column(name = "ComplaintId", nullable = false, unique = true)
 	private String complaintId;
 	@ManyToOne(cascade = CascadeType.DETACH)
@@ -67,10 +67,10 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	@Column(name ="LandMark")
 	private String landMark;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getComplaintId() {
