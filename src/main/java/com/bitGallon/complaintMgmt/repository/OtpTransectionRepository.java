@@ -35,7 +35,7 @@ public class OtpTransectionRepository {
 	@SuppressWarnings("unchecked")
 	public OtpTransectionDetail getOtpDetails(String otp, String mobileNumber) throws Exception {
 		List<OtpTransectionDetail> otpTransectionDetailslist = getSession()
-															  .createQuery("FROM OtpTransectionDetail od WHERE od.mobileNumber=:p1 AND od.otp=:p2")
+															  .createQuery("FROM OtpTransectionDetail od WHERE od.mobileNumber=:p1 AND od.otp=:p2 order by createdDate desc")
 															  .setParameter("p1", mobileNumber)
 															  .setParameter("p2", otp).list();
 

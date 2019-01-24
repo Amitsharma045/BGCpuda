@@ -2,9 +2,11 @@ package com.bitGallon.complaintMgmt.config;
 
 import java.util.Properties;
 
+import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -86,5 +88,12 @@ public class DBConfiguration {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
 		transactionManager.setSessionFactory(sessionFactory().getObject());
 		return transactionManager;
+	}
+	 @Bean
+	public MultipartConfigElement multipartConfigElement() {
+		MultipartConfigFactory factory = new MultipartConfigFactory();
+		factory.setMaxFileSize("200MB");
+		factory.setMaxRequestSize("200MB");
+		return factory.createMultipartConfig();
 	}
 }

@@ -2,6 +2,8 @@ package com.bitGallon.complaintMgmt.repository;
 
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
@@ -17,8 +19,11 @@ import com.bitGallon.complaintMgmt.bean.ComplaintMinBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
+import com.bitGallon.complaintMgmt.bean.ParentComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
+import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
+import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 
 
 public class UtilRepository {
@@ -130,6 +135,7 @@ public class UtilRepository {
 		ProjectionList projList = Projections.projectionList();
 		criteria.setProjection(projList.add(Projections.distinct(Projections.property(COMPLAINT_REG_MIN + ".issueTitle")), "issueTitle").
 		add(Projections.property(USER_ALIAS + ".mobileNumber"), "complaintBy").
+		add(Projections.property(COMPLAINT_REG_MIN + ".id"), "id").
 		add(Projections.property(COMPLAINT_REG_MIN + ".referenceComplaint"), "referenceComplaint").
 		add(Projections.property(ISSUE_TYPE_ALIAS + ".name"), "issueType").
 		add(Projections.property(SUB_CATEGORY_ALIAS + ".name"), "subCategory").
@@ -179,5 +185,36 @@ public class UtilRepository {
 	
 	public static Criteria addDateFilterCriteria(Criteria criteria, String propertyName, Date startDate, Date endDate) {
 		return criteria.add(Restrictions.between( propertyName , startDate, endDate));
+	}
+	
+	public static ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {
+		ComplaintRegistrationBean bean = new ComplaintRegistrationBean();
+		bean.setId(registration.getId());
+		bean.setReferenceComplaint(registration.getReferenceComplaint());
+		bean.setAdditionalComments(registration.getAdditionalComments());
+		bean.setAreaName(registration.getArea().getName());
+		bean.setComplaintBy(registration.getUser().getMobileNumber());
+		bean.setComplaintLat(registration.getComplaintLat());
+		bean.setComplaintLng(registration.getComplaintLng());
+		bean.setEmployeeMobileNumber(registration.getEmployee().getName());
+		bean.setEmployeeName(registration.getEmployee().getRegisteredMobileNo());
+		bean.setIssueName(registration.getIssueType().getName());
+		bean.setIssueTitle(registration.getIssueTitle());
+		bean.setStatus(registration.getStatus().getStatus());
+		bean.setSubStatus(registration.getSubStatus().getStatus());
+		bean.setDesignation(registration.getEmployee().getRole().getRoleName());
+		List<String> attachmentBeans = null;
+		if(!attachmentDetails.isEmpty()) {
+			attachmentBeans = attachmentDetails.stream().map(attachmentDetail -> attachmentDetail.getName()).collect(Collectors.toList());
+		}
+		bean.setAttachmentsFiles(attachmentBeans);
+		return bean;
+	}
+
+	public static Criteria transferToParentStatusBean(Criteria criteria) {
+		return criteria.setProjection(Projections.projectionList()
+				.add(Projections.property(STATUS_ALIAS + ".id"), "id")
+				.add(Projections.property(STATUS_ALIAS + ".status"), "status"))
+				.setResultTransformer(new AliasToBeanResultTransformer(ParentComplaintStatusBean.class));
 	}
 }

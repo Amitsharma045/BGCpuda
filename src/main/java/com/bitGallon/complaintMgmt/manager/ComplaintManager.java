@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
+import com.bitGallon.complaintMgmt.bean.MinCategorySubCategoryBean;
+import com.bitGallon.complaintMgmt.bean.MinSubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
@@ -27,6 +29,8 @@ import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
 import com.bitGallon.complaintMgmt.repository.StatusRepository;
+import com.bitGallon.complaintMgmt.repository.SubCategoryRepository;
+import com.bitGallon.complaintMgmt.repository.UtilRepository;
 import com.bitGallon.complaintMgmt.schedular.SchedularTask;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
 
@@ -43,9 +47,6 @@ public class ComplaintManager {
 	private EmployeeRepository empRepository;
 	
 	@Autowired
-	private RoleRepository roleRepository;
-	
-	@Autowired
 	private ComplaintRepository complaintRepository;
 	
 	@Autowired
@@ -56,6 +57,9 @@ public class ComplaintManager {
 	
 	@Autowired
 	private StatusRepository statusRepository;
+	
+	@Autowired
+	private SubCategoryRepository subCategoryRepository;
 	
 	
 
@@ -71,7 +75,7 @@ public class ComplaintManager {
 			complaintRegistration.setEmployee(null);
 			complaintRegistration.setEscalatedTime(null);
 			SchedularTask.setAssignEmployeeTask(true);
-		}
+		} 
 		String comp = getComplaintNumber();
 		complaintRegistration.setComplaintId(comp+DELIM+complaintRegistration.getComplaintLevel());
 		complaintRegistration.setReferenceComplaint(comp);
@@ -94,11 +98,11 @@ public class ComplaintManager {
 		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId);
 	}
 	
-	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate, Date endDate, Long subCategoryId){
+	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate, Date endDate, Long subCategoryId, Long prevComplaintId, List<Long> statusId){
 		if(startDate == null && endDate !=null) return null;
 		if(endDate == null) endDate = new Date();
 		
-		return repository.getAllComplaintsForEmployee(page, employeeId, startDate, endDate, subCategoryId);
+		return repository.getAllComplaintsForEmployee(page, employeeId, startDate, endDate, subCategoryId, prevComplaintId, statusId);
 	}
 	/*public List<ComplaintRegistration> getAllComplaintsForEmp(Pageable page, long empId){
 		return repository.getAllComplaints(page, empId);
@@ -114,7 +118,7 @@ public class ComplaintManager {
 		ComplaintRegistrationBean registrationBean = null;
 		if(registration != null) {
 			attachmentDetails = attachmentDetailRepository.getAttachments(registration.getId());
-			registrationBean = createComplaintRepoBean(registration , attachmentDetails);
+			registrationBean = UtilRepository.createComplaintRepoBean(registration , attachmentDetails);
 		}
 		return registrationBean;
 	}
@@ -125,7 +129,7 @@ public class ComplaintManager {
 		ComplaintRegistrationBean registrationBean = null;
 		if(registration != null) {
 			attachmentDetails = attachmentDetailRepository.getAttachments(registration.getId());
-			registrationBean = createComplaintRepoBean(registration , attachmentDetails);
+			registrationBean = UtilRepository.createComplaintRepoBean(registration , attachmentDetails);
 		}
 		return registrationBean;
 	}
@@ -134,29 +138,7 @@ public class ComplaintManager {
 		return repository.getAllUnAssiginedComplaints();
 	}
 	
-	private ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {
-		ComplaintRegistrationBean bean = new ComplaintRegistrationBean();
-		bean.setId(registration.getId());
-		bean.setReferenceComplaint(registration.getReferenceComplaint());
-		bean.setAdditionalComments(registration.getAdditionalComments());
-		bean.setAreaName(registration.getArea().getName());
-		bean.setComplaintBy(registration.getUser().getMobileNumber());
-		bean.setComplaintLat(registration.getComplaintLat());
-		bean.setComplaintLng(registration.getComplaintLng());
-		bean.setEmployeeMobileNumber(registration.getEmployee().getName());
-		bean.setEmployeeName(registration.getEmployee().getRegisteredMobileNo());
-		bean.setIssueName(registration.getIssueType().getName());
-		bean.setIssueTitle(registration.getIssueTitle());
-		bean.setStatus(registration.getStatus().getStatus());
-		bean.setSubStatus(registration.getSubStatus().getStatus());
-		bean.setDesignation(registration.getEmployee().getRole().getRoleName());
-		List<String> attachmentBeans = null;
-		if(!attachmentDetails.isEmpty()) {
-			attachmentBeans = attachmentDetails.stream().map(attachmentDetail -> attachmentDetail.getName()).collect(Collectors.toList());
-		}
-		bean.setAttachmentsFiles(attachmentBeans);
-		return bean;
-	}
+	
 
 	public ComplaintRegistration resolveComplaint(String complaintId, Long empId, String subStatus, String additionalComments) {
 		ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
@@ -180,12 +162,13 @@ public class ComplaintManager {
 		return complaintRegistration;
 	}
 	
-	public ComplaintRegistration updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
+	public ComplaintRegistrationBean updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
 		ComplaintRegistration newComplaintRegistration = null;
 		ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
-		if(complaintRegistration.getEmployee().getId()==empId) {
+		if(complaintRegistration == null) return null;
+		if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId) {
 			newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
-			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
+			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL))
 				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL));
 			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
@@ -196,9 +179,12 @@ public class ComplaintManager {
 				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
 				complaintRegistration.setAdditionalComments(additionalComments);
 			}
+			newComplaintRegistration.setAdditionalComments(CommonUtil.addPreviousComplaintStatus(newComplaintRegistration.getAdditionalComments(), complaintRegistration.getStatus(), complaintRegistration.getSubStatus()));
+			repository.saveOrUpdateComplaintRegistration(complaintRegistration);
+			repository.saveComplaintRegistration(newComplaintRegistration);
+			return UtilRepository.createComplaintRepoBean(newComplaintRegistration, null);
 		}
-		
-		return repository.saveComplaintRegistration(newComplaintRegistration);
+		return null;
 	}
 	
 	private String getComplaintNumber() {
@@ -207,6 +193,7 @@ public class ComplaintManager {
 	
 	private ComplaintRegistration getUpdatedComplaint(ComplaintRegistration updatedComplaintRegistration) {
 		ComplaintRegistration newComplaintRegistration = new ComplaintRegistration();
+		newComplaintRegistration.setIsActive((short)1);
 		newComplaintRegistration.setArea(updatedComplaintRegistration.getArea());
 		newComplaintRegistration.setAdditionalComments(updatedComplaintRegistration.getAdditionalComments());
 		String comp = updatedComplaintRegistration.getReferenceComplaint();
@@ -214,9 +201,12 @@ public class ComplaintManager {
 		newComplaintRegistration.setComplaintLat(updatedComplaintRegistration.getComplaintLat());
 		newComplaintRegistration.setComplaintLevel((short) (updatedComplaintRegistration.getComplaintLevel()+1));
 		newComplaintRegistration.setComplaintLng(updatedComplaintRegistration.getComplaintLng());
-		newComplaintRegistration.setEmployee(updatedComplaintRegistration.getEmployee().getReportingEmployee());
-		EscalationHierarchy escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(updatedComplaintRegistration.getIssueType(), 
-				newComplaintRegistration.getComplaintLevel());
+		EscalationHierarchy escalationHierarchy =null;
+		if(null != updatedComplaintRegistration.getEmployee()) {
+			newComplaintRegistration.setEmployee(updatedComplaintRegistration.getEmployee().getReportingEmployee());
+			escalationHierarchy = escalationHierarchyRepository.getEscalationHierarchyDetail(updatedComplaintRegistration.getIssueType(), 
+					newComplaintRegistration.getComplaintLevel());
+		}
 		if(escalationHierarchy != null)	newComplaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
 		else newComplaintRegistration.setEscalatedTime(null); //no further escalation hierarchy hence complaint has reached to the highest level
 		newComplaintRegistration.setIssueTitle(updatedComplaintRegistration.getIssueTitle());
@@ -225,6 +215,8 @@ public class ComplaintManager {
 		newComplaintRegistration.setReferenceComplaint(updatedComplaintRegistration.getReferenceComplaint());
 		newComplaintRegistration.setRemark(updatedComplaintRegistration.getRemark());
 		newComplaintRegistration.setUser(updatedComplaintRegistration.getUser());
+		newComplaintRegistration.setStatus(updatedComplaintRegistration.getStatus());
+		newComplaintRegistration.setSubStatus(updatedComplaintRegistration.getSubStatus());
 		return newComplaintRegistration;
 	}
 
@@ -247,5 +239,20 @@ public class ComplaintManager {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public MinCategorySubCategoryBean getAssignedSubCategories(Long userId) {
+		MinCategorySubCategoryBean categorySubCategoryBean = new MinCategorySubCategoryBean();
+		Employee emp = empRepository.getEmployee(userId);
+		categorySubCategoryBean.setCategoryId(emp.getCategory().getId());
+		categorySubCategoryBean.setCategoryName(emp.getCategory().getName());
+		categorySubCategoryBean.setSubCategories(subCategoryRepository
+				.getAllSubCategories(categorySubCategoryBean.getCategoryId()).stream().map(subCategory -> {
+					MinSubCategoryBean minSubCategoryBean = new MinSubCategoryBean();
+					minSubCategoryBean.setId(subCategory.getId());
+					minSubCategoryBean.setName(subCategory.getName());
+					return minSubCategoryBean;
+				}).collect(Collectors.toList()));
+		return categorySubCategoryBean;
 	}
 }

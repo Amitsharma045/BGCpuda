@@ -86,7 +86,7 @@ public class SchedularTask {
 			logger.trace(message);
 		}
 	}
-	
+	 
 	@Scheduled(fixedRate = 300000)
 	public void escalateComplaint() {
 		List<ComplaintRegistration> escalatedComplaints = complaintRepository.getCrossedEscalatedTimeComplaints();

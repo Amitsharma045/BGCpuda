@@ -133,7 +133,7 @@ public class UserComplaintServices extends RestResource {
 			complaintRegistration.setIsActive((short)1);
 			complaintRegistration.setComplaintLevel((short)0);
 			complaintRegistration.setStatus(statusManager.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
-			complaintRegistration.setSubStatus(statusManager.getStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
+			complaintRegistration.setSubStatus(statusManager.getSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
 			
 			ComplaintRegistration savedComplaint=manager.saveComplaintRegistration(complaintRegistration);
 			if(savedComplaint!=null && savedComplaint.getId()!=0) {

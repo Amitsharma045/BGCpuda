@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
 
+import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.google.common.net.MediaType;
 
@@ -23,7 +24,8 @@ public class CommonUtil {
 	
 	public static String getRandomOtp() throws Exception {
 		Random rand = new Random();
-		return String.format("%04d", rand.nextInt(10000));
+//		return String.format("%04d", rand.nextInt(10000));
+		return "1234";
 	} 
 	
 	public static Date getExpiryDate() throws Exception {
@@ -117,5 +119,12 @@ public class CommonUtil {
 			} 
 		}
 		return emp;
+	}
+
+	public static String addPreviousComplaintStatus(String additionalComments, ComplaintStatus status,
+			ComplaintStatus subStatus) {
+		String pastComment = "Status included by previous employee " + status + " due to " + subStatus;
+		if(null != additionalComments) return pastComment;
+		return additionalComments + pastComment;
 	}
 }

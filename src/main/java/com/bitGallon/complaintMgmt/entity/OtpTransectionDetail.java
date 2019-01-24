@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BG_Otp")
-public class OtpTransectionDetail  implements Serializable {
+public class OtpTransectionDetail extends BaseEntity<OtpTransectionDetail>  implements Serializable {
 
 	/**
 	 * 

@@ -6,6 +6,8 @@ import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.IssueTypeBean;
+import com.bitGallon.complaintMgmt.bean.MinCategorySubCategoryBean;
+import com.bitGallon.complaintMgmt.bean.ParentComplaintStatusBean;
 import com.bitGallon.complaintMgmt.bean.RemarkBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
@@ -33,6 +35,8 @@ public class JsonResponse {
 	private List<ComplaintStatusBean> complaintStatusBeanList;
 	private RemarkBean remarkBean;
 	private List<RemarkBean> remarkBeanList;
+	private List<ParentComplaintStatusBean> statusBeans;
+	private MinCategorySubCategoryBean categorySubCateogryList;
 	
 	public String getStatusCode() {
 		return statusCode;
@@ -135,5 +139,17 @@ public class JsonResponse {
 	}
 	public void setRemarkBeanList(List<RemarkBean> remarkBeanList) {
 		this.remarkBeanList = remarkBeanList;
+	}
+	public List<ParentComplaintStatusBean> getStatusBeans() {
+		return statusBeans;
+	}
+	public void setStatusBeans(List<ParentComplaintStatusBean> statusBeans) {
+		this.statusBeans = statusBeans;
+	}
+	public MinCategorySubCategoryBean getCategorySubCateogryList() {
+		return categorySubCateogryList;
+	}
+	public void setCategorySubCateogryList(MinCategorySubCategoryBean categorySubCateogryList) {
+		this.categorySubCateogryList = categorySubCateogryList;
 	}
 }

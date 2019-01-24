@@ -1,44 +1,30 @@
 package com.bitGallon.complaintMgmt.bean;
 
-public class SubCategoryBean {
+import java.util.List;
+
+public class MinCategorySubCategoryBean {
 	/**
 	 * 
 	 */
-	private long id;
-	private String name;
 	private long categoryId;
 	private String categoryName;
-	
+	private List<MinSubCategoryBean> subCategories;
 	public long getCategoryId() {
 		return categoryId;
 	}
-
 	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
-
 	public String getCategoryName() {
 		return categoryName;
 	}
-
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-
-	public long getId() {
-		return id;
+	public List<MinSubCategoryBean> getSubCategories() {
+		return subCategories;
 	}
-
-	public void setId(long id) {
-		this.id = id;
+	public void setSubCategories(List<MinSubCategoryBean> subCategories) {
+		this.subCategories = subCategories;
 	}
-
-	public String getName() {
-		return name;
-	} 
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 }

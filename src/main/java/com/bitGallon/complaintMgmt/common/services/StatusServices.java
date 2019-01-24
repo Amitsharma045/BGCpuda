@@ -1,8 +1,10 @@
 package com.bitGallon.complaintMgmt.common.services;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
+import com.bitGallon.complaintMgmt.bean.ParentComplaintStatusBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
@@ -71,6 +74,23 @@ public class StatusServices  extends RestResource  {
 		return sendResponse(jsonResponse);
 	}
 	
+	@RequestMapping(value = "/v1.0/getParentStatues", produces={"application/json"},
+			method = RequestMethod.GET)
+	@ResponseBody
+	public LinkedHashMap<String, Object> getParentStatus() throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+		List<ParentComplaintStatusBean> parentComplaintStatusBeans = manager.getParentStatus();
+		jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+		jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_PROCESSED);
+		jsonResponse.setStatusBeans(parentComplaintStatusBeans);
+	} catch(Exception ex) {
+		jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+		jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+		log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+	}
+	return sendResponse(jsonResponse);
+	}
 	@RequestMapping(value = "/v1.0/updateIsActive", produces = { "application/json" }, method = RequestMethod.PUT)
 	@ResponseBody
 	public ComplaintStatusBean updateIsActive(@RequestParam("id") long id, @RequestParam("isActive") short isActive) {

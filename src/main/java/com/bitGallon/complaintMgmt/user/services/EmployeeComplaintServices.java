@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
+import com.bitGallon.complaintMgmt.bean.MinCategorySubCategoryBean;
+import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.manager.AreaManager;
@@ -53,10 +55,12 @@ public class EmployeeComplaintServices  extends RestResource {
 	public HashMap<String,Object> getAllComplaints(Pageable complaintId,
 			@RequestParam(name= "startDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date startDate,
 		@RequestParam(name= "endDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date endDate,
-		@RequestParam(name="categoryId", required = false) Long subCategoryId) throws Exception {
+		@RequestParam(name="subCategoryId", required = false) Long subCategoryId,
+		@RequestParam(name="prevComplaintId", required = false) Long prevComplaintId,
+		@RequestParam(name="statusId", required = false) List<Long> statusId) throws Exception {
 		jsonResponse = new JsonResponse();
 		try {
-			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForEmployee(complaintId, getUserId() , startDate , endDate, subCategoryId);
+			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForEmployee(complaintId, getUserId() , startDate , endDate, subCategoryId, prevComplaintId, statusId);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
 			jsonResponse.setComplaintList(complaintList);
@@ -113,12 +117,13 @@ public class EmployeeComplaintServices  extends RestResource {
 			@RequestParam(name="comment") String comment) throws Exception {
 		jsonResponse = new JsonResponse();
 		try {
-			ComplaintRegistration complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
+			ComplaintRegistrationBean complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
-			jsonResponse.setComplaintRegistration(complaintRegistration);
+			jsonResponse.setComplaintRegistrationBean(complaintRegistration);
 			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
+			System.out.println(ex);
 			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
 			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
 			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
@@ -126,4 +131,20 @@ public class EmployeeComplaintServices  extends RestResource {
 		return sendResponse(jsonResponse);
 	}
 	
+	@RequestMapping(value = "/v1.0/getAssignedSubCategories/", produces = { "application/json" }, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String,Object> getAssignedSubCategories() throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			MinCategorySubCategoryBean categorySubCategoryBean = manager.getAssignedSubCategories(getUserId());
+			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setCategorySubCateogryList(categorySubCategoryBean);
+		} catch(Exception ex) {
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
+	}
 }

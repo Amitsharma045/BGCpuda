@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bitGallon.complaintMgmt.bean.ComplaintStatusBean;
+import com.bitGallon.complaintMgmt.bean.ParentComplaintStatusBean;
 import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 
 @Repository
@@ -53,6 +54,13 @@ public class StatusRepository {
 		Criteria criteria = getSession().createCriteria(ComplaintStatus.class, UtilRepository.STATUS_ALIAS)
 				.add(UtilRepository.isActiveRestricition());
 		return UtilRepository.transferToStatusBean(criteria).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ParentComplaintStatusBean> getAllParentStatuses() {
+		Criteria criteria = getSession().createCriteria(ComplaintStatus.class, UtilRepository.STATUS_ALIAS)
+				.add(Restrictions.isNull("parentStatus.id")).add(UtilRepository.isActiveRestricition());
+		return UtilRepository.transferToParentStatusBean(criteria).list();
 	}
 	
 	@SuppressWarnings("unchecked")

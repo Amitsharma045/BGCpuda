@@ -1,9 +1,5 @@
 package com.bitGallon.complaintMgmt.bean;
 
-import javax.persistence.Column;
-
-
-
 public class UserBean {
 	private String userId;
 	private String userName;

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.bitGallon.complaintMgmt.config.HibernateBuildInCriterion;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
@@ -25,6 +26,9 @@ public class ComplaintRepository {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private StatusRepository statusRepository;
 
 	public Session getSession() {
 		return sessionFactory.getCurrentSession();
@@ -98,12 +102,20 @@ public class ComplaintRepository {
 	
 	@SuppressWarnings("unchecked")
 	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate,
-			Date endDate, Long subCategoryId) {
+			Date endDate, Long subCategoryId, Long prevComplaintId, List<Long> statusId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
+		if(null != statusId) {
+			criteria.add(HibernateBuildInCriterion.buildInCriterion(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusId));
+		} else {
+		criteria.add(Restrictions.disjunction().
+					add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS).getId()))
+					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALED).getId())));
+		}
+		UtilRepository.addPageableAndSorting(criteria, page);
 		UtilRepository.addSorting(criteria, page);
 		criteria.add(Restrictions.eq(UtilRepository.EMPLOYEE_ALIAS+ ".id", employeeId));
-		criteria.add(Restrictions.lt("id", page.getPageNumber()));
+		if(prevComplaintId != null) criteria.add(Restrictions.lt("id", prevComplaintId));
 		if (startDate != null && endDate != null) {
 			UtilRepository.addDateFilterCriteria(criteria, "createdDate", startDate, endDate);
 		}
@@ -164,9 +176,9 @@ public class ComplaintRepository {
 	@SuppressWarnings("unchecked")
 	public ComplaintRegistration getLatestComplaint(String complaintId) {
 		List<ComplaintRegistration> complaintlist = getSession()
-				.createQuery("FROM ComplaintRegistration cr WHERE cr.referenceComplaint =:p1 and cr.isActive = 1 and cr.complaintLevel IN (select max(complaintLevel) from ComplaintRegistration cpr cpr.referenceComplaint=:p2)")
+				.createQuery("FROM ComplaintRegistration cr WHERE cr.referenceComplaint =:p1 and cr.isActive = 1 and cr.complaintLevel IN (select max(complaintLevel) from ComplaintRegistration cpr WHERE cpr.referenceComplaint=:p2)")
 				.setParameter("p1", complaintId)
-				.setParameter("p1", complaintId)
+				.setParameter("p2", complaintId)
 				.list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);
