@@ -199,12 +199,16 @@ public class UtilRepository {
 		bean.setEmployeeMobileNumber(registration.getEmployee().getName());
 		bean.setEmployeeName(registration.getEmployee().getRegisteredMobileNo());
 		bean.setIssueName(registration.getIssueType().getName());
-		bean.setIssueTitle(registration.getIssueTitle());
+		bean.setIssueTitle(registration.getIssueTitle()); 
 		bean.setStatus(registration.getStatus().getStatus());
 		bean.setSubStatus(registration.getSubStatus().getStatus());
 		bean.setDesignation(registration.getEmployee().getRole().getRoleName());
+		if(registration.getEmployee().getReportingEmployee() != null ) {
+			bean.setReportingEmployeeId(registration.getEmployee().getReportingEmployee().getId());
+			bean.setReportingEmployeeName(registration.getEmployee().getReportingEmployee().getName());
+		}
 		List<String> attachmentBeans = null;
-		if(!attachmentDetails.isEmpty()) {
+		if(attachmentDetails != null && !attachmentDetails.isEmpty()) {
 			attachmentBeans = attachmentDetails.stream().map(attachmentDetail -> attachmentDetail.getName()).collect(Collectors.toList());
 		}
 		bean.setAttachmentsFiles(attachmentBeans);

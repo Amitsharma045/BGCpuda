@@ -5,6 +5,8 @@ import java.util.List;
 public class ComplaintRegistrationBean {
 	private long id;
 	private String employeeName;
+	private Long reportingEmployeeId;
+	private String reportingEmployeeName;
 	private String employeeMobileNumber;
 	private String designation;
 	private short complaintLevel;
@@ -117,5 +119,17 @@ public class ComplaintRegistrationBean {
 	}
 	public void setComplaintBy(String complaintBy) {
 		this.complaintBy = complaintBy;
+	}
+	public Long getReportingEmployeeId() {
+		return reportingEmployeeId;
+	}
+	public void setReportingEmployeeId(Long reportingEmployeeId) {
+		this.reportingEmployeeId = reportingEmployeeId;
+	}
+	public String getReportingEmployeeName() {
+		return reportingEmployeeName;
+	}
+	public void setReportingEmployeeName(String reportingEmployeeName) {
+		this.reportingEmployeeName = reportingEmployeeName;
 	}
 }

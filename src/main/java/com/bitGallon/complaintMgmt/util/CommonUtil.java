@@ -123,7 +123,7 @@ public class CommonUtil {
 
 	public static String addPreviousComplaintStatus(String additionalComments, ComplaintStatus status,
 			ComplaintStatus subStatus) {
-		String pastComment = "Status included by previous employee " + status + " due to " + subStatus;
+		String pastComment = "Status included by previous employee " + status.getStatus() + " due to " + subStatus.getStatus();
 		if(null != additionalComments) return pastComment;
 		return additionalComments + pastComment;
 	}

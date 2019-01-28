@@ -24,6 +24,7 @@ import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
+import com.bitGallon.complaintMgmt.repository.UtilRepository;
 import com.bitGallon.complaintMgmt.rest.RestResource;
 
 @Controller
@@ -99,9 +100,10 @@ public class EmployeeComplaintServices  extends RestResource {
 		jsonResponse = new JsonResponse();
 		try {
 			ComplaintRegistration complaintRegistration = manager.resolveComplaint(complaintId, getUserId(), subStatus, comment);
+			ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration, null);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
-			jsonResponse.setComplaintRegistration(complaintRegistration);
+			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
 			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
 			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);

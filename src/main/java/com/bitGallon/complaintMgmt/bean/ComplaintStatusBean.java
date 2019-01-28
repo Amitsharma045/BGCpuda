@@ -4,7 +4,7 @@ public class ComplaintStatusBean{
 	private long id;
 	private String status;
 	private long parentStatusId ;
-	private long parentStatus ;
+	private String parentStatus ;
 	public long getId() {
 		return id;
 	}
@@ -17,10 +17,10 @@ public class ComplaintStatusBean{
 	public void setParentStatusId(long parentStatusId) {
 		this.parentStatusId = parentStatusId;
 	}
-	public long getParentStatus() {
+	public String getParentStatus() {
 		return parentStatus;
 	}
-	public void setParentStatus(long parentStatus) {
+	public void setParentStatus(String parentStatus) {
 		this.parentStatus = parentStatus;
 	}
 	public String getStatus() {
