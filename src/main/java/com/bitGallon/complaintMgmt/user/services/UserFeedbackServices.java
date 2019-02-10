@@ -23,6 +23,7 @@ import com.bitGallon.complaintMgmt.manager.AspectManager;
 import com.bitGallon.complaintMgmt.manager.AspectRatingManager;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.FeedbackManager;
+import com.bitGallon.complaintMgmt.manager.StatusManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.rest.RestResource;
 import com.google.gson.Gson;
@@ -31,7 +32,7 @@ import net.sf.json.JSONObject;
 
 
 @Controller
-@RequestMapping(value = "/bitGallon/api/feedback")
+@RequestMapping(value = "/bitGallon/api/user/feedback")
 public class UserFeedbackServices extends RestResource {
 	
 	private Class clazz = UserFeedbackServices.class;
@@ -48,6 +49,9 @@ public class UserFeedbackServices extends RestResource {
 	
 	@Autowired
 	private  FeedbackManager feedbackManager;
+	
+	@Autowired
+	private  StatusManager statusManager;
 	
 	private JsonResponse jsonResponse;
 	
@@ -67,11 +71,14 @@ public class UserFeedbackServices extends RestResource {
 		try {
 			ComplaintRegistration complaintRegistration = complaintManager.getComplaintForUser(complaintNumber , getUserId());
 			if(complaintRegistration != null && 
-					complaintRegistration.getStatus().getStatus().equals(ConstantProperty.STATUS_RESOLVED))
+					complaintRegistration.getStatus().getStatus().equalsIgnoreCase(ConstantProperty.STATUS_RESOLVED))
 			{
 				Feedback feedback = getFeedBack(complaintRegistration, serviceRating, serviceComment, recommendedPoint);
 				List<AspectRating> aspectRatingList = getAspectRating(complaintRegistration,aspectRating);
 				Long id =feedbackManager.saveFeedback(feedback);
+				complaintRegistration.setStatus(statusManager.getStatus(ConstantProperty.STATUS_CLOSED));
+				complaintRegistration.setSubStatus(statusManager.getSubStatus(ConstantProperty.SUB_STATUS_CLOSED_FEEDBACK_PROVIDED));
+				complaintManager.saveOrUpdateComplaintRegistration(complaintRegistration);
 				if(id != null) {
 					aspectRatingManager.saveAspectRating(aspectRatingList);
 					jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);

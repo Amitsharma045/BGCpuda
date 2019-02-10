@@ -82,6 +82,10 @@ public class ComplaintManager {
 		return repository.saveComplaintRegistration(complaintRegistration);
 	}
 	
+	public void saveOrUpdateComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
+		repository.saveOrUpdateComplaintRegistration(complaintRegistration);
+	}
+	
 	public ComplaintRegistration getComplaintForUser(String complanintId, long userId) {
 		return repository.getComplaintByComplaintNumber(complanintId, userId);
 	}
@@ -91,11 +95,11 @@ public class ComplaintManager {
 		return repository.getComplaintForUser(complanintId, empId);
 	}*/
 	
-	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate, Date endDate, Long categoryId){
+	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate, Date endDate, Long categoryId, List<Long> statusId){
 		if(startDate == null && endDate !=null) return null;
 		if(endDate == null) endDate = new Date();
 		
-		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId);
+		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId, statusId);
 	}
 	
 	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate, Date endDate, Long subCategoryId, Long prevComplaintId, List<Long> statusId){

@@ -26,8 +26,8 @@ public class FeedbackRepository {
 	}
 
 	public Long saveFeedback(Feedback feedback) {
-		Long id = (Long) getSession().save(feedback);
-		return id;
+		getSession().saveOrUpdate(feedback);
+		return feedback.getId();
 	}
 
 }

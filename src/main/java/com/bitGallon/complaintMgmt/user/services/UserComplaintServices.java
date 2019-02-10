@@ -62,10 +62,11 @@ public class UserComplaintServices extends RestResource {
 	public HashMap<String,Object> getAllComplaints(Pageable page,
 			@RequestParam(name= "startDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date startDate,
 		@RequestParam(name= "endDate", required = false) @DateTimeFormat(pattern="dd/MM/yyyy") Date endDate,
-		@RequestParam(name="categoryId", required = false) Long categoryId) throws Exception {
+		@RequestParam(name="categoryId", required = false) Long categoryId,
+		@RequestParam(name="statusId", required = false) List<Long> statusId) throws Exception {
 		jsonResponse = new JsonResponse();
 		try {
-			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId);
+			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId, statusId);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
 			jsonResponse.setComplaintList(complaintList);

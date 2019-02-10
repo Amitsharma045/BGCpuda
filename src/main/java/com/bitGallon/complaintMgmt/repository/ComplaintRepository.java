@@ -85,9 +85,16 @@ public class ComplaintRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate,
-			Date endDate, Long categoryId) {
+			Date endDate, Long categoryId, List<Long> statusId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
+		if(null != statusId) {
+			criteria.add(HibernateBuildInCriterion.buildInCriterion(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusId));
+		} else {
+		criteria.add(Restrictions.disjunction().
+					add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS).getId()))
+					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALED).getId())));
+		}
 		UtilRepository.addPageableAndSorting(criteria, page);
 		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".id", userId));
 		criteria.add(Restrictions.ne(UtilRepository.STATUS_ALIAS + ".id", 4l));

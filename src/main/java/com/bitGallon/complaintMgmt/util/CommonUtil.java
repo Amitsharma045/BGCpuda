@@ -123,6 +123,9 @@ public class CommonUtil {
 
 	public static String addPreviousComplaintStatus(String additionalComments, ComplaintStatus status,
 			ComplaintStatus subStatus) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, 3);
+		System.out.println(cal);
 		String pastComment = "Status included by previous employee " + status.getStatus() + " due to " + subStatus.getStatus();
 		if(null != additionalComments) return pastComment;
 		return additionalComments + pastComment;
