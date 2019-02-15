@@ -166,7 +166,7 @@ public class ComplaintManager {
 		return complaintRegistration;
 	}
 	
-	public ComplaintRegistrationBean updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
+	public ComplaintRegistration updateComplaint(String complaintId, Long empId, String subStatus, String additionalComments) throws Exception {
 		ComplaintRegistration newComplaintRegistration = null;
 		ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
 		if(complaintRegistration == null) return null;
@@ -186,7 +186,7 @@ public class ComplaintManager {
 			newComplaintRegistration.setAdditionalComments(CommonUtil.addPreviousComplaintStatus(newComplaintRegistration.getAdditionalComments(), complaintRegistration.getStatus(), complaintRegistration.getSubStatus()));
 			repository.saveOrUpdateComplaintRegistration(complaintRegistration);
 			repository.saveComplaintRegistration(newComplaintRegistration);
-			return UtilRepository.createComplaintRepoBean(newComplaintRegistration, null);
+			return newComplaintRegistration;
 		}
 		return null;
 	}

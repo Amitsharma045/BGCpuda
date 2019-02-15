@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bitGallon.complaintMgmt.entity.Employee;
+import com.bitGallon.complaintMgmt.entity.User;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 
 /**
@@ -22,5 +23,7 @@ public class EmployeeManager {
 	public Employee getEmployee(String mobileNumber) {
 		return repository.getEmployee(mobileNumber);
 	}
-
+	public void saveUpdateUser(Employee employee) throws Exception {
+		repository.saveUpdateUser(employee);
+	}
 }

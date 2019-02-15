@@ -18,6 +18,7 @@ public class ConstantProperty {
 	public static final String EMAIL_ID  = "emailId";
 	public static final String NAME  = "name";
 	public static final String OTP  = "otp";
+	public static final String TOKEN  = "token";
 	public static final String REGISTERED_COMPLAINT  = "registeredComplaint";
 	public static final String COMPLAINT_NUMBER  = "complaintNumber";
 	public static final String SERVICE_RATING  = "serviceRating";
@@ -139,6 +140,11 @@ public class ConstantProperty {
 
 	public static final String EMPLOYEE  = "EMPLOYEE";
 	public static final String USER  = "USER";
+
+	public static final String NEW_COMPLAINT_TITLE = "New Complaint";
+	public static final String ESCALETD_COMPLAINT_TITLE = "Escaleted Complaint";
+	public static final String RESOLVED_COMPLAINT_TITLE = "Resolved Complaint";
+	
 
 
 

@@ -16,6 +16,7 @@ import com.bitGallon.complaintMgmt.entity.ComplaintStatus;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.EscalationHierarchy;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
+import com.bitGallon.complaintMgmt.manager.PushNotificationManager;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
@@ -41,6 +42,9 @@ public class SchedularTask {
 	@Autowired
 	private EscalationHierarchyRepository escalationHierarchyRepository;
 	
+	@Autowired
+	private  PushNotificationManager pushNotificationManager;
+	
 	@Scheduled(fixedRate = 900000)
 	public void assignEmployeeToComplaint() throws Exception {
 		List<Employee> empList = null;
@@ -52,6 +56,7 @@ public class SchedularTask {
 				for(ComplaintRegistration complaintRegistration : complaintlist) {
 					empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
 					if(empList != null) {
+						Employee previousEmployee = complaintRegistration.getEmployee();
 						HashMap<Employee, Integer> empCountHM = complaintRepository.getAssignedEmployee(empList);
 						Employee assignedEmployee = CommonUtil.findAssignedEmployee(empCountHM);
 						complaintRegistration.setEmployee(assignedEmployee);
@@ -59,6 +64,10 @@ public class SchedularTask {
 						complaintRegistration.setEscalatedTime(CommonUtil.getEscaltedTime(escalationHierarchy.getEscalationTime()));
 						complaintRepository.saveOrUpdateComplaintRegistration(complaintRegistration);
 						System.out.println("Complaint Assigned");
+						pushNotificationManager.sendEscalationComplaintNotificationsToUser(complaintRegistration);
+						pushNotificationManager.sendAutoEscalationComplaintNotificationsToEmployee(complaintRegistration);
+						complaintRegistration.setEmployee(previousEmployee);
+						pushNotificationManager.sendAutoEscalateMessageForPreviousComplaintAsignee(complaintRegistration);
 					} else {
 						System.out.println("Complaint Not Assigned Yet");
 						SchedularTask.setAssignEmployeeTask(true);

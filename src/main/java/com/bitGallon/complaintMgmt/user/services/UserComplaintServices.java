@@ -25,10 +25,15 @@ import com.bitGallon.complaintMgmt.manager.AreaManager;
 import com.bitGallon.complaintMgmt.manager.AttachmentDetailManager;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
+import com.bitGallon.complaintMgmt.manager.PushNotificationManager;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
+import com.bitGallon.complaintMgmt.notification.PushNotificationUtil;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.rest.RestResource;
+import com.bitGallon.complaintMgmt.smsapi.sendSMS;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
+import com.bitGallon.complaintMgmt.util.PushNotificationMessageUtil;
+import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
 
 
 @Controller
@@ -52,6 +57,9 @@ public class UserComplaintServices extends RestResource {
 	
 	@Autowired
 	private  StatusManager statusManager;
+	
+	@Autowired
+	private  PushNotificationManager pushNotificationManager;
 	
 	
 	private JsonResponse jsonResponse;
@@ -141,6 +149,7 @@ public class UserComplaintServices extends RestResource {
 				if(attachmentDetails.length>0) {
 					attachmentDetails = attachmentManager.saveAttachments(savedComplaint,attachmentDetails,uploadedFiles);
 				}
+				pushNotificationManager.sendNewComplaintNotifications(complaintRegistration);
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 				jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
 				log(clazz, ConstantProperty.SUCCESSFUL_SAVED, ConstantProperty.LOG_DEBUG);

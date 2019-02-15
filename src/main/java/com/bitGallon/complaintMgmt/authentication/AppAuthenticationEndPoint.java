@@ -161,6 +161,8 @@ public class AppAuthenticationEndPoint extends RestResource {
 		Employee emp = null;
 		String mobileNumber = request.getParameter(ConstantProperty.MOBILE_NUMBER);
 		String otp = request.getParameter(ConstantProperty.OTP);
+		String deviceToken = request.getParameter(ConstantProperty.TOKEN);
+
 		jsonResponse = new JsonResponse();
 		try {
 			OtpTransectionDetail otpTransectionDetail = otpDetailManager.getOtpDetails(otp, mobileNumber);
@@ -169,16 +171,16 @@ public class AppAuthenticationEndPoint extends RestResource {
 					if(otpTransectionDetail.getUserType().equals(ConstantProperty.USER)) {
 						user = authenticationManager.getUserByMobileNumber(mobileNumber);
 						if (user == null) {
-							user = getUserDetail(mobileNumber, otpTransectionDetail.getEmailId());
+							user = getUserDetail(mobileNumber, otpTransectionDetail.getEmailId(), deviceToken);
 							Long id = authenticationManager.saveUser(user);
 							user.setId(id);
 						} else {
 							if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
+							if (!user.getDeviceToken().equals(deviceToken)) user.setDeviceToken(deviceToken);
 							user.setLastLoginDate(CommonUtil.getCurrentDate());
 							user.setLoginCount(user.getLoginCount()+1);
 							authenticationManager.saveUpdateUser(user);
 						}
-						otpDetailManager.delete(otpTransectionDetail);
 
 						String accessKey = JwtUtil.getRandomSecretKey();
 						String accessToken = JwtTokenFactory.createAccessJwtToken(String.valueOf(user.getId()), accessKey);
@@ -200,8 +202,15 @@ public class AppAuthenticationEndPoint extends RestResource {
 							jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
 							jsonResponse.setMessage(ConstantProperty.NOT_RESISTERED_EMPLOYEE);
 							return sendResponse(jsonResponse);
+						} else {
+							if (emp.getDeviceToken() == null) {
+								emp.setDeviceToken(deviceToken);
+								employeeManager.saveUpdateUser(emp);
+							} else if (!emp.getDeviceToken().equals(deviceToken)) {
+								emp.setDeviceToken(deviceToken);
+								employeeManager.saveUpdateUser(emp);
+							}
 						}
-						otpDetailManager.delete(otpTransectionDetail);
 
 						String accessKey = JwtUtil.getRandomSecretKey();
 						String accessToken = JwtTokenFactory.createAccessJwtToken(String.valueOf(emp.getId()), accessKey);
@@ -218,6 +227,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 							return sendResponse(jsonResponse);
 						}
 					}
+					otpDetailManager.delete(otpTransectionDetail);
 				} else {
 					jsonResponse.setStatusCode(ConstantProperty.UNAUTHORIZED);
 					jsonResponse.setMessage(ConstantProperty.OTP_EXPIRED_MESSAGE);
@@ -442,12 +452,13 @@ public class AppAuthenticationEndPoint extends RestResource {
 		return otpTransectionDetails;
 	}
 	
-	public User getUserDetail(String mobileNumber, String emailId) throws Exception {
+	public User getUserDetail(String mobileNumber, String emailId, String token) throws Exception {
 		User user = new User();
 		user.setLoginCount(1);
 		user.setLoginDate(CommonUtil.getCurrentDate());
 		user.setMobileNumber(mobileNumber);
 		user.setEmailId(emailId);
+		user.setDeviceToken(token);
 		return user;
 	}
 }

@@ -49,6 +49,9 @@ public class User extends BaseEntity<String> implements Serializable {
 	@Column(name = "LoginCount")
 	private Integer loginCount;
 
+	@Column(name = "DeviceToken")
+	private String deviceToken;
+	
 	public long getId() {
 		return id;
 	}
@@ -111,6 +114,14 @@ public class User extends BaseEntity<String> implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 
 }

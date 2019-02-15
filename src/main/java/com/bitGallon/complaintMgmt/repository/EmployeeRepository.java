@@ -53,4 +53,9 @@ public class EmployeeRepository {
 		return getSession().load(Employee.class, id);
 	}
 	
+	public void saveUpdateUser(Employee employee) throws Exception {
+		getSession().saveOrUpdate(employee);
+	}
+	
+	
 }

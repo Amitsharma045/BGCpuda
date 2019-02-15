@@ -39,6 +39,9 @@ public class Employee extends BaseEntity<String> implements Serializable {
 	private String alternateMobileNo;
 	@Column(name = "EmailId", nullable = false, unique = true)
 	private String emailId;
+	@Column(name = "DeviceToken")
+	private String deviceToken;
+	
 	
 	public long getId() {
 		return id;
@@ -87,5 +90,11 @@ public class Employee extends BaseEntity<String> implements Serializable {
 	}
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 }

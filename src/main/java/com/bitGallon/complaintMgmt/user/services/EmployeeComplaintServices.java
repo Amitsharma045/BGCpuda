@@ -22,10 +22,15 @@ import com.bitGallon.complaintMgmt.manager.AreaManager;
 import com.bitGallon.complaintMgmt.manager.AttachmentDetailManager;
 import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
+import com.bitGallon.complaintMgmt.manager.PushNotificationManager;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
+import com.bitGallon.complaintMgmt.notification.PushNotificationUtil;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.UtilRepository;
 import com.bitGallon.complaintMgmt.rest.RestResource;
+import com.bitGallon.complaintMgmt.smsapi.sendSMS;
+import com.bitGallon.complaintMgmt.util.PushNotificationMessageUtil;
+import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
 
 @Controller
 @RequestMapping(value = "/bitGallon/api/employee/complaint")
@@ -48,6 +53,8 @@ public class EmployeeComplaintServices  extends RestResource {
 	@Autowired
 	private  StatusManager statusManager;
 	
+	@Autowired
+	private  PushNotificationManager pushNotificationManager;
 	
 	private JsonResponse jsonResponse;
 	
@@ -101,6 +108,7 @@ public class EmployeeComplaintServices  extends RestResource {
 		try {
 			ComplaintRegistration complaintRegistration = manager.resolveComplaint(complaintId, getUserId(), subStatus, comment);
 			ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration, null);
+			pushNotificationManager.sendResolvedComplaintNotifications(complaintRegistration);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
 			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
@@ -119,10 +127,12 @@ public class EmployeeComplaintServices  extends RestResource {
 			@RequestParam(name="comment") String comment) throws Exception {
 		jsonResponse = new JsonResponse();
 		try {
-			ComplaintRegistrationBean complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
+			ComplaintRegistration complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
+			pushNotificationManager.sendManualEscalationComplaintNotifications(complaintRegistration);
+			ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration, null);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
-			jsonResponse.setComplaintRegistrationBean(complaintRegistration);
+			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
 			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
 			System.out.println(ex);
