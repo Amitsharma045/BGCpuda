@@ -48,11 +48,12 @@ public class PushNotificationUtil {
 		System.out.println("response:\n" + responseText);
 	}
 	
-	public static JSONObject getNotification(String title, String body, String complaintId) {
+	public static JSONObject getNotification(String title, String body, String complaintId, String complaintStatus) {
 		JSONObject info = new JSONObject();
 		info.put("title", title); // Notification title
 		info.put("body", body); 
 		info.put("complaintId", complaintId); 
+		info.put("complaintStatus", complaintStatus); 
 		return info;
 	}
 	

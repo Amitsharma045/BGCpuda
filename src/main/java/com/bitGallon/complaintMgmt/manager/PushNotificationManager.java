@@ -26,6 +26,7 @@ public class PushNotificationManager {
 			PushNotificationUtil.pushFCMNotifications(env.getProperty("notification.firbase.user"), userDeviceIdKey, notification);
 		else
 			System.out.println("userDeviceIdKey can't be NULL");
+
 	}
 	private void pushFCMNotificationsEmployee(String employeeDeviceIdKey, JSONObject notification) throws Exception {
 		if (employeeDeviceIdKey!=null)
@@ -38,7 +39,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.NEW_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getMessageForComplaintAsignee(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getUser().getMobileNumber(), SmsMessagesUtil.getMessageForComplainer(complaintRegistration.getReferenceComplaint()));
 		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getMessageForComplaintAsignee(complaintRegistration.getReferenceComplaint()));	
 	}
@@ -47,7 +48,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsUser(complaintRegistration.getUser().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.RESOLVED_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getResolvedComplaintMessageForComplainer(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getUser().getMobileNumber(), SmsMessagesUtil.getResolvedComplaintMessageForComplainer(complaintRegistration.getReferenceComplaint()));
 	}
 	
@@ -60,7 +61,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsUser(complaintRegistration.getUser().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.ESCALETD_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getAutoEscalateMessageForComplainer(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getUser().getMobileNumber(), SmsMessagesUtil.getAutoEscalateMessageForComplainer(complaintRegistration.getReferenceComplaint()));
 	}
 
@@ -68,7 +69,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.ESCALETD_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getManualEscalateMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getManualEscalateMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()));
 	}
 	
@@ -76,7 +77,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.ESCALETD_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getAutoEscalateMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getAutoEscalateMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()));
 	}
 	
@@ -84,7 +85,7 @@ public class PushNotificationManager {
 		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.ESCALETD_COMPLAINT_TITLE,
 						PushNotificationMessageUtil.getAutoEscalateMessageForPreviousComplaintAsignee(complaintRegistration.getReferenceComplaint()),
-						complaintRegistration.getReferenceComplaint()));
+						complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
 		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getAutoEscalateMessageForPreviousComplaintAsignee(complaintRegistration.getReferenceComplaint()));
 	}
 }
