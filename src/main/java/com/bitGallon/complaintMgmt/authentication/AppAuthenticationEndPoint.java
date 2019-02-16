@@ -30,6 +30,7 @@ import com.bitGallon.complaintMgmt.rest.JwtUtil;
 import com.bitGallon.complaintMgmt.rest.RestResource;
 import com.bitGallon.complaintMgmt.smsapi.sendSMS;
 import com.bitGallon.complaintMgmt.util.CommonUtil;
+import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -80,8 +81,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 			if(id != null) {
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 				jsonResponse.setMessage(ConstantProperty.OTP_SENT);
-				String messageBody = "Silent Reaction OTP Verification Code: "+otp+". Do not share it or"
-						+ " use it elsewhere.";
+				String messageBody = SmsMessagesUtil.getMessageForOtp("1234");
 				smsStatus = sendSMS.sendSms(phoneNumber, messageBody);
 				if(!smsStatus.get(ConstantProperty.STATUS_CODE).equals(ConstantProperty.OK_STATUS)) {
 					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
@@ -176,7 +176,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 							user.setId(id);
 						} else {
 							if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
-							if (!user.getDeviceToken().equals(deviceToken)) user.setDeviceToken(deviceToken);
+							if (user.getDeviceToken()!=null && !user.getDeviceToken().equals(deviceToken)) user.setDeviceToken(deviceToken);
 							user.setLastLoginDate(CommonUtil.getCurrentDate());
 							user.setLoginCount(user.getLoginCount()+1);
 							authenticationManager.saveUpdateUser(user);
