@@ -22,10 +22,16 @@ public class PushNotificationManager {
 	private Environment env;
 	
 	private void pushFCMNotificationsUser(String userDeviceIdKey, JSONObject notification) throws Exception {
-		PushNotificationUtil.pushFCMNotifications(env.getProperty("notification.firbase.user"), userDeviceIdKey, notification);
+		if (userDeviceIdKey!=null)
+			PushNotificationUtil.pushFCMNotifications(env.getProperty("notification.firbase.user"), userDeviceIdKey, notification);
+		else
+			System.out.println("userDeviceIdKey can't be NULL");
 	}
-	private void pushFCMNotificationsEmployee(String userDeviceIdKey, JSONObject notification) throws Exception {
-		PushNotificationUtil.pushFCMNotifications(env.getProperty("notification.firbase.employee"), userDeviceIdKey, notification);
+	private void pushFCMNotificationsEmployee(String employeeDeviceIdKey, JSONObject notification) throws Exception {
+		if (employeeDeviceIdKey!=null)
+			PushNotificationUtil.pushFCMNotifications(env.getProperty("notification.firbase.employee"), employeeDeviceIdKey, notification);
+		else
+			System.out.println("employeeDeviceIdKey can't be NULL");
 	}
 	
 	public void sendNewComplaintNotifications(ComplaintRegistration complaintRegistration) throws Exception {

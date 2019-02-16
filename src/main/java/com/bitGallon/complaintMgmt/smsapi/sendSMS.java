@@ -18,6 +18,8 @@ public class sendSMS {
 	public static HashMap<String,String> sendSms(String mobileNumber,String messageBody) {
 		HashMap<String,String> smsStatus = new HashMap<String,String>();
 		try {
+			if(mobileNumber == null)
+				throw new NullPointerException("Mobile Number can't be empty");
 			String url="http://api.msg91.com/api/v2/sendsms?"
 					+ "message="+messageBody
 					+"&authkey=262630AbLFsE79Di5c63cd93" 
