@@ -23,7 +23,7 @@ public class ComplaintRegistrationBean {
 	private String additionalComments;
 	private String complaintBy;
 	private List<String> attachmentsFiles;
-	
+	private String createdDate;
 	
 	public String getSubCategoryName() {
 		return subCategoryName;
@@ -145,5 +145,11 @@ public class ComplaintRegistrationBean {
 	}
 	public void setReportingEmployeeName(String reportingEmployeeName) {
 		this.reportingEmployeeName = reportingEmployeeName;
+	}
+	public String getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 }

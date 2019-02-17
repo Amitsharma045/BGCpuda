@@ -205,6 +205,7 @@ public class ComplaintManager {
 		newComplaintRegistration.setComplaintLat(updatedComplaintRegistration.getComplaintLat());
 		newComplaintRegistration.setComplaintLevel((short) (updatedComplaintRegistration.getComplaintLevel()+1));
 		newComplaintRegistration.setComplaintLng(updatedComplaintRegistration.getComplaintLng());
+		newComplaintRegistration.setCreatedDate(updatedComplaintRegistration.getCreatedDate());
 		EscalationHierarchy escalationHierarchy =null;
 		if(null != updatedComplaintRegistration.getEmployee()) {
 			newComplaintRegistration.setEmployee(updatedComplaintRegistration.getEmployee().getReportingEmployee());
@@ -227,6 +228,7 @@ public class ComplaintManager {
 	public void escalateComplaints(ComplaintRegistration complaint) {
 		ComplaintRegistration newComplaintRegistration = null;
 		newComplaintRegistration = getUpdatedComplaint(complaint);
+		newComplaintRegistration.setCreatedDate(complaint.getCreatedDate());
 		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
 		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM));
 		try {

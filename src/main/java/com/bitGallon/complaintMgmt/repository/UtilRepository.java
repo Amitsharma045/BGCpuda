@@ -1,6 +1,7 @@
 package com.bitGallon.complaintMgmt.repository;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -214,6 +215,7 @@ public class UtilRepository {
 			attachmentBeans = attachmentDetails.stream().map(attachmentDetail -> attachmentDetail.getName()).collect(Collectors.toList());
 		}
 		bean.setAttachmentsFiles(attachmentBeans);
+		bean.setCreatedDate(UtilRepository.getDateInFormat(registration.getCreatedDate()));
 		return bean;
 	}
 
@@ -222,5 +224,10 @@ public class UtilRepository {
 				.add(Projections.property(STATUS_ALIAS + ".id"), "id")
 				.add(Projections.property(STATUS_ALIAS + ".status"), "status"))
 				.setResultTransformer(new AliasToBeanResultTransformer(ParentComplaintStatusBean.class));
+	}
+	
+	public static String getDateInFormat(Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+		return dateFormat.format(date);
 	}
 }
