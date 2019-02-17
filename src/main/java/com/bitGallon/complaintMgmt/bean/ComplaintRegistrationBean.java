@@ -11,6 +11,8 @@ public class ComplaintRegistrationBean {
 	private String designation;
 	private short complaintLevel;
 	private String issueName;
+	private String subCategoryName;
+	private String categoryName;
 	private String issueTitle;
 	private String areaName;
 	private double complaintLat;
@@ -23,6 +25,18 @@ public class ComplaintRegistrationBean {
 	private List<String> attachmentsFiles;
 	
 	
+	public String getSubCategoryName() {
+		return subCategoryName;
+	}
+	public void setSubCategoryName(String subCategoryName) {
+		this.subCategoryName = subCategoryName;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
 	public String getDesignation() {
 		return designation;
 	}

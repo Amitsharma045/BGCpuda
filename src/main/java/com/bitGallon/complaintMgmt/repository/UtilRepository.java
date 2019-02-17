@@ -196,9 +196,11 @@ public class UtilRepository {
 		bean.setComplaintBy(registration.getUser().getMobileNumber());
 		bean.setComplaintLat(registration.getComplaintLat());
 		bean.setComplaintLng(registration.getComplaintLng());
-		bean.setEmployeeMobileNumber(registration.getEmployee().getName());
-		bean.setEmployeeName(registration.getEmployee().getRegisteredMobileNo());
+		bean.setEmployeeMobileNumber(registration.getEmployee().getRegisteredMobileNo());
+		bean.setEmployeeName(registration.getEmployee().getName());
 		bean.setIssueName(registration.getIssueType().getName());
+		bean.setSubCategoryName(registration.getIssueType().getSubCategory().getName());
+		bean.setCategoryName(registration.getIssueType().getSubCategory().getCategory().getName());
 		bean.setIssueTitle(registration.getIssueTitle()); 
 		bean.setStatus(registration.getStatus().getStatus());
 		bean.setSubStatus(registration.getSubStatus().getStatus());
