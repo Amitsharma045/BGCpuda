@@ -175,7 +175,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 							user.setId(id);
 						} else {
 							if (user.getEmailId()==null) user.setEmailId(otpTransectionDetail.getEmailId());
-							if (user.getDeviceToken()!=null && !user.getDeviceToken().equals(deviceToken)) user.setDeviceToken(deviceToken);
+							user.setDeviceToken(deviceToken);
 							user.setLastLoginDate(CommonUtil.getCurrentDate());
 							user.setLoginCount(user.getLoginCount()+1);
 							authenticationManager.saveUpdateUser(user);
@@ -202,13 +202,8 @@ public class AppAuthenticationEndPoint extends RestResource {
 							jsonResponse.setMessage(ConstantProperty.NOT_RESISTERED_EMPLOYEE);
 							return sendResponse(jsonResponse);
 						} else {
-							if (emp.getDeviceToken() == null) {
-								emp.setDeviceToken(deviceToken);
-								employeeManager.saveUpdateUser(emp);
-							} else if (!emp.getDeviceToken().equals(deviceToken)) {
-								emp.setDeviceToken(deviceToken);
-								employeeManager.saveUpdateUser(emp);
-							}
+							emp.setDeviceToken(deviceToken);
+							employeeManager.saveUpdateUser(emp);
 						}
 
 						String accessKey = JwtUtil.getRandomSecretKey();

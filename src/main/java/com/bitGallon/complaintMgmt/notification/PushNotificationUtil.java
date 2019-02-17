@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 
@@ -52,8 +53,10 @@ public class PushNotificationUtil {
 		JSONObject info = new JSONObject();
 		info.put("title", title); // Notification title
 		info.put("body", body); 
-		info.put("complaintId", complaintId); 
-		info.put("complaintStatus", complaintStatus); 
+		HashMap<String, String> complaintMap =  new HashMap<String, String>();
+		complaintMap.put("complaintId", complaintId);
+		complaintMap.put("complaintStatus", complaintStatus);
+		info.put("data", complaintMap); 
 		return info;
 	}
 	
