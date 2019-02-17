@@ -52,11 +52,11 @@ public class PushNotificationUtil {
 	public static JSONObject getNotification(String title, String body, String complaintId, String complaintStatus) {
 		JSONObject info = new JSONObject();
 		info.put("title", title); // Notification title
-		info.put("body", body); 
 		HashMap<String, String> complaintMap =  new HashMap<String, String>();
+		complaintMap.put("body", body);
 		complaintMap.put("complaintId", complaintId);
 		complaintMap.put("complaintStatus", complaintStatus);
-		info.put("data", complaintMap); 
+		info.put("body", complaintMap); 
 		return info;
 	}
 	
