@@ -1,6 +1,7 @@
 package com.bitGallon.complaintMgmt.manager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,14 +99,22 @@ public class ComplaintManager {
 	public List<ComplaintRegistration> getAllComplaintsForUser(Pageable page, Long userId, Date startDate, Date endDate, Long categoryId, List<Long> statusId){
 		if(startDate == null && endDate !=null) return null;
 		if(endDate == null) endDate = new Date();
-		
+		// add end date +1 
+		Calendar cal= Calendar.getInstance();
+		cal.setTime(endDate);
+		cal.add(Calendar.DATE, 1);
+		endDate = cal.getTime();
 		return repository.getAllComplaintsForUser(page, userId , startDate, endDate, categoryId, statusId);
 	}
 	
 	public List<ComplaintRegistration> getAllComplaintsForEmployee(Pageable page, Long employeeId, Date startDate, Date endDate, Long subCategoryId, Long prevComplaintId, List<Long> statusId){
 		if(startDate == null && endDate !=null) return null;
 		if(endDate == null) endDate = new Date();
-		
+		// add end date +1 
+		Calendar cal= Calendar.getInstance();
+		cal.setTime(endDate);
+		cal.add(Calendar.DATE, 1);
+		endDate = cal.getTime();
 		return repository.getAllComplaintsForEmployee(page, employeeId, startDate, endDate, subCategoryId, prevComplaintId, statusId);
 	}
 	/*public List<ComplaintRegistration> getAllComplaintsForEmp(Pageable page, long empId){

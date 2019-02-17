@@ -2,6 +2,7 @@ package com.bitGallon.complaintMgmt.repository;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,6 +150,28 @@ public class UtilRepository {
 		return criteria;
 	}
 	
+	public static List<ComplaintMinBean> transferToMiniComplaintBean(List<ComplaintRegistration> complaintRegistration) {
+		List<ComplaintMinBean> complaintMinBeans = new ArrayList<>();
+		if(complaintRegistration == null || complaintRegistration.size()==0) return null;
+		complaintMinBeans = complaintRegistration.stream().map( complaint -> {
+			ComplaintMinBean minBean = new ComplaintMinBean();
+			minBean.setCategory(complaint.getIssueType().getSubCategory().getCategory().getName());
+			minBean.setComplaintBy(complaint.getUser().getUserName()==null?complaint.getUser().getMobileNumber():complaint.getUser().getUserName());
+			minBean.setCreatedDate(UtilRepository.getDateInFormat(complaint.getCreatedDate()));
+			minBean.setEmployeeName(complaint.getEmployee()==null?"":complaint.getEmployee().getName());
+			minBean.setEmployeeNo(complaint.getEmployee()==null?"":complaint.getEmployee().getRegisteredMobileNo());
+			minBean.setId(complaint.getId());
+			minBean.setIssueTitle(complaint.getIssueTitle());
+			minBean.setIssueType(complaint.getIssueType().getName());
+			minBean.setReferenceComplaint(complaint.getReferenceComplaint());
+			minBean.setStatus(complaint.getStatus().getStatus());
+			minBean.setSubCategory(complaint.getIssueType().getSubCategory().getName());
+			minBean.setSubStatus(complaint.getSubStatus().getStatus());
+			return minBean;
+		}).collect(Collectors.toList());
+		return complaintMinBeans;
+	}
+	
 	public static Criteria addPageableAndSorting(Criteria criteria, Pageable page) {
 		//setting page configurations
 		criteria.setFirstResult(page.getPageNumber() * page.getPageSize()).setMaxResults(page.getPageSize());
@@ -185,7 +208,7 @@ public class UtilRepository {
 	}
 	
 	public static Criteria addDateFilterCriteria(Criteria criteria, String propertyName, Date startDate, Date endDate) {
-		return criteria.add(Restrictions.between( propertyName , startDate, endDate));
+		return criteria.add(Restrictions.between(propertyName , startDate, endDate));
 	}
 	
 	public static ComplaintRegistrationBean createComplaintRepoBean(ComplaintRegistration registration, List<AttachmentDetail> attachmentDetails) {

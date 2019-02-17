@@ -12,6 +12,7 @@ public class ComplaintMinBean {
 	private String subStatus;
 	private String issueTitle;
 	private String complaintBy;
+	private String createdDate;
 	
 	public String getEmployeeName() {
 		return employeeName;
@@ -78,5 +79,11 @@ public class ComplaintMinBean {
 	}
 	public void setId(long id) {
 		this.id = id;
+	}
+	public String getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 }

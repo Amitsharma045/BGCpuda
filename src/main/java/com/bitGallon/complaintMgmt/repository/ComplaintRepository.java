@@ -88,6 +88,13 @@ public class ComplaintRepository {
 			Date endDate, Long categoryId, List<Long> statusId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
+		criteria.createAlias(UtilRepository.COMPLAINT_REG_MIN + ".issueType", UtilRepository.ISSUE_TYPE_ALIAS).
+		createAlias(UtilRepository.ISSUE_TYPE_ALIAS + ".subCategory", UtilRepository.SUB_CATEGORY_ALIAS).
+		createAlias(UtilRepository.SUB_CATEGORY_ALIAS + ".category", UtilRepository.CATEGORY_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".employee", UtilRepository.EMPLOYEE_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".status", UtilRepository.PARENT_STATUS_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".subStatus", UtilRepository.STATUS_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".user", UtilRepository.USER_ALIAS);
 		if(null != statusId) {
 			criteria.add(HibernateBuildInCriterion.buildInCriterion(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusId));
 		} else {
@@ -104,7 +111,7 @@ public class ComplaintRepository {
 		if(categoryId!=null && categoryId!=0) {
 			criteria.add(Restrictions.eq(UtilRepository.CATEGORY_ALIAS+".id", categoryId));
 		}
-		return UtilRepository.transferToMiniComplaintBean(criteria).list();
+		return UtilRepository.transferToMiniComplaintBean(criteria.list());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -112,6 +119,13 @@ public class ComplaintRepository {
 			Date endDate, Long subCategoryId, Long prevComplaintId, List<Long> statusId) {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
+		criteria.createAlias(UtilRepository.COMPLAINT_REG_MIN + ".issueType", UtilRepository.ISSUE_TYPE_ALIAS).
+		createAlias(UtilRepository.ISSUE_TYPE_ALIAS + ".subCategory", UtilRepository.SUB_CATEGORY_ALIAS).
+		createAlias(UtilRepository.SUB_CATEGORY_ALIAS + ".category", UtilRepository.CATEGORY_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".employee", UtilRepository.EMPLOYEE_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".status", UtilRepository.PARENT_STATUS_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".subStatus", UtilRepository.STATUS_ALIAS).
+		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".user", UtilRepository.USER_ALIAS);
 		if(null != statusId) {
 			criteria.add(HibernateBuildInCriterion.buildInCriterion(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusId));
 		} else {
@@ -129,7 +143,7 @@ public class ComplaintRepository {
 		if(subCategoryId!=null && subCategoryId!=0) {
 			criteria.add(Restrictions.eq(UtilRepository.SUB_CATEGORY_ALIAS+".id", subCategoryId));
 		}
-		return UtilRepository.transferToMiniComplaintBean(criteria).list();
+		return UtilRepository.transferToMiniComplaintBean(criteria.list());
 	}
 
 
