@@ -152,6 +152,7 @@ public class ComplaintRepository {
 		Criteria criteria = getSession().createCriteria(ComplaintRegistration.class, UtilRepository.COMPLAINT_REG_MIN);
 		criteria.add(UtilRepository.isActiveRestricition());
 		criteria.add(Restrictions.eq("referenceComplaint", complaintNumber)).add(Restrictions.eq("user.id", userId));
+		criteria.addOrder(org.hibernate.criterion.Order.desc("complaintLevel"));
 		List<ComplaintRegistration> complaintlist = criteria.setFetchSize(1).list();
 		if(complaintlist.size() != 0) {
 			return complaintlist.get(0);

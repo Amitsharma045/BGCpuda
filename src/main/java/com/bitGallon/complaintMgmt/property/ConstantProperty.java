@@ -128,7 +128,7 @@ public class ConstantProperty {
 	public static final String SUB_STATUS_ESCALED_OTHERS = "OTHERS";
 	
 	public static final String SUB_STATUS_CLOSED_FEEDBACK_NOT_PROVIDED = "FEEDBACK NOT PROVIDED";
-	public static final String SUB_STATUS_CLOSED_FEEDBACK_PROVIDED = "FEEDBACK PROVIDED";
+	public static final String SUB_STATUS_CLOSED_FEEDBACK_PROVIDED = "CLOSED";
 
 	
 	public static final String ISSUE_TITLE = "issueTitle";
