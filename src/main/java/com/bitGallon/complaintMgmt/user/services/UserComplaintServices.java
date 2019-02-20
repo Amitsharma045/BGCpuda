@@ -124,8 +124,6 @@ public class UserComplaintServices extends RestResource {
 		try {
 			AttachmentDetail [] attachmentDetails = new AttachmentDetail[uploadedFiles.length];
 			if(attachmentDetails.length>0 && !validateFiles(uploadedFiles,attachmentDetails,jsonResponse)) {
-				jsonResponse.setStatusCode(ConstantProperty.INVALID_FILE);
-				jsonResponse.setMessage(ConstantProperty.INVALID_FILE_ERROR);
 				log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
 				return sendResponse(jsonResponse);
 			}
@@ -199,13 +197,15 @@ public class UserComplaintServices extends RestResource {
 	private boolean validateFileExt(MultipartFile uploadedFile, AttachmentDetail attachmentDetails, 
 			JsonResponse jsonResponse) throws Exception
 	{
-		if(CommonUtil.getMatchingStrings(CommonUtil.listOfAcceptedFiles(),uploadedFile.getContentType())) {
-			return true;
-		}
-		else {
-			jsonResponse.setStatusCode(ConstantProperty.FILE_SIZE_LIMIT);
-			jsonResponse.setMessage(ConstantProperty.FILE_SIZE_ERROR);
-			return false;
-		}
+		return true;
 	}
+	
+	/*
+	 * private boolean validateFileExt(MultipartFile uploadedFile, AttachmentDetail
+	 * attachmentDetails, JsonResponse jsonResponse) throws Exception {
+	 * if(CommonUtil.getMatchingStrings(CommonUtil.listOfAcceptedFiles(),
+	 * uploadedFile.getContentType())) { return true; } else {
+	 * jsonResponse.setStatusCode(ConstantProperty.FILE_SIZE_LIMIT);
+	 * jsonResponse.setMessage(ConstantProperty.FILE_SIZE_ERROR); return false; } }
+	 */
 }

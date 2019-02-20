@@ -10,7 +10,7 @@ import com.bitGallon.complaintMgmt.property.ConstantProperty;
 
  
 /**
- * @author rpsingh
+ * @author suhani
  *
  */
 public class sendSMS {
@@ -22,7 +22,7 @@ public class sendSMS {
 				throw new NullPointerException("Mobile Number can't be empty");
 			String url="http://api.msg91.com/api/v2/sendsms?"
 					+ "message="+messageBody
-					+"&authkey=262630AbLFsE79Di5c63cd93" 
+					+"&authkey=263706AzUVaNGZk35c6bb8de" 
 					+"&mobiles="+mobileNumber 
 					+"&route=4" //ROUTE 4 FOR TRANSCATIONAL MESSAGE
 					+"&sender=CTPUDA" //SENDERID
