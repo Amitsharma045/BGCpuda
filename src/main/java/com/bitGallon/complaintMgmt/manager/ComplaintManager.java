@@ -182,15 +182,18 @@ public class ComplaintManager {
 		if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId) {
 			newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
 			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
-			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL))
-				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL));
-			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
-				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME));
-			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE))
-				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE));
-			if(subStatus.equals(ConstantProperty.SUB_STATUS_ESCALED_OTHERS)) {
-				complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_OTHERS));
-				complaintRegistration.setAdditionalComments(additionalComments);
+			complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_EMPLOYEE));
+			complaintRegistration.setAdditionalComments(additionalComments);
+
+			newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALATED));
+			if(subStatus.equalsIgnoreCase(ConstantProperty.SUB_STATUS_ESCALED_NEED_APPROVAL))
+				newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(subStatus));
+			if(subStatus.equalsIgnoreCase(ConstantProperty.SUB_STATUS_ESCALED_REQUIRE_MORE_TIME))
+				newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(subStatus));
+			if(subStatus.equalsIgnoreCase(ConstantProperty.SUB_STATUS_ESCALED_STOCK_UNAVAILABLE))
+				newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(subStatus));
+			if(subStatus.equalsIgnoreCase(ConstantProperty.SUB_STATUS_ESCALED_OTHERS)) {
+				newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(subStatus));
 			}
 			newComplaintRegistration.setAdditionalComments(CommonUtil.addPreviousComplaintStatus(newComplaintRegistration.getAdditionalComments(), complaintRegistration.getStatus(), complaintRegistration.getSubStatus()));
 			repository.saveOrUpdateComplaintRegistration(complaintRegistration);
@@ -208,7 +211,6 @@ public class ComplaintManager {
 		ComplaintRegistration newComplaintRegistration = new ComplaintRegistration();
 		newComplaintRegistration.setIsActive((short)1);
 		newComplaintRegistration.setArea(updatedComplaintRegistration.getArea());
-		newComplaintRegistration.setAdditionalComments(updatedComplaintRegistration.getAdditionalComments());
 		String comp = updatedComplaintRegistration.getReferenceComplaint();
 		newComplaintRegistration.setComplaintId(comp+DELIM+(updatedComplaintRegistration.getComplaintLevel()+1));
 		newComplaintRegistration.setComplaintLat(updatedComplaintRegistration.getComplaintLat());
@@ -229,8 +231,6 @@ public class ComplaintManager {
 		newComplaintRegistration.setReferenceComplaint(updatedComplaintRegistration.getReferenceComplaint());
 		newComplaintRegistration.setRemark(updatedComplaintRegistration.getRemark());
 		newComplaintRegistration.setUser(updatedComplaintRegistration.getUser());
-		newComplaintRegistration.setStatus(updatedComplaintRegistration.getStatus());
-		newComplaintRegistration.setSubStatus(updatedComplaintRegistration.getSubStatus());
 		return newComplaintRegistration;
 	}
 
@@ -238,7 +238,7 @@ public class ComplaintManager {
 		ComplaintRegistration newComplaintRegistration = null;
 		newComplaintRegistration = getUpdatedComplaint(complaint);
 		newComplaintRegistration.setCreatedDate(complaint.getCreatedDate());
-		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALED));
+		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_ESCALATED));
 		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM));
 		try {
 			//create new complaint

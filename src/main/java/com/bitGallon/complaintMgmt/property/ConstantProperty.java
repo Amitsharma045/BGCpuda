@@ -111,7 +111,7 @@ public class ConstantProperty {
 
 	public static final String STATUS_RESOLVED = "RESOLVED";
 	public static final String STATUS_IN_PROGRESS = "IN PROGRESS";
-	public static final String STATUS_ESCALED = "ESCALATED";
+	public static final String STATUS_ESCALATED = "ESCALATED";
 	public static final String STATUS_CLOSED = "CLOSED";
 
 	public static final String SUB_STATUS_RESOLVED_ISSUE_FIXED = "ISSUE FIXED";
@@ -122,12 +122,12 @@ public class ConstantProperty {
 	public static final String SUB_STATUS_IN_PROGRESS = "IN PROGRESS";
 	
 	public static final String SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM = "ESCALATED BY SYSTEM";
+	public static final String SUB_STATUS_ESCALED_ESCALATED_BY_EMPLOYEE = "ESCALATED BY EMPLOYEE";
 	public static final String SUB_STATUS_ESCALED_NEED_APPROVAL = "NEED APPROVAL";
 	public static final String SUB_STATUS_ESCALED_STOCK_UNAVAILABLE = "STOCK UNAVAILABLE";
 	public static final String SUB_STATUS_ESCALED_REQUIRE_MORE_TIME = "REQUIRE MORE TIME";
 	public static final String SUB_STATUS_ESCALED_OTHERS = "OTHERS";
 	
-	public static final String SUB_STATUS_CLOSED_FEEDBACK_NOT_PROVIDED = "FEEDBACK NOT PROVIDED";
 	public static final String SUB_STATUS_CLOSED_FEEDBACK_PROVIDED = "CLOSED";
 
 	

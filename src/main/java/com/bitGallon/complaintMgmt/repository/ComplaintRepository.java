@@ -100,7 +100,7 @@ public class ComplaintRepository {
 		} else {
 		criteria.add(Restrictions.disjunction().
 					add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS).getId()))
-					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALED).getId())));
+					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALATED).getId())));
 		}
 		UtilRepository.addPageableAndSorting(criteria, page);
 		criteria.add(Restrictions.eq(UtilRepository.USER_ALIAS + ".id", userId));
@@ -131,7 +131,7 @@ public class ComplaintRepository {
 		} else {
 		criteria.add(Restrictions.disjunction().
 					add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS).getId()))
-					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALED).getId())));
+					.add(Restrictions.eq(UtilRepository.COMPLAINT_REG_MIN+".status.id", statusRepository.getStatus(ConstantProperty.STATUS_ESCALATED).getId())));
 		}
 		UtilRepository.addPageableAndSorting(criteria, page);
 		UtilRepository.addSorting(criteria, page);

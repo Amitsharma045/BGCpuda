@@ -128,6 +128,6 @@ public class CommonUtil {
 		System.out.println(cal);
 		String pastComment = "Status included by previous employee " + status.getStatus() + " due to " + subStatus.getStatus();
 		if(null != additionalComments) return pastComment;
-		return additionalComments + pastComment;
+		return additionalComments + " "+ pastComment;
 	}
 }
