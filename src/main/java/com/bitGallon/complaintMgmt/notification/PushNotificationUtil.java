@@ -14,7 +14,9 @@ public class PushNotificationUtil {
 
 	private static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 
-	public static void pushFCMNotifications(String authKeyserver, String userDeviceIdKey, JSONObject notification) throws Exception{
+	public static void pushFCMNotifications(String authKeyserver, String userDeviceIdKey, 
+			                                      JSONObject notification, JSONObject data) throws Exception
+	{
 
 		URL url = new URL(API_URL_FCM);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -30,6 +32,7 @@ public class PushNotificationUtil {
 		JSONObject json = new JSONObject();
 		json.put("to",userDeviceIdKey.trim());
 		json.put("notification", notification);
+		json.put("data", data);
 
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(json.toString());
@@ -49,14 +52,17 @@ public class PushNotificationUtil {
 		System.out.println("response:\n" + responseText);
 	}
 	
-	public static JSONObject getNotification(String title, String body, String complaintId, String complaintStatus) {
+	public static JSONObject getNotification(String title, String body) {
 		JSONObject info = new JSONObject();
 		info.put("title", title); // Notification title
-		HashMap<String, String> complaintMap =  new HashMap<String, String>();
-		complaintMap.put("body", body);
-		complaintMap.put("complaintId", complaintId);
-		complaintMap.put("complaintStatus", complaintStatus);
-		info.put("body", complaintMap); 
+		info.put("body", body); 
+		return info;
+	}
+	
+	public static JSONObject getData(String complaintId, String complaintStatus) {
+		JSONObject info = new JSONObject();
+		info.put("complaintId", complaintId); 
+		info.put("complaintStatus", complaintStatus); 
 		return info;
 	}
 	
