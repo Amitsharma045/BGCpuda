@@ -404,8 +404,7 @@ public class AppAuthenticationEndPoint extends RestResource {
 			if(id != null) {
 				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 				jsonResponse.setMessage(ConstantProperty.OTP_SENT);
-				String messageBody = "Silent Reaction OTP Verification Code: "+otp+". Do not share it or"
-						+ " use it elsewhere.";
+				String messageBody = SmsMessagesUtil.getMessageForOtp("1234");
 				smsStatus = sendSMS.sendSms(mobileNumber, messageBody);
 				if(!smsStatus.get(ConstantProperty.STATUS_CODE).equals(ConstantProperty.OK_STATUS)) {
 					jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
