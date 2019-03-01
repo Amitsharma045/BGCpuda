@@ -19,6 +19,7 @@ import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.MinCategorySubCategoryBean;
 import com.bitGallon.complaintMgmt.bean.MinSubCategoryBean;
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
+import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.EscalationHierarchy;
@@ -28,6 +29,7 @@ import com.bitGallon.complaintMgmt.repository.AttachmentDetailRepository;
 import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
+import com.bitGallon.complaintMgmt.repository.RoleCategoryRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
 import com.bitGallon.complaintMgmt.repository.StatusRepository;
 import com.bitGallon.complaintMgmt.repository.SubCategoryRepository;
@@ -62,6 +64,8 @@ public class ComplaintManager {
 	@Autowired
 	private SubCategoryRepository subCategoryRepository;
 	
+	 @Autowired
+	 private RoleCategoryRepository roleCategoryRepository;
 	
 
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
@@ -256,18 +260,32 @@ public class ComplaintManager {
 		
 	}
 
-	public MinCategorySubCategoryBean getAssignedSubCategories(Long userId) {
-		MinCategorySubCategoryBean categorySubCategoryBean = new MinCategorySubCategoryBean();
-		Employee emp = empRepository.getEmployee(userId);
-		categorySubCategoryBean.setCategoryId(emp.getCategory().getId());
-		categorySubCategoryBean.setCategoryName(emp.getCategory().getName());
-		categorySubCategoryBean.setSubCategories(subCategoryRepository
-				.getAllSubCategories(categorySubCategoryBean.getCategoryId()).stream().map(subCategory -> {
-					MinSubCategoryBean minSubCategoryBean = new MinSubCategoryBean();
-					minSubCategoryBean.setId(subCategory.getId());
-					minSubCategoryBean.setName(subCategory.getName());
-					return minSubCategoryBean;
-				}).collect(Collectors.toList()));
-		return categorySubCategoryBean;
-	}
+	public List<MinCategorySubCategoryBean> getAssignedCategoriesSubCategory(Long userId) {
+        MinCategorySubCategoryBean categorySubCategoryBean = new MinCategorySubCategoryBean();
+        Employee emp = empRepository.getEmployee(userId.longValue());
+        List<Category> categoryList = roleCategoryRepository.getAssignedCategory(emp.getRole());
+        ArrayList<MinCategorySubCategoryBean> listMinCategorySubCategoryBean = null;
+        if (categoryList != null) {
+            listMinCategorySubCategoryBean = new ArrayList<MinCategorySubCategoryBean>();
+            for (Category category : categoryList) {
+                MinCategorySubCategoryBean bean = new MinCategorySubCategoryBean();
+                bean.setCategoryId(category.getId());
+                bean.setCategoryName(category.getName());
+                bean.setSubCategories(this.subCategoryRepository.getAllSubCategories(category.getId()).stream().map(subCategory -> {
+                    MinSubCategoryBean minSubCategoryBean = new MinSubCategoryBean();
+                    minSubCategoryBean.setId(subCategory.getId());
+                    minSubCategoryBean.setName(subCategory.getName());
+                    return minSubCategoryBean;
+                }).collect(Collectors.toList()));
+                listMinCategorySubCategoryBean.add(bean);
+            }
+        }
+        return listMinCategorySubCategoryBean;
+    }
+
+    public List<Category> getAssignedCategories(Long userId) {
+        Employee emp = empRepository.getEmployee(userId.longValue());
+        List categoryList = roleCategoryRepository.getAssignedCategory(emp.getRole());
+        return categoryList;
+    }
 }

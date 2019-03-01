@@ -49,7 +49,7 @@ public class ComplaintRegistration extends BaseEntity<String> implements Seriali
 	private Double complaintLat;
 	@Column(name = "complaintLng" , precision = 11 , scale = 8 )
 	private Double complaintLng;
-	@Column(name = "ReferenceComplaint", nullable = false, unique = true)
+	@Column(name = "ReferenceComplaint", nullable = false)
 	private String referenceComplaint;
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "Status", referencedColumnName = "id")

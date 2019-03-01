@@ -20,39 +20,34 @@ public class Role extends BaseEntity<String> implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	@Column(name = "RoleName", nullable = false)
-	private String roleName;
-	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "BG_CategoryId", referencedColumnName = "id")
-	private Category category;
-	@Column(name = "RoleHierarchy", nullable = false)
-	private int roleHierarchy;
-	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	public Category getCategory() {
-		return category;
-	}
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-	public int getRoleHierarchy() {
-		return roleHierarchy;
-	}
-	public void setRoleHierarchy(int roleHierarchy) {
-		this.roleHierarchy = roleHierarchy;
-	}
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long id;
+    @Column(name="RoleName", nullable=false)
+    private String roleName;
+    @Column(name="RoleHierarchy", nullable=false)
+    private int roleHierarchy;
 
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getRoleName() {
+        return this.roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public int getRoleHierarchy() {
+        return this.roleHierarchy;
+    }
+
+    public void setRoleHierarchy(int roleHierarchy) {
+        this.roleHierarchy = roleHierarchy;
+    }
 }

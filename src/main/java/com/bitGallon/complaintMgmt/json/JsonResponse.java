@@ -36,7 +36,8 @@ public class JsonResponse {
 	private RemarkBean remarkBean;
 	private List<RemarkBean> remarkBeanList;
 	private List<ParentComplaintStatusBean> statusBeans;
-	private MinCategorySubCategoryBean categorySubCateogryList;
+	private MinCategorySubCategoryBean categorySubCateogryBean;
+	private List<MinCategorySubCategoryBean> categorySubCateogryList;
 	
 	public String getStatusCode() {
 		return statusCode;
@@ -146,10 +147,19 @@ public class JsonResponse {
 	public void setStatusBeans(List<ParentComplaintStatusBean> statusBeans) {
 		this.statusBeans = statusBeans;
 	}
-	public MinCategorySubCategoryBean getCategorySubCateogryList() {
-		return categorySubCateogryList;
+	public MinCategorySubCategoryBean getCategorySubCateogryBean() {
+		return this.categorySubCateogryBean;
 	}
-	public void setCategorySubCateogryList(MinCategorySubCategoryBean categorySubCateogryList) {
+
+	public void setCategorySubCateogryBean(MinCategorySubCategoryBean categorySubCateogryBean) {
+		this.categorySubCateogryBean = categorySubCateogryBean;
+	}
+
+	public List<MinCategorySubCategoryBean> getCategorySubCateogryList() {
+		return this.categorySubCateogryList;
+	}
+
+	public void setCategorySubCateogryList(List<MinCategorySubCategoryBean> categorySubCateogryList) {
 		this.categorySubCateogryList = categorySubCateogryList;
 	}
 }

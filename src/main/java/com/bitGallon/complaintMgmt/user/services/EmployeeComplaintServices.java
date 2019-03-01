@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.user.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bitGallon.complaintMgmt.bean.CategoryBean;
 import com.bitGallon.complaintMgmt.bean.ComplaintRegistrationBean;
 import com.bitGallon.complaintMgmt.bean.MinCategorySubCategoryBean;
 import com.bitGallon.complaintMgmt.bean.SubCategoryBean;
+import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.json.JsonResponse;
 import com.bitGallon.complaintMgmt.manager.AreaManager;
@@ -143,20 +146,53 @@ public class EmployeeComplaintServices  extends RestResource {
 		return sendResponse(jsonResponse);
 	}
 	
-	@RequestMapping(value = "/v1.0/getAssignedSubCategories/", produces = { "application/json" }, method = RequestMethod.GET)
-	@ResponseBody
-	public HashMap<String,Object> getAssignedSubCategories() throws Exception {
-		jsonResponse = new JsonResponse();
-		try {
-			MinCategorySubCategoryBean categorySubCategoryBean = manager.getAssignedSubCategories(getUserId());
-			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
-			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
-			jsonResponse.setCategorySubCateogryList(categorySubCategoryBean);
-		} catch(Exception ex) {
-			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
-			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
-			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
-		}
-		return sendResponse(jsonResponse);
-	}
+	 @RequestMapping(value={"/v1.0/getAssignedCategorySubCateogry"}, produces={"application/json"}, method={RequestMethod.GET})
+	    @ResponseBody
+	    public HashMap<String, Object> getAssignedCategoriesWithSubcategory() throws Exception {
+	        this.jsonResponse = new JsonResponse();
+	        try {
+	            List categorySubCategoryBeanList = manager.getAssignedCategoriesSubCategory(getUserId());
+	            jsonResponse.setStatusCode("200");
+	            jsonResponse.setMessage("Information saved successfully");
+	            jsonResponse.setCategorySubCateogryList(categorySubCategoryBeanList);
+	        }
+	        catch (Exception ex) {
+	            jsonResponse.setStatusCode("501");
+	            jsonResponse.setMessage("Internal Server Error");
+	            log(this.clazz, ex.getMessage(), "ERROR");
+	        }
+	        return this.sendResponse(this.jsonResponse);
+	    }
+
+	    @RequestMapping(value={"/v1.0/getAssignedCategories"}, produces={"application/json"}, method={RequestMethod.GET})
+	    @ResponseBody
+	    public HashMap<String, Object> getAssignedCategories() throws Exception {
+	        this.jsonResponse = new JsonResponse();
+	        try {
+	            List<Category> categoryList = manager.getAssignedCategories(getUserId());
+	            jsonResponse.setStatusCode("200");
+	            jsonResponse.setMessage("Information saved successfully");
+	            jsonResponse.setCategoryBeanList(convertCategoryBean(categoryList));
+	        }
+	        catch (Exception ex) {
+	            jsonResponse.setStatusCode("501");
+	            jsonResponse.setMessage("Internal Server Error");
+	            log(clazz, ex.getMessage(), "ERROR");
+	        }
+	        return sendResponse(jsonResponse);
+	    }
+	    
+	    public List<CategoryBean> convertCategoryBean(List<Category> categoryList) {
+	        ArrayList<CategoryBean> categoryBeanList = null;
+	        if (categoryList != null && categoryList.size() > 0) {
+	            categoryBeanList = new ArrayList<CategoryBean>();
+	            for (Category category : categoryList) {
+	                CategoryBean categoryBean = new CategoryBean();
+	                categoryBean.setId(category.getId());
+	                categoryBean.setName(category.getName());
+	                categoryBeanList.add(categoryBean);
+	            }
+	        }
+	        return categoryBeanList;
+	    }
 }
