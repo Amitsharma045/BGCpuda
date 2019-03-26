@@ -23,12 +23,14 @@ import com.bitGallon.complaintMgmt.entity.Category;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
 import com.bitGallon.complaintMgmt.entity.Employee;
 import com.bitGallon.complaintMgmt.entity.EscalationHierarchy;
+import com.bitGallon.complaintMgmt.entity.IssueType;
 import com.bitGallon.complaintMgmt.entity.Role;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.AttachmentDetailRepository;
 import com.bitGallon.complaintMgmt.repository.ComplaintRepository;
 import com.bitGallon.complaintMgmt.repository.EmployeeRepository;
 import com.bitGallon.complaintMgmt.repository.EscalationHierarchyRepository;
+import com.bitGallon.complaintMgmt.repository.IssueTypeRepository;
 import com.bitGallon.complaintMgmt.repository.RoleCategoryRepository;
 import com.bitGallon.complaintMgmt.repository.RoleRepository;
 import com.bitGallon.complaintMgmt.repository.StatusRepository;
@@ -66,8 +68,10 @@ public class ComplaintManager {
 	
 	 @Autowired
 	 private RoleCategoryRepository roleCategoryRepository;
+	 
+	 @Autowired
+	 private IssueTypeRepository issueTypeRepository;
 	
-
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
 		List<Employee> empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
 		if(empList != null) {
@@ -288,4 +292,40 @@ public class ComplaintManager {
         List categoryList = roleCategoryRepository.getAssignedCategory(emp.getRole());
         return categoryList;
     }
+
+    public ComplaintRegistration transferComplaint(String complaintId, Long empId, Long issueId) throws Exception {
+    	ComplaintRegistration newComplaintRegistration = null;
+    	ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
+    	if(complaintRegistration == null) return null;
+    	if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId && complaintRegistration.getIssueType().getId() != issueId) {
+    		complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
+    		complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_TRANSFERED_TRANSFERED_BY_EMPLOYEE));
+    		complaintRegistration.setAdditionalComments("Issue has been transferred to other department by " + complaintRegistration.getEmployee().getName());
+    		newComplaintRegistration = getTransferedComplaint(complaintRegistration, issueId);
+    		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
+    		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
+    		newComplaintRegistration.setAdditionalComments("Transferred Issue, Please check the previous complaint Id " + complaintId +" for addtional information");
+    		complaintRegistration.setAdditionalComments(complaintRegistration.getAdditionalComments() +" and new complaint Id is" + newComplaintRegistration.getComplaintId());
+    		repository.saveOrUpdateComplaintRegistration(complaintRegistration);
+        	repository.saveOrUpdateComplaintRegistration(newComplaintRegistration);
+        	List<AttachmentDetail> attachmentDetails = attachmentDetailRepository.getAttachments(complaintRegistration.getId());
+        	if(attachmentDetails!=null && !attachmentDetails.isEmpty()) {
+        		for (AttachmentDetail attachmentDetail : attachmentDetails) {
+    				attachmentDetail.setComplaintReferenceId(newComplaintRegistration);
+    				attachmentDetailRepository.updateAttachment(attachmentDetail);
+    			}
+        	}
+    	}
+    	return newComplaintRegistration;
+    }
+
+	private ComplaintRegistration getTransferedComplaint(ComplaintRegistration complaintRegistration, Long issueId) throws Exception {
+		IssueType issueType = issueTypeRepository.getIssueType(issueId.toString());
+		if(issueType ==null) return null;
+		ComplaintRegistration newComplaintRegistration = new ComplaintRegistration();
+		newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
+		newComplaintRegistration.setIssueType(issueType);
+		newComplaintRegistration.setComplaintLevel((short) 0);
+		return saveComplaintRegistration(newComplaintRegistration);
+	}
 }

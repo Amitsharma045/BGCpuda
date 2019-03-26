@@ -123,6 +123,7 @@ public class ConstantProperty {
 	
 	public static final String SUB_STATUS_ESCALED_ESCALATED_BY_SYSTEM = "ESCALATED BY SYSTEM";
 	public static final String SUB_STATUS_ESCALED_ESCALATED_BY_EMPLOYEE = "ESCALATED BY EMPLOYEE";
+	public static final String SUB_STATUS_TRANSFERED_TRANSFERED_BY_EMPLOYEE = "TRANSFERED TO OTHER DEPT BY EMPLOYEE";
 	public static final String SUB_STATUS_ESCALED_NEED_APPROVAL = "NEED APPROVAL";
 	public static final String SUB_STATUS_ESCALED_STOCK_UNAVAILABLE = "STOCK UNAVAILABLE";
 	public static final String SUB_STATUS_ESCALED_REQUIRE_MORE_TIME = "REQUIRE MORE TIME";
@@ -144,6 +145,8 @@ public class ConstantProperty {
 	public static final String NEW_COMPLAINT_TITLE = "New Complaint";
 	public static final String ESCALETD_COMPLAINT_TITLE = "Escaleted Complaint";
 	public static final String RESOLVED_COMPLAINT_TITLE = "Resolved Complaint";
+	public static final String INVALID_REQUEST = "204";
+	public static final String INVALID_REQUEST_PASSED = "Invalid Request Passed";
 	
 
 

@@ -61,4 +61,8 @@ public class AttachmentDetailRepository {
 				.setParameter("id", complaintId).list();*/
 	}
 
+	public void updateAttachment(AttachmentDetail attachmentDetail) {
+		getSession().saveOrUpdate(attachmentDetail);
+	}
+
 }

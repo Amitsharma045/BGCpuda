@@ -146,6 +146,32 @@ public class EmployeeComplaintServices  extends RestResource {
 		return sendResponse(jsonResponse);
 	}
 	
+	@RequestMapping(value = "/v1.0/transferComplaint/", produces = { "application/json" }, method = RequestMethod.GET)
+	@ResponseBody
+	public HashMap<String,Object> transferComplaint(@RequestParam(name="complaintId") String complaintId, @RequestParam(name="issueId") Long issueId) throws Exception {
+		jsonResponse = new JsonResponse();
+		try {
+			ComplaintRegistration complaintRegistration = manager.transferComplaint(complaintId, getUserId(), issueId);
+			if(complaintRegistration != null) {
+				ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration,attachmentManager.getAttachments(complaintRegistration.getId()));
+				jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
+				jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+				jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
+				log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+			} else {
+				jsonResponse.setStatusCode(ConstantProperty.INVALID_REQUEST);
+				jsonResponse.setMessage(ConstantProperty.INVALID_REQUEST_PASSED);
+				jsonResponse.setComplaintRegistrationBean(null);
+				log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+			}
+		} catch(Exception ex) {
+			System.out.println(ex);
+			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
+			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
+			log(clazz, ex.getMessage(), ConstantProperty.LOG_ERROR);
+		}
+		return sendResponse(jsonResponse);
+	}
 	 @RequestMapping(value={"/v1.0/getAssignedCategorySubCateogry"}, produces={"application/json"}, method={RequestMethod.GET})
 	    @ResponseBody
 	    public HashMap<String, Object> getAssignedCategoriesWithSubcategory() throws Exception {
