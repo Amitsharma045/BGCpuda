@@ -34,6 +34,10 @@ public class SmsMessagesUtil {
 		return "Escalation Manual : You have been assigned with escalated complaint id "+id+". Please visit CPUDA Employee app to see the details.";
 	}
 
+	public static String getTransferedMessageForNextComplaintAsignee(String id){
+		return "Transfered Complaint : You have been assigned with transfered complaint id "+id+". Please visit CPUDA Employee app to see the details.";
+	}
+	
 	//RESOLVED MESSAGES
 	public static String getResolvedComplaintMessageForComplainer(String id){
 		return "Your complaint with complaint id "+id+" has been resolved. Please visit CPUDA app to give your valuable feedback for resolved complaint.";

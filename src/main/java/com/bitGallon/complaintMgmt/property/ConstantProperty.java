@@ -145,6 +145,8 @@ public class ConstantProperty {
 	public static final String NEW_COMPLAINT_TITLE = "New Complaint";
 	public static final String ESCALETD_COMPLAINT_TITLE = "Escaleted Complaint";
 	public static final String RESOLVED_COMPLAINT_TITLE = "Resolved Complaint";
+	public static final String TRANSFERED_COMPLAINT_TITLE = "Transfered Complaint";
+
 	public static final String INVALID_REQUEST = "204";
 	public static final String INVALID_REQUEST_PASSED = "Invalid Request Passed";
 	

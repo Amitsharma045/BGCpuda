@@ -74,6 +74,26 @@ public class PushNotificationManager {
 		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getManualEscalateMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()));
 	}
 	
+	public void sendTransferComplaintNotifications(ComplaintRegistration complaintRegistration) throws Exception {
+		sendTransferComplaintNotificationsToUser(complaintRegistration);
+		sendTransferComplaintNotificationsToEmployee(complaintRegistration);
+	}
+	
+	private void sendTransferComplaintNotificationsToUser(ComplaintRegistration complaintRegistration) throws Exception {
+		pushFCMNotificationsUser(complaintRegistration.getUser().getDeviceToken(),
+				PushNotificationUtil.getNotification(ConstantProperty.TRANSFERED_COMPLAINT_TITLE,
+						PushNotificationMessageUtil.getTransferedMessageForComplainer(complaintRegistration.getReferenceComplaint(), complaintRegistration.getIssueType().getName())),
+						PushNotificationUtil.getData(complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
+	}
+
+	private void sendTransferComplaintNotificationsToEmployee(ComplaintRegistration complaintRegistration) throws Exception {
+		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
+				PushNotificationUtil.getNotification(ConstantProperty.TRANSFERED_COMPLAINT_TITLE,
+						PushNotificationMessageUtil.getTransferedMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint())),
+				PushNotificationUtil.getData(complaintRegistration.getReferenceComplaint(), complaintRegistration.getStatus().getStatus()));
+		sendSMS.sendSms(complaintRegistration.getEmployee().getRegisteredMobileNo(), SmsMessagesUtil.getTransferedMessageForNextComplaintAsignee(complaintRegistration.getReferenceComplaint()));
+	}
+	
 	public void sendAutoEscalationComplaintNotificationsToEmployee(ComplaintRegistration complaintRegistration) throws Exception {
 		pushFCMNotificationsEmployee(complaintRegistration.getEmployee().getDeviceToken(),
 				PushNotificationUtil.getNotification(ConstantProperty.ESCALETD_COMPLAINT_TITLE,

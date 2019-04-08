@@ -11,6 +11,10 @@ public class PushNotificationMessageUtil {
 			return "Your complaint with complaint id "+id+" has been escalated to higher hierarchy.";
 		}
 
+		public static String getTransferedMessageForComplainer(String id, String issueTypeName){
+			return "Your complaint with complaint id "+id+" has been transfered to "+issueTypeName;
+		}
+		
 		public static String getAutoEscalateMessageForPreviousComplaintAsignee(String id){
 			return "Escalation : The complaint assigned to you with complaint id "+id+" has been escalated to higher hierarchy.";
 		}
@@ -22,6 +26,10 @@ public class PushNotificationMessageUtil {
 		//MANUAL ESCALATION MESSAGE
 		public static String getManualEscalateMessageForNextComplaintAsignee(String id){
 			return "Escalation Manual : You have been assigned with escalated complaint id "+id;
+		}
+		
+		public static String getTransferedMessageForNextComplaintAsignee(String id){
+			return "Transfered Complaint : You have been assigned with transfered complaint id "+id;
 		}
 
 		//RESOLVED MESSAGES

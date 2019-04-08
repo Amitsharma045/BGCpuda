@@ -76,9 +76,9 @@ public class UserComplaintServices extends RestResource {
 		try {
 			List<ComplaintRegistration> complaintList = manager.getAllComplaintsForUser(page, getUserId() , startDate , endDate, categoryId, statusId);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
-			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_PROCESSED);
 			jsonResponse.setComplaintList(complaintList);
-			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+			log(clazz, ConstantProperty.SUCCESSFUL_PROCESSED, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
 			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
 			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);
@@ -95,9 +95,9 @@ public class UserComplaintServices extends RestResource {
 		try {
 			ComplaintRegistrationBean complaintRegistrationBean = manager.getComplaintByComplaintNumber(complaintId, getUserId());
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
-			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
+			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_PROCESSED);
 			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
-			log(clazz, ConstantProperty.INVALID_FILE_ERROR, ConstantProperty.LOG_DEBUG);
+			log(clazz, ConstantProperty.SUCCESSFUL_PROCESSED, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
 			jsonResponse.setStatusCode(ConstantProperty.SERVER_ERROR);
 			jsonResponse.setMessage(ConstantProperty.INTERNAL_SERVER_ERROR);

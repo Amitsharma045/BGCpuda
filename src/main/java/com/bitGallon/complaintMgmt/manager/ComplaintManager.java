@@ -293,14 +293,14 @@ public class ComplaintManager {
         return categoryList;
     }
 
-    public ComplaintRegistration transferComplaint(String complaintId, Long empId, Long issueId) throws Exception {
+    public ComplaintRegistration transferComplaint(String complaintId, Long empId, Long issueId, String comment) throws Exception {
     	ComplaintRegistration newComplaintRegistration = null;
     	ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
     	if(complaintRegistration == null) return null;
     	if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId && complaintRegistration.getIssueType().getId() != issueId) {
     		complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
     		complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_TRANSFERED_TRANSFERED_BY_EMPLOYEE));
-    		complaintRegistration.setAdditionalComments("Issue has been transferred to other department by " + complaintRegistration.getEmployee().getName());
+    		complaintRegistration.setAdditionalComments("Issue has been transferred to other department by " + complaintRegistration.getEmployee().getName()+" Reason :: "+comment);
     		newComplaintRegistration = getTransferedComplaint(complaintRegistration, issueId);
     		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
     		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
