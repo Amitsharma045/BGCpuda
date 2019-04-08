@@ -297,6 +297,9 @@ public class ComplaintManager {
     	ComplaintRegistration newComplaintRegistration = null;
     	ComplaintRegistration complaintRegistration = repository.getLatestComplaint(complaintId);
     	if(complaintRegistration == null) return null;
+    	if(complaintRegistration.getStatus().getStatus().equalsIgnoreCase(ConstantProperty.STATUS_RESOLVED) ||
+				complaintRegistration.getStatus().getStatus().equalsIgnoreCase(ConstantProperty.STATUS_CLOSED))
+			return null;
     	if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId && complaintRegistration.getIssueType().getId() != issueId) {
     		complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
     		complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_TRANSFERED_TRANSFERED_BY_EMPLOYEE));
