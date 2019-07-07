@@ -332,8 +332,6 @@ public class ComplaintManager {
 		newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
 		newComplaintRegistration.setIssueType(issueType);
 		newComplaintRegistration.setComplaintLevel((short) 0);
-		if (newComplaintRegistration.getEscalatedTime() == null)
-			return null;
 		return saveComplaintRegistration(newComplaintRegistration);
 	}
 }
