@@ -131,11 +131,13 @@ public class EmployeeComplaintServices  extends RestResource {
 		jsonResponse = new JsonResponse();
 		try {
 			ComplaintRegistration complaintRegistration = manager.updateComplaint(complaintId, getUserId(), subStatus, comment);
-			pushNotificationManager.sendManualEscalationComplaintNotifications(complaintRegistration);
-			ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration, null);
 			jsonResponse.setStatusCode(ConstantProperty.OK_STATUS);
 			jsonResponse.setMessage(ConstantProperty.SUCCESSFUL_SAVED);
-			jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
+			if(complaintRegistration!=null) {
+				ComplaintRegistrationBean complaintRegistrationBean = UtilRepository.createComplaintRepoBean(complaintRegistration, null);
+				pushNotificationManager.sendManualEscalationComplaintNotifications(complaintRegistration);
+				jsonResponse.setComplaintRegistrationBean(complaintRegistrationBean);
+			}
 			log(clazz, ConstantProperty.SUCCESSFUL_PROCESSED, ConstantProperty.LOG_DEBUG);
 		} catch(Exception ex) {
 			System.out.println(ex);
