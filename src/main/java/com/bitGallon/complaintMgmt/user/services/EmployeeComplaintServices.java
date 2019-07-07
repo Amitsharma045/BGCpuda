@@ -148,7 +148,7 @@ public class EmployeeComplaintServices  extends RestResource {
 		return sendResponse(jsonResponse);
 	}
 	
-	@RequestMapping(value = "/v1.0/transferComplaint/", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/v1.0/transferComplaint/", produces = { "application/json" }, method = RequestMethod.POST)
 	@ResponseBody
 	public HashMap<String,Object> transferComplaint(@RequestParam(name="complaintId") String complaintId, @RequestParam(name="issueId") Long issueId,
 			@RequestParam(name="comment") String comment) throws Exception 

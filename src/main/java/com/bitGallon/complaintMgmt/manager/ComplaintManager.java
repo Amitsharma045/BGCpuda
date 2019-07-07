@@ -189,8 +189,6 @@ public class ComplaintManager {
 		if(complaintRegistration == null) return null;
 		if(complaintRegistration.getEmployee() != null && complaintRegistration.getEmployee().getId()==empId) {
 			newComplaintRegistration = getUpdatedComplaint(complaintRegistration);
-			if (newComplaintRegistration.getEscalatedTime() == null)
-				return null;
 			complaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_CLOSED));
 			complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_ESCALED_ESCALATED_BY_EMPLOYEE));
 			complaintRegistration.setAdditionalComments(additionalComments);
@@ -307,7 +305,6 @@ public class ComplaintManager {
     		complaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_TRANSFERED_TRANSFERED_BY_EMPLOYEE));
     		complaintRegistration.setAdditionalComments("Issue has been transferred to other department by " + complaintRegistration.getEmployee().getName()+" Reason :: "+comment);
     		newComplaintRegistration = getTransferedComplaint(complaintRegistration, issueId);
-    		if(newComplaintRegistration == null) return null;
     		newComplaintRegistration.setStatus(statusRepository.getStatus(ConstantProperty.STATUS_IN_PROGRESS));
     		newComplaintRegistration.setSubStatus(statusRepository.getSubStatus(ConstantProperty.SUB_STATUS_IN_PROGRESS));
     		newComplaintRegistration.setAdditionalComments("Transferred Issue, Please check the previous complaint Id " + complaintId +" for addtional information");
