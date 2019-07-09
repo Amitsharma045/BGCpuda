@@ -91,7 +91,6 @@ public class ComplaintRepository {
 		criteria.createAlias(UtilRepository.COMPLAINT_REG_MIN + ".issueType", UtilRepository.ISSUE_TYPE_ALIAS).
 		createAlias(UtilRepository.ISSUE_TYPE_ALIAS + ".subCategory", UtilRepository.SUB_CATEGORY_ALIAS).
 		createAlias(UtilRepository.SUB_CATEGORY_ALIAS + ".category", UtilRepository.CATEGORY_ALIAS).
-		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".employee", UtilRepository.EMPLOYEE_ALIAS).
 		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".status", UtilRepository.PARENT_STATUS_ALIAS).
 		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".subStatus", UtilRepository.STATUS_ALIAS).
 		createAlias(UtilRepository.COMPLAINT_REG_MIN + ".user", UtilRepository.USER_ALIAS);
