@@ -39,7 +39,7 @@ public class EmployeeRepository {
 	@SuppressWarnings("unchecked")
 	public List<Employee> getEmployee(Role role, Area area) {
 		List<Employee> emplist = getSession()
-				.createQuery("FROM Employee emp WHERE emp.role.id =:p1 and emp.isActive = 1 and emp.id in (FROM EmployeeAreaMapping eam where eam.area.id = :p2)")
+				.createQuery("FROM Employee emp WHERE emp.role.id =:p1 and emp.isActive = 1 and emp.id in (select eam.employee.id FROM EmployeeAreaMapping eam where eam.area.id = :p2)")
 				.setParameter("p1", role.getId())
 				.setParameter("p2", area.getId()).list();
 
