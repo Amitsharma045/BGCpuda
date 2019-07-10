@@ -1,14 +1,17 @@
 package com.bitGallon.complaintMgmt.user.services;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,13 +30,9 @@ import com.bitGallon.complaintMgmt.manager.ComplaintManager;
 import com.bitGallon.complaintMgmt.manager.IssueTypeManager;
 import com.bitGallon.complaintMgmt.manager.PushNotificationManager;
 import com.bitGallon.complaintMgmt.manager.StatusManager;
-import com.bitGallon.complaintMgmt.notification.PushNotificationUtil;
 import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.rest.RestResource;
-import com.bitGallon.complaintMgmt.smsapi.sendSMS;
-import com.bitGallon.complaintMgmt.util.CommonUtil;
-import com.bitGallon.complaintMgmt.util.PushNotificationMessageUtil;
-import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
+import com.bitGallon.complaintMgmt.util.AmazonS3FilesManager;
 
 
 @Controller
@@ -108,8 +107,7 @@ public class UserComplaintServices extends RestResource {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/v1.0/saveComplaint", produces={"application/json"},
-			method = RequestMethod.POST)
+	@RequestMapping(value = "/v1.0/saveComplaint",produces = { "application/json" }, method = RequestMethod.POST)
 	@ResponseBody  
 	public HashMap<String,Object> saveComplaint(HttpServletRequest request,@RequestParam("uploadingFiles")  MultipartFile[] uploadedFiles) throws Exception {
 		

@@ -1,9 +1,8 @@
 package com.bitGallon.complaintMgmt.repository;
 
 import java.io.File;
-import java.util.List;
 import java.io.IOException;
-
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -16,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bitGallon.complaintMgmt.entity.AttachmentDetail;
 import com.bitGallon.complaintMgmt.entity.ComplaintRegistration;
-import com.bitGallon.complaintMgmt.util.Constants;
+import com.bitGallon.complaintMgmt.util.AmazonS3FilesManager;
 
 @Repository
 @Transactional
@@ -25,6 +24,8 @@ public class AttachmentDetailRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	private static AmazonS3FilesManager fileUpload = new AmazonS3FilesManager();
+	
 	public Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
@@ -45,9 +46,10 @@ public class AttachmentDetailRepository {
 	}
 
 	private void uploadFile(String complaintId, MultipartFile uploadedFiles) throws Exception {
-		File destLocation = new File(Constants.COMPLAINT_IMAGE_LOC + complaintId +"_"+ uploadedFiles.getOriginalFilename());
+		File destLocation = new File(System.getProperty("java.io.tmpdir")+"/" + complaintId +"_"+ uploadedFiles.getOriginalFilename());
 		try {
 			uploadedFiles.transferTo(destLocation);
+			fileUpload.uploadedFile(destLocation);
 		} catch (IllegalStateException | IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());

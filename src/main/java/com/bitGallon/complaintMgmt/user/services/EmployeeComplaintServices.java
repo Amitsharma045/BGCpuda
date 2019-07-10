@@ -1,5 +1,6 @@
 package com.bitGallon.complaintMgmt.user.services;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import com.bitGallon.complaintMgmt.property.ConstantProperty;
 import com.bitGallon.complaintMgmt.repository.UtilRepository;
 import com.bitGallon.complaintMgmt.rest.RestResource;
 import com.bitGallon.complaintMgmt.smsapi.sendSMS;
+import com.bitGallon.complaintMgmt.util.AmazonS3FilesManager;
 import com.bitGallon.complaintMgmt.util.PushNotificationMessageUtil;
 import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
 
@@ -40,7 +42,6 @@ import com.bitGallon.complaintMgmt.util.SmsMessagesUtil;
 public class EmployeeComplaintServices  extends RestResource {
 	
 	private Class clazz = EmployeeComplaintServices.class;
-	
 	@Autowired
 	private ComplaintManager manager;
 	
