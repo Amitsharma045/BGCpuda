@@ -5,10 +5,6 @@ import java.io.IOException;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -31,9 +27,8 @@ public class AmazonS3FilesManager {
 		
 	}
 	
-	final static AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
-	final static AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.AP_SOUTH_1).build();
-	/*public static void main(String[] args) {
+	final static AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_SOUTH_1).build();
+	public static void main(String[] args) {
 		System.out.println(s3Client.listBuckets());
-	}*/
+	}
 }
