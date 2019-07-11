@@ -28,7 +28,7 @@ public class AmazonS3FilesManager {
 	}
 	
 	final static AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_SOUTH_1).build();
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		System.out.println(s3Client.listBuckets());
-	}
+	}*/
 }
