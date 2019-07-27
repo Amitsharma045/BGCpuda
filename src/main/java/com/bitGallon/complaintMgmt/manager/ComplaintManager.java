@@ -73,6 +73,7 @@ public class ComplaintManager {
 	 private IssueTypeRepository issueTypeRepository;
 	
 	public ComplaintRegistration saveComplaintRegistration(ComplaintRegistration complaintRegistration) throws Exception {
+		if(complaintRegistration.getArea() == null) return null;
 		List<Employee> empList = empRepository.getEmployee(complaintRegistration.getIssueType().getRole(), complaintRegistration.getArea());
 		if(empList != null) {
 			HashMap<Employee, Integer> empCountHM = complaintRepository.getAssignedEmployee(empList);
